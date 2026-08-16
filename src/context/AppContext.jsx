@@ -10,6 +10,9 @@ export const AppProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
   const [authLoading, setAuthLoading] = useState(true);
 
+  // Worker/admin: ID user yang sedang dikelola (null = diri sendiri untuk role user)
+  const [selectedManagedUserId, setSelectedManagedUserId] = useState(null);
+
   // Cek sesi saat aplikasi pertama kali dibuka
   useEffect(() => {
     const token = localStorage.getItem('tmk_token');
@@ -31,16 +34,28 @@ export const AppProvider = ({ children }) => {
       });
   }, []);
 
-  // Load tanaman dari API setiap kali user login
-  const loadPlants = useCallback(async () => {
+  /**
+   * loadPlants — fetch tanaman sesuai role:
+   *  - role 'user'          : fetch milik sendiri (tidak perlu userId param)
+   *  - role 'worker'/'admin': fetch untuk selectedManagedUserId kalau sudah dipilih
+   */
+  const loadPlants = useCallback(async (overrideUserId = null) => {
     if (!loggedIn) return;
     try {
-      const data = await fetchPlants();
+      const currentUser = user; // closure snapshot
+      let targetId = overrideUserId;
+
+      // Untuk worker/admin, pakai selectedManagedUserId kalau tidak ada override
+      if (!targetId && currentUser && currentUser.role !== 'user') {
+        targetId = selectedManagedUserId;
+      }
+
+      const data = await fetchPlants(targetId || null);
       setPlants(data);
     } catch (err) {
       console.error('Gagal load tanaman:', err.message);
     }
-  }, [loggedIn]);
+  }, [loggedIn, user, selectedManagedUserId]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -49,6 +64,13 @@ export const AppProvider = ({ children }) => {
       setPlants([]);
     }
   }, [loggedIn, loadPlants]);
+
+  // Saat worker/admin ganti user yang dikelola, reload plants otomatis
+  useEffect(() => {
+    if (loggedIn && user && user.role !== 'user' && selectedManagedUserId) {
+      loadPlants(selectedManagedUserId);
+    }
+  }, [selectedManagedUserId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const showToast = (message, type = 'success') => {
     const id = Date.now();
@@ -74,6 +96,7 @@ export const AppProvider = ({ children }) => {
     setLoggedIn(false);
     setUser(null);
     setPlants([]);
+    setSelectedManagedUserId(null);
     showToast('Berhasil keluar akun', 'success');
   };
 
@@ -96,12 +119,18 @@ export const AppProvider = ({ children }) => {
       updatePlant,
       loadPlants,
       authLoading,
+      selectedManagedUserId,
+      setSelectedManagedUserId,
     }}>
       {children}
       {/* Global Toast UI */}
       <div id="toast-container" className="toast-container">
         {toasts.map((toast) => {
-          const colors = { success: 'var(--color-primary)', warning: 'var(--color-warning)', error: 'var(--color-danger)' };
+          const colors = {
+            success: 'var(--color-primary)',
+            warning: 'var(--color-warning)',
+            error: 'var(--color-danger)',
+          };
           const icons = {
             success: (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -122,7 +151,7 @@ export const AppProvider = ({ children }) => {
                 <line x1="15" y1="9" x2="9" y2="15" />
                 <line x1="9" y1="9" x2="15" y2="15" />
               </svg>
-            )
+            ),
           };
           return (
             <div

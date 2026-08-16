@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
+import PendingApprovalModal from '../components/PendingApprovalModal';
 import '../css/auth.css';
 
 export default function LoginPage() {
@@ -16,6 +17,7 @@ export default function LoginPage() {
   const [passError, setPassError] = useState('');
 
   const [apiError, setApiError] = useState('');
+  const [showPendingModal, setShowPendingModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -40,7 +42,11 @@ export default function LoginPage() {
       await loginUser(email, password);
       navigate('/dashboard');
     } catch (err) {
-      setApiError(err.message || 'Login gagal, coba lagi.');
+      if (err.code === 'pending_approval') {
+        setShowPendingModal(true);
+      } else {
+        setApiError(err.message || 'Login gagal, coba lagi.');
+      }
     } finally {
       setLoading(false);
     }
@@ -48,6 +54,7 @@ export default function LoginPage() {
 
   return (
     <div className="auth-body" style={{ width: '100%' }}>
+      {showPendingModal && <PendingApprovalModal onClose={() => setShowPendingModal(false)} />}
       <div className="auth-layout">
         {/* Left Panel */}
         <div className="auth-panel-left" role="complementary" aria-label="Informasi produk">

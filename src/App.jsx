@@ -14,6 +14,7 @@ import PlantDetailPage from './pages/PlantDetailPage';
 import HistoryPage from './pages/HistoryPage';
 import ManagePlantsPage from './pages/ManagePlantsPage';
 import ProfilePage from './pages/ProfilePage';
+import AdminApprovalPage from './pages/AdminApprovalPage';
 
 // Import CSS Design system
 import './css/style.css';
@@ -59,6 +60,14 @@ export default function App() {
             element={
               <AuthGuard>
                 <HistoryPage />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/admin/approval"
+            element={
+              <AuthGuard>
+                <AdminApprovalPage />
               </AuthGuard>
             }
           />

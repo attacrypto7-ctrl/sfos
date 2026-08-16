@@ -1,13 +1,9 @@
 /**
- * plantService.js — Abstraksi Service Layer untuk Tanamanku Frontend.
- *
- * Beroperasi menggunakan REST API backend Node.js + Supabase.
- * VITE_API_URL harus diset di .env untuk mengaktifkan mode API.
+ * plantService.js — Service Layer Tanamanku Frontend
  */
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-// Helper token
 function getToken() {
   return localStorage.getItem('tmk_token') || '';
 }
@@ -19,7 +15,7 @@ function authHeaders() {
   };
 }
 
-// ── Auth APIs ───────────────────────────────────────────────
+// ── Auth APIs ────────────────────────────────────────────────
 
 export async function loginApi(email, password) {
   const res = await fetch(`${API_BASE_URL}/auth/login`, {
@@ -28,11 +24,19 @@ export async function loginApi(email, password) {
     body: JSON.stringify({ email, password }),
   });
   const data = await res.json();
+  // 403 pending_approval — biarkan caller handle, jangan throw biasa
+  if (res.status === 403) {
+    const err = new Error(data.message || 'Akun belum disetujui.');
+    err.code = data.error;           // 'pending_approval'
+    err.supportPhone = data.supportPhone;
+    throw err;
+  }
   if (!res.ok) throw new Error(data.error || 'Gagal login');
   localStorage.setItem('tmk_token', data.token);
   return data;
 }
 
+// register tidak lagi return token — return { message, supportPhone }
 export async function registerApi(userData) {
   const res = await fetch(`${API_BASE_URL}/auth/register`, {
     method: 'POST',
@@ -41,23 +45,46 @@ export async function registerApi(userData) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Gagal pendaftaran');
-  localStorage.setItem('tmk_token', data.token);
-  return data;
+  return data; // { message, supportPhone }
 }
 
 export async function getMeApi() {
-  const res = await fetch(`${API_BASE_URL}/auth/me`, {
-    headers: authHeaders(),
-  });
+  const res = await fetch(`${API_BASE_URL}/auth/me`, { headers: authHeaders() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Sesi berakhir');
   return data.user;
 }
 
-// ── Plants APIs ─────────────────────────────────────────────
+export async function forgotPasswordApi(email) {
+  const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengirim permintaan reset kata sandi');
+  return data;
+}
 
-export async function fetchPlants() {
-  const res = await fetch(`${API_BASE_URL}/plants`, { headers: authHeaders() });
+export async function changePasswordApi(oldPassword, newPassword) {
+  const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ oldPassword, newPassword }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengganti kata sandi');
+  return data;
+}
+
+// ── Plants APIs ──────────────────────────────────────────────
+
+// userId: diisi worker/admin untuk scope ke user tertentu; user biasa biarkan kosong
+export async function fetchPlants(userId = null) {
+  const url = userId
+    ? `${API_BASE_URL}/plants?userId=${userId}`
+    : `${API_BASE_URL}/plants`;
+  const res = await fetch(url, { headers: authHeaders() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Gagal mengambil data tanaman');
   return data;
@@ -70,6 +97,7 @@ export async function fetchPlantById(id) {
   return data;
 }
 
+// plantData harus include targetUserId untuk worker/admin
 export async function createPlantApi(plantData) {
   const res = await fetch(`${API_BASE_URL}/plants`, {
     method: 'POST',
@@ -129,7 +157,7 @@ export async function fetchPlantChartHistory(id, range = 'daily') {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Gagal mengambil riwayat chart');
-  return data; // { labels: [...], values: [...] }
+  return data;
 }
 
 // ── History APIs ─────────────────────────────────────────────
@@ -139,40 +167,13 @@ export async function fetchHistory(plantId = 'all', type = 'all') {
   if (plantId !== 'all') params.set('plantId', plantId);
   if (type !== 'all') params.set('type', type);
   const query = params.toString() ? `?${params.toString()}` : '';
-
-  const res = await fetch(`${API_BASE_URL}/history${query}`, {
-    headers: authHeaders(),
-  });
+  const res = await fetch(`${API_BASE_URL}/history${query}`, { headers: authHeaders() });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Gagal mengambil riwayat penyiraman');
   return data;
 }
 
-// ── Auth Extended APIs ───────────────────────────────────────
-
-export async function forgotPasswordApi(email) {
-  const res = await fetch(`${API_BASE_URL}/auth/forgot-password`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Gagal mengirim permintaan reset kata sandi');
-  return data;
-}
-
-export async function changePasswordApi(oldPassword, newPassword) {
-  const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ oldPassword, newPassword }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Gagal mengganti kata sandi');
-  return data;
-}
-
-// ── Profile APIs ────────────────────────────────────────────
+// ── Profile APIs ─────────────────────────────────────────────
 
 export async function updateProfileApi(profileData) {
   const res = await fetch(`${API_BASE_URL}/profile`, {
@@ -193,5 +194,54 @@ export async function updateNotificationsApi(notifData) {
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || 'Gagal mengupdate notifikasi');
+  return data;
+}
+
+// ── Users API (worker & admin) ───────────────────────────────
+
+export async function fetchManagedUsersApi() {
+  const res = await fetch(`${API_BASE_URL}/users/managed`, { headers: authHeaders() });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengambil daftar user');
+  return data; // [{ id, name, email }]
+}
+
+// ── Admin APIs ───────────────────────────────────────────────
+
+export async function adminListUsersApi(status = 'pending') {
+  const res = await fetch(`${API_BASE_URL}/admin/users?status=${status}`, { headers: authHeaders() });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengambil daftar pengguna');
+  return data;
+}
+
+export async function adminApproveUserApi(id) {
+  const res = await fetch(`${API_BASE_URL}/admin/users/${id}/approve`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal menyetujui akun');
+  return data;
+}
+
+export async function adminRejectUserApi(id) {
+  const res = await fetch(`${API_BASE_URL}/admin/users/${id}/reject`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal menolak akun');
+  return data;
+}
+
+export async function adminChangeRoleApi(id, role) {
+  const res = await fetch(`${API_BASE_URL}/admin/users/${id}/role`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: JSON.stringify({ role }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengubah role');
   return data;
 }
