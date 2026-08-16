@@ -1,0 +1,1275 @@
+/* ============================================================
+   TANAMANKU — App Pages Styles
+   ============================================================ */
+
+/* ── Dashboard ── */
+.greeting-section {
+  margin-bottom: var(--space-8);
+}
+.greeting-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--space-1);
+}
+.greeting-sub {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+}
+
+/* Summary Cards */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
+}
+.summary-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: var(--transition-normal);
+}
+.summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.summary-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.summary-icon.green  { background: var(--color-primary-pale);  color: var(--color-primary); }
+.summary-icon.yellow { background: var(--color-warning-pale); color: var(--color-warning); }
+.summary-icon.blue   { background: var(--color-info-pale);    color: var(--color-info); }
+.summary-count {
+  font-size: var(--font-size-3xl);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-text);
+}
+.summary-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+.section-header h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+/* Plant Cards Grid */
+.plants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-5);
+}
+
+.plant-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-xs);
+  transition: var(--transition-normal);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.plant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-primary-light);
+}
+.plant-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+}
+.plant-card-accent.warning {
+  background: linear-gradient(90deg, var(--color-warning), #FDD678);
+}
+
+.plant-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.plant-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+  font-size: 24px;
+}
+.plant-name {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-text);
+  flex: 1;
+}
+.plant-type {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+/* Moisture Section in card */
+.plant-moisture {
+  background: var(--color-primary-ghost);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+.moisture-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+.moisture-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.moisture-value {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-primary-dark);
+}
+
+/* Plant card footer */
+.plant-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.plant-last-update {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.plant-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  box-shadow: 0 6px 24px rgba(29,158,117,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-normal);
+  z-index: 50;
+}
+.fab:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(29,158,117,0.5);
+}
+@media (max-width: 768px) {
+  .fab { bottom: 80px; }
+}
+
+/* ── Plant Detail ── */
+.detail-header-card {
+  background: linear-gradient(135deg, var(--color-primary-ghost), white);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  margin-bottom: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+}
+.detail-plant-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+}
+.detail-plant-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--color-primary-light), var(--color-primary));
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  flex-shrink: 0;
+}
+.detail-plant-name {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+}
+.detail-plant-meta {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+  flex-wrap: wrap;
+}
+.detail-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  align-items: flex-end;
+}
+
+/* Detail Grid */
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* Gauge Big */
+.moisture-gauge-section {
+  background: white;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+.gauge-big {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: var(--space-4) 0;
+}
+.gauge-big svg { overflow: visible; }
+.gauge-center-text {
+  position: absolute;
+  text-align: center;
+}
+.gauge-pct {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+}
+.gauge-sub {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+.gauge-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.gauge-stat {
+  background: var(--color-primary-ghost);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  text-align: center;
+}
+.gauge-stat-val { font-weight: 700; font-size: var(--font-size-lg); color: var(--color-primary-dark); }
+.gauge-stat-lbl { font-size: 11px; color: var(--color-text-muted); }
+
+/* Chart section */
+.chart-section {
+  background: white;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+.chart-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+.chart-tab {
+  padding: 5px 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.chart-tab.active {
+  background: white;
+  color: var(--color-primary);
+  box-shadow: var(--shadow-xs);
+}
+.chart-canvas-wrap {
+  position: relative;
+  height: 200px;
+}
+canvas#moistureChart {
+  width: 100%;
+  height: 200px;
+}
+
+/* Watering Controls */
+.water-control-card {
+  background: white;
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.water-control-header {
+  background: linear-gradient(135deg, var(--color-primary-ghost), white);
+  border-bottom: 1px solid var(--color-border-soft);
+  padding: var(--space-5) var(--space-6);
+}
+.water-control-header h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+}
+.water-control-body {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.btn-water-now {
+  width: 100%;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  padding: 14px;
+  font-size: var(--font-size-md);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 16px rgba(29,158,117,0.3);
+  gap: var(--space-2);
+}
+.btn-water-now:hover {
+  box-shadow: 0 6px 24px rgba(29,158,117,0.45);
+  transform: translateY(-2px);
+}
+.btn-water-now.watering {
+  background: var(--color-border);
+  color: var(--color-text-muted);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.auto-water-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-primary-ghost);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-soft);
+}
+.auto-water-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.auto-water-title {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+}
+.auto-water-desc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* History Log */
+.history-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.log-item {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-soft);
+}
+.log-item:last-child { border-bottom: none; }
+.log-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.log-dot.auto   { background: var(--color-primary); }
+.log-dot.manual { background: var(--color-info); }
+.log-content { flex: 1; }
+.log-title {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+.log-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+.log-badge {
+  flex-shrink: 0;
+}
+
+/* ── History Page ── */
+.history-filters {
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-soft);
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-6);
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 180px;
+}
+.filter-label {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.filter-actions { margin-left: auto; }
+
+/* Timeline */
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+.timeline-day {
+  margin-bottom: var(--space-6);
+}
+.timeline-day-header {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.timeline-day-header::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-soft);
+}
+.timeline-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.timeline-item {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-soft);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: var(--transition-fast);
+}
+.timeline-item:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-xs);
+}
+.timeline-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.timeline-icon.auto   { background: var(--color-primary-pale);  color: var(--color-primary); }
+.timeline-icon.manual { background: var(--color-info-pale);    color: var(--color-info); }
+.timeline-info { flex: 1; }
+.timeline-title { font-size: var(--font-size-base); font-weight: 600; }
+.timeline-desc  { font-size: var(--font-size-sm); color: var(--color-text-muted); margin-top: 2px; }
+.timeline-meta  {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.timeline-time { font-size: var(--font-size-sm); color: var(--color-text-muted); font-weight: 500; }
+.timeline-duration { font-size: var(--font-size-xs); color: var(--color-text-light); }
+
+/* ── Manage Plants Page ── */
+.manage-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.plant-list-item {
+  background: white;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-soft);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: var(--transition-fast);
+}
+.plant-list-item:hover {
+  border-color: var(--color-primary-light);
+  box-shadow: var(--shadow-xs);
+}
+.plant-list-items { display: flex; flex-direction: column; gap: var(--space-3); }
+
+.plant-list-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.plant-list-info { flex: 1; }
+.plant-list-name { font-size: var(--font-size-base); font-weight: 600; }
+.plant-list-sub  { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px; }
+.plant-list-actions { display: flex; gap: var(--space-2); }
+
+/* Threshold slider */
+.threshold-row {
+  display: flex;
+  gap: var(--space-4);
+}
+.threshold-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.threshold-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.threshold-val {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--color-primary);
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border);
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(29,158,117,0.35);
+  transition: var(--transition-fast);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Sticky form card */
+.form-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-soft);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  position: sticky;
+  top: 80px;
+}
+.form-card-header {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  padding: var(--space-5) var(--space-6);
+  color: white;
+}
+.form-card-header h3 { color: white; font-size: var(--font-size-lg); }
+.form-card-header p  { color: rgba(255,255,255,0.75); font-size: var(--font-size-sm); margin-top: 2px; }
+.form-card-body {
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* ── Profile Page ── */
+.profile-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+.profile-card {
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-soft);
+  overflow: hidden;
+  position: sticky;
+  top: 80px;
+}
+.profile-card-top {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  padding: var(--space-8);
+  text-align: center;
+  color: white;
+}
+.profile-avatar-big {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-weight: 800;
+  color: white;
+  margin: 0 auto var(--space-3);
+  border: 3px solid rgba(255,255,255,0.3);
+}
+.profile-name  { font-size: var(--font-size-xl); font-weight: 700; color: white; }
+.profile-email { font-size: var(--font-size-sm); opacity: 0.75; margin-top: 4px; }
+.profile-card-body {
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text-sub);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+.profile-menu-item:hover { background: var(--color-primary-ghost); color: var(--color-primary); }
+.profile-menu-item.danger { color: var(--color-danger); }
+.profile-menu-item.danger:hover { background: var(--color-danger-pale); }
+
+.settings-section {
+  background: white;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-soft);
+  overflow: hidden;
+  margin-bottom: var(--space-5);
+}
+.settings-section-header {
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border-soft);
+  background: var(--color-primary-ghost);
+}
+.settings-section-header h3 { font-size: var(--font-size-md); font-weight: 700; }
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  border-bottom: 1px solid var(--color-border-soft);
+  gap: var(--space-4);
+}
+.settings-item:last-child { border-bottom: none; }
+.settings-item-info { flex: 1; }
+.settings-item-title { font-size: var(--font-size-base); font-weight: 500; }
+.settings-item-desc  { font-size: var(--font-size-xs); color: var(--color-text-muted); margin-top: 2px; }
+
+/* FAQ Accordion */
+.faq-item {
+  border-bottom: 1px solid var(--color-border-soft);
+}
+.faq-question {
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  transition: var(--transition-fast);
+}
+.faq-question:hover { color: var(--color-primary); }
+.faq-icon { transition: transform 0.3s ease; color: var(--color-text-muted); }
+.faq-item.open .faq-icon { transform: rotate(180deg); }
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+.faq-item.open .faq-answer { max-height: 200px; }
+.faq-answer-inner {
+  padding: 0 var(--space-6) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}
+
+/* ── Responsive App ── */
+@media (max-width: 1024px) {
+  .summary-grid  { grid-template-columns: 1fr 1fr; }
+  .detail-grid   { grid-template-columns: 1fr; }
+  .manage-layout { grid-template-columns: 1fr; }
+  .profile-layout{ grid-template-columns: 1fr; }
+  .form-card     { position: static; }
+  .profile-card  { position: static; }
+}
+@media (max-width: 768px) {
+  .summary-grid  { grid-template-columns: 1fr; }
+  .plants-grid   { grid-template-columns: 1fr; }
+  .history-filters { flex-direction: column; }
+  .filter-actions  { margin-left: 0; width: 100%; }
+  .timeline-item { flex-wrap: wrap; }
+  .detail-header-card { flex-direction: column; align-items: flex-start; }
+  .detail-actions { align-items: stretch; width: 100%; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   GARDEN OVERVIEW PAGE
+   ══════════════════════════════════════════════════════════ */
+
+/* ── Layout ── */
+.garden-top-row {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+  align-items: start;
+}
+
+.garden-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+  gap: var(--space-4);
+}
+
+.garden-section-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.garden-section-sub {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+/* ── Health Score Card ── */
+.garden-health-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-xs);
+}
+
+.garden-health-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.garden-health-body {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+/* ── Health Gauge ── */
+.health-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.health-gauge-wrap svg {
+  display: block;
+  overflow: visible;
+}
+
+.health-gauge-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -52%);
+  text-align: center;
+  pointer-events: none;
+}
+
+.health-gauge-score {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1;
+  transition: color 0.6s ease;
+}
+
+.health-gauge-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.health-gauge-status {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition: color 0.6s ease;
+}
+
+/* ── Breakdown legend ── */
+.garden-health-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+
+.garden-breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-sub);
+}
+
+.garden-breakdown-item strong {
+  margin-left: auto;
+  font-size: var(--font-size-md);
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.garden-breakdown-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Quick Stats Column ── */
+.garden-stats-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.garden-stat-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-soft);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  transition: var(--transition-fast);
+}
+
+.garden-stat-card:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateX(2px);
+}
+
+.garden-stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.garden-stat-val {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.garden-stat-lbl {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 3px;
+}
+
+/* ── Bar Chart Card ── */
+.garden-chart-card {
+  margin-bottom: var(--space-6);
+  padding: var(--space-6);
+}
+
+.garden-chart-wrap {
+  width: 100%;
+  min-height: 220px;
+  overflow-x: auto;
+}
+
+.garden-chart-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 220px;
+}
+
+/* ── Critical Section ── */
+.garden-critical-section {
+  margin-bottom: var(--space-6);
+}
+
+.garden-alert-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-danger);
+  box-shadow: 0 0 0 3px rgba(232,69,69,0.2);
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(232,69,69,0.2); }
+  50%       { box-shadow: 0 0 0 7px rgba(232,69,69,0.05); }
+}
+
+/* ── Heatmap Grid ── */
+.garden-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+/* ── Plant Heat Card ── */
+.garden-heat-card {
+  background: var(--color-white);
+  border: 1.5px solid var(--color-border-soft);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  cursor: pointer;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.garden-heat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--card-accent, var(--color-primary));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+
+.garden-heat-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-bg, transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  border-radius: var(--radius-xl);
+}
+
+.garden-heat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--card-accent, var(--color-primary-light));
+}
+
+.garden-heat-card:hover::after {
+  opacity: 1;
+}
+
+.garden-heat-card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.garden-heat-card.urgent {
+  border-color: rgba(232,69,69,0.3);
+  background: linear-gradient(135deg, rgba(232,69,69,0.02), var(--color-white));
+}
+
+.garden-heat-card.urgent::before {
+  background: var(--color-danger);
+}
+
+/* ── Card Top Row ── */
+.garden-heat-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  position: relative;
+  z-index: 1;
+}
+
+.garden-heat-emoji {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  background: var(--card-bg, var(--color-primary-ghost));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  border: 1.5px solid var(--color-border-soft);
+}
+
+.garden-heat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.garden-heat-name {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.garden-heat-type {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.garden-heat-badge {
+  flex-shrink: 0;
+}
+
+.garden-heat-pct {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* ── Moisture Range Bar ── */
+.garden-heat-bar-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.garden-heat-bar-track {
+  position: relative;
+  height: 10px;
+  background: var(--color-border-soft);
+  border-radius: var(--radius-full);
+  overflow: visible;
+  margin-bottom: var(--space-2);
+}
+
+.garden-heat-bar-ideal {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: rgba(29,158,117,0.15);
+  border-radius: var(--radius-full);
+  border: 1px solid rgba(29,158,117,0.25);
+}
+
+.garden-heat-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: var(--radius-full);
+  opacity: 0.85;
+  transition: width 1s cubic-bezier(0.4,0,0.2,1);
+}
+
+.garden-heat-bar-needle {
+  position: absolute;
+  top: -3px;
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  transform: translateX(-50%);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: left 1s cubic-bezier(0.4,0,0.2,1);
+  z-index: 2;
+}
+
+.garden-heat-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+/* ── Card Footer ── */
+.garden-heat-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+  gap: var(--space-2);
+}
+
+.garden-heat-update {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.garden-heat-btn-water {
+  background: var(--btn-color, var(--color-primary));
+  color: white;
+  border-radius: var(--radius-full);
+  padding: 5px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.garden-heat-btn-water:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.garden-heat-btn-water:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .garden-top-row {
+    grid-template-columns: 1fr;
+  }
+  .garden-stats-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .garden-health-body {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-6);
+  }
+  .garden-health-breakdown {
+    width: 100%;
+  }
+  .garden-stats-col {
+    grid-template-columns: 1fr 1fr;
+  }
+  .garden-heatmap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .garden-stats-col {
+    grid-template-columns: 1fr;
+  }
+}
