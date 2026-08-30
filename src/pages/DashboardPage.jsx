@@ -134,15 +134,16 @@ export default function DashboardPage() {
         </div>
       ) : (
         <div className="plants-grid" id="plants-grid" role="list" aria-label="Daftar tanaman">
-          {plants.map((plant) => {
+          {plants.map((plant, index) => {
             const isWarning = plant.status === 'warning';
             const mColor = getMoistureColor(plant.moisture, plant.moistureMin, plant.moistureMax);
             return (
               <div
                 key={plant.id}
-                className="plant-card"
+                className="plant-card ambient-float"
                 onClick={() => navigate(`/plant-detail?id=${plant.id}`)}
                 role="listitem"
+                style={{ animationDelay: `${index * 0.2}s` }}
               >
                 <div className={`plant-card-accent ${isWarning ? 'warning' : ''}`}></div>
                 <div className="plant-card-header">
@@ -178,7 +179,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="moisture-bar">
                     <div
-                      className="moisture-fill"
+                      className="moisture-fill shimmer-wrap"
                       style={{
                         width: `${plant.moisture !== null && plant.moisture !== undefined ? plant.moisture : 0}%`,
                         background: `linear-gradient(90deg, ${mColor}88, ${mColor})`,

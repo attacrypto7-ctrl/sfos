@@ -330,7 +330,9 @@ export default function PlantDetailPage() {
           {/* Gauge */}
           <div className="moisture-gauge-section" role="region" aria-label="Kelembaban saat ini">
             <h3 className="text-lg text-bold mb-4">Kelembaban Saat Ini</h3>
-            <div className="gauge-big">
+            <div className="gauge-big pulse-breathe" style={{ position: 'relative' }}>
+              <div className="sonar-ring" style={{ inset: '-10px', opacity: 0.35 }}></div>
+              <div className="sonar-ring" style={{ inset: '-10px', opacity: 0.2, animationDelay: '1.2s' }}></div>
               <svg id="gauge-svg" width="128" height="128" viewBox="0 0 128 128" aria-hidden="true">
                 <circle cx="64" cy="64" r={r} fill="none" stroke="#EDF7F3" strokeWidth="10" />
                 <circle

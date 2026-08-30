@@ -156,7 +156,7 @@ export default function RegisterPage() {
             <p className="auth-brand-tagline">Aplikasi Pertanian Nomor Satu</p>
           </div>
 
-          <div className="auth-illustration" aria-hidden="true">
+          <div className="auth-illustration ambient-drift" aria-hidden="true">
             <svg viewBox="0 0 360 280" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="360" height="280" rx="20" fill="rgba(255,255,255,0.08)" />
               <g transform="translate(60,180)">

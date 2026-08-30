@@ -68,7 +68,7 @@ export default function LoginPage() {
             <p className="auth-brand-tagline">Aplikasi Pertanian Nomor Satu</p>
           </div>
 
-          <div className="auth-illustration" aria-hidden="true">
+          <div className="auth-illustration ambient-drift" aria-hidden="true">
             <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="360" height="260" rx="20" fill="rgba(255,255,255,0.08)" />
               <ellipse cx="180" cy="220" rx="140" ry="28" fill="rgba(255,255,255,0.08)" />

@@ -122,7 +122,7 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="hero" id="hero" aria-labelledby="hero-headline">
-        <div className="hero-bg"></div>
+        <div className="hero-bg ambient-drift"></div>
 
         <div className="hero-contour" aria-hidden="true">
           <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
@@ -249,7 +249,7 @@ export default function LandingPage() {
             </div>
 
             {/* Floating cards */}
-            <div className="hero-float-card card-1">
+            <div className="hero-float-card card-1 ambient-float" style={{ animationDelay: '0.2s' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2.5">
                 <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
               </svg>
@@ -258,7 +258,7 @@ export default function LandingPage() {
                 <div style={{ fontSize: '16px', fontWeight: 800, color: '#1D9E75' }}>72%</div>
               </div>
             </div>
-            <div className="hero-float-card card-2">
+            <div className="hero-float-card card-2 ambient-float" style={{ animationDelay: '0.9s' }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2.5">
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
@@ -268,7 +268,7 @@ export default function LandingPage() {
                 <div style={{ fontSize: '12px', fontWeight: 700 }}>Aktif ✓</div>
               </div>
             </div>
-            <div className="hero-float-card card-3">
+            <div className="hero-float-card card-3 ambient-float" style={{ animationDelay: '1.6s' }}>
               <span style={{ fontSize: '18px' }}>🌳</span>
               <div>
                 <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kondisi</div>
