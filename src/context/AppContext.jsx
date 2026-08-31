@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [authLoading, setAuthLoading] = useState(true);
+  const [plantsLoading, setPlantsLoading] = useState(false);
 
   // Worker/admin: ID user yang sedang dikelola (null = diri sendiri untuk role user)
   const [selectedManagedUserId, setSelectedManagedUserId] = useState(null);
@@ -41,6 +42,7 @@ export const AppProvider = ({ children }) => {
    */
   const loadPlants = useCallback(async (overrideUserId = null) => {
     if (!loggedIn) return;
+    setPlantsLoading(true);
     try {
       const currentUser = user; // closure snapshot
       let targetId = overrideUserId;
@@ -54,6 +56,8 @@ export const AppProvider = ({ children }) => {
       setPlants(data);
     } catch (err) {
       console.error('Gagal load tanaman:', err.message);
+    } finally {
+      setPlantsLoading(false);
     }
   }, [loggedIn, user, selectedManagedUserId]);
 
@@ -119,6 +123,7 @@ export const AppProvider = ({ children }) => {
       updatePlant,
       loadPlants,
       authLoading,
+      plantsLoading,
       selectedManagedUserId,
       setSelectedManagedUserId,
     }}>

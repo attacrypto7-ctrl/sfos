@@ -79,7 +79,7 @@ export default function LandingPage() {
       {/* Navbar */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
         <Link to="/" className="nav-logo" aria-label="Tanamanku beranda">
-          <div class="nav-logo-mark">
+          <div className="nav-logo-mark">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
@@ -107,11 +107,7 @@ export default function LandingPage() {
 
       {/* Mobile nav links toggle */}
       {mobileMenuOpen && (
-        <div className="mobile-nav-panel" style={{
-          position: 'fixed', top: '68px', left: 0, right: 0, background: 'white',
-          padding: '20px', zIndex: 199, borderBottom: '1px solid var(--color-border-soft)',
-          display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'var(--shadow-md)'
-        }}>
+        <div className="mobile-nav-panel">
           <a href="#features" onClick={() => setMobileMenuOpen(false)}>Fitur</a>
           <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>Cara Kerja</a>
           <a href="#stats" onClick={() => setMobileMenuOpen(false)}>Statistik</a>
@@ -157,9 +153,9 @@ export default function LandingPage() {
             <div className="hero-trust">
               <div className="trust-avatars" aria-hidden="true">
                 <div className="trust-avatar">BS</div>
-                <div class="trust-avatar">AR</div>
-                <div class="trust-avatar">DW</div>
-                <div class="trust-avatar">+</div>
+                <div className="trust-avatar">AR</div>
+                <div className="trust-avatar">DW</div>
+                <div className="trust-avatar">+</div>
               </div>
               <p className="trust-text"><strong>2,400+</strong> petani sudah bergabung</p>
             </div>
@@ -290,7 +286,7 @@ export default function LandingPage() {
         <div className="section-inner">
           <p className="section-eyebrow">Kenapa Tanamanku?</p>
           <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk Kebunmu</h2>
-          <p class="section-sub">Dari sensor tanah hingga AI cerdas — semua bekerja bersama agar tanamanmu selalu mendapatkan yang terbaik.</p>
+          <p className="section-sub">Dari sensor tanah hingga AI cerdas — semua bekerja bersama agar tanamanmu selalu mendapatkan yang terbaik.</p>
 
           <div className="features-grid">
             <div className="feature-card reveal">
@@ -392,8 +388,11 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="landing-footer" role="contentinfo">
+        <div className="footer-rings" aria-hidden="true">
+          <span></span><span></span>
+        </div>
         <div className="footer-inner">
-          <div>
+          <div className="footer-brand-block">
             <div className="footer-logo">
               <div className="footer-logo-mark">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -402,7 +401,7 @@ export default function LandingPage() {
               </div>
               <span className="footer-brand-name">Tanamanku</span>
             </div>
-            <p className="footer-tagline" style={{ marginTop: '4px' }}>Menjaga tanaman, menumbuhkan hasil.</p>
+            <p className="footer-tagline">Menjaga tanaman, menumbuhkan hasil.</p>
           </div>
           <p className="footer-copy">© 2025 Tanamanku · Aplikasi Pertanian Nomor Satu</p>
         </div>

@@ -1,0 +1,408 @@
+/* ============================================================
+   TANAMANKU — Interactive Loading Screen ("Memuat kebun anda")
+   ============================================================ */
+
+.tmk-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  font-family: var(--font-family);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 120%, rgba(159, 225, 203, 0.35) 0%, transparent 55%),
+    linear-gradient(150deg, #2AB885 0%, #1D9E75 52%, #0F6E56 100%);
+}
+
+/* Variant inline (di dalam konten aplikasi) */
+.tmk-loader.is-inline {
+  position: relative;
+  inset: auto;
+  z-index: 5;
+  min-height: 60vh;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Blobs dekoratif ── */
+.tmk-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+.tmk-blob-a {
+  width: 420px;
+  height: 420px;
+  top: -160px;
+  right: -140px;
+  animation: tmk-drift 18s var(--ease-drift) infinite;
+}
+.tmk-blob-b {
+  width: 300px;
+  height: 300px;
+  bottom: -120px;
+  left: -100px;
+  animation: tmk-drift 22s var(--ease-drift) infinite reverse;
+}
+
+/* ── Matahari ── */
+.tmk-sun {
+  position: absolute;
+  top: 8%;
+  right: 10%;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #FFF6D8, #FDD34D);
+  box-shadow: 0 0 50px rgba(253, 211, 77, 0.55);
+  animation: tmk-float 5s var(--ease-float) infinite;
+  pointer-events: none;
+}
+.tmk-sun::before {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg, rgba(255, 255, 255, 0.35) 12deg, transparent 24deg,
+    transparent 60deg, rgba(255, 255, 255, 0.35) 72deg, transparent 84deg,
+    transparent 120deg, rgba(255, 255, 255, 0.35) 132deg, transparent 144deg,
+    transparent 180deg, rgba(255, 255, 255, 0.35) 192deg, transparent 204deg,
+    transparent 240deg, rgba(255, 255, 255, 0.35) 252deg, transparent 264deg,
+    transparent 300deg, rgba(255, 255, 255, 0.35) 312deg, transparent 324deg
+  );
+  -webkit-mask: radial-gradient(circle, transparent 46%, #000 47% 62%, transparent 63%);
+  mask: radial-gradient(circle, transparent 46%, #000 47% 62%, transparent 63%);
+  animation: tmk-spin 24s linear infinite;
+}
+
+/* ── Awan ── */
+.tmk-cloud {
+  position: absolute;
+  width: 120px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: var(--radius-full);
+  pointer-events: none;
+  animation: tmk-drift-slow 26s var(--ease-drift) infinite;
+}
+.tmk-cloud::before,
+.tmk-cloud::after {
+  content: '';
+  position: absolute;
+  background: inherit;
+  border-radius: 50%;
+}
+.tmk-cloud::before {
+  width: 52px;
+  height: 52px;
+  top: -24px;
+  left: 22px;
+}
+.tmk-cloud::after {
+  width: 40px;
+  height: 40px;
+  top: -14px;
+  right: 24px;
+}
+.tmk-cloud-1 { top: 18%; left: 6%; }
+.tmk-cloud-2 {
+  top: 30%;
+  right: 14%;
+  transform: scale(0.7);
+  animation-delay: -12s;
+}
+
+/* ── Kartu utama ── */
+.tmk-card {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8) var(--space-8) var(--space-6);
+  box-shadow: var(--shadow-xl), 0 0 0 1px rgba(255, 255, 255, 0.6);
+  text-align: center;
+  animation: tmk-pop 0.6s var(--ease-float) both;
+}
+.is-inline .tmk-card {
+  background: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.tmk-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-primary-ghost);
+  color: var(--color-primary-dark);
+  font-weight: 800;
+  font-size: var(--font-size-md);
+  padding: 7px 16px;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-5);
+}
+.tmk-brand svg { color: var(--color-primary); }
+
+.tmk-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+  line-height: 1.25;
+}
+.tmk-sub {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+/* ── Skena pertumbuhan ── */
+.tmk-scene {
+  position: relative;
+  height: 210px;
+  margin: 0 auto var(--space-6);
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(180deg, rgba(159, 225, 203, 0.25) 0%, rgba(226, 245, 238, 0) 55%),
+    repeating-linear-gradient(90deg, transparent 0 46px, rgba(29, 158, 117, 0.08) 46px 48px);
+  user-select: none;
+}
+.tmk-hills {
+  position: absolute;
+  inset-inline: 0;
+  bottom: -10px;
+  height: 70px;
+  background: linear-gradient(180deg, #DCF7EC 0%, #9FE1CB 100%);
+  border-radius: 70% 30% 0 0 / 100% 40% 0 0;
+  pointer-events: none;
+}
+.tmk-hills::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 20% 40%, rgba(255,255,255,0.5) 0 12px, transparent 13px),
+    radial-gradient(circle at 60% 60%, rgba(255,255,255,0.4) 0 9px, transparent 10px),
+    radial-gradient(circle at 85% 30%, rgba(29,158,117,0.2) 0 14px, transparent 15px);
+}
+
+.tmk-pot {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 170px;
+  display: block;
+}
+.tmk-plant {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  transition: transform 0.7s var(--ease-float);
+  filter: drop-shadow(0 10px 12px rgba(15, 110, 86, 0.28));
+  will-change: transform;
+}
+.tmk-plant svg {
+  width: 100%;
+  height: 100%;
+  animation: tmk-float-svg 4s var(--ease-float) infinite;
+}
+.tmk-plant.shake { animation: tmk-shake 0.55s ease; }
+.tmk-plant .tmk-glow {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  width: 26px;
+  height: 26px;
+  transform: translate(-50%, 0);
+  border-radius: 50%;
+  background: radial-gradient(circle, #FDD34D 0%, transparent 70%);
+  opacity: 0;
+  animation: tmk-water-flash 1.1s ease;
+}
+
+/* Tetesan air */
+.tmk-droplets {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.tmk-droplets i {
+  position: absolute;
+  top: 6%;
+  width: 8px;
+  height: 11px;
+  background: #BFE9FF;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  box-shadow: 0 0 6px rgba(191, 233, 255, 0.8);
+  animation: tmk-fall 1s ease-in forwards;
+}
+.tmk-waterline {
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 22px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, transparent, rgba(191, 233, 255, 0.9) 30% 70%, transparent);
+  opacity: 0;
+  animation: tmk-waterline 1.1s ease;
+  pointer-events: none;
+}
+
+/* ── Progress ── */
+.tmk-progress {
+  margin-top: var(--space-2);
+}
+.tmk-track {
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--color-border-soft);
+  overflow: hidden;
+  position: relative;
+}
+.tmk-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-primary-light), var(--color-primary), var(--color-primary-dark));
+  background-size: 200% 100%;
+  animation: tmk-stripes 1.4s linear infinite;
+  transition: width 0.4s var(--ease-pulse);
+  position: relative;
+}
+.tmk-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: translateX(-100%);
+  animation: tmk-shimmer 1.6s infinite;
+}
+.tmk-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-3);
+  font-size: var(--font-size-xs);
+}
+.tmk-step {
+  color: var(--color-text-sub);
+  font-weight: 600;
+  animation: tmk-fade-swap 0.5s ease;
+}
+.tmk-pct {
+  font-weight: 800;
+  font-size: var(--font-size-sm);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-pale);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+/* Tombol interaktif */
+.tmk-water-btn {
+  margin-top: var(--space-6);
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 12px 20px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+  color: white;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  box-shadow: 0 6px 20px rgba(29, 158, 117, 0.4);
+  transition: var(--transition-normal);
+}
+.tmk-water-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 26px rgba(29, 158, 117, 0.5);
+}
+.tmk-water-btn:active { transform: scale(0.97); }
+.tmk-water-btn:focus-visible {
+  outline: 2px solid var(--color-primary-dark);
+  outline-offset: 3px;
+}
+
+/* ── Keyframes ── */
+@keyframes tmk-pop {
+  from { opacity: 0; transform: translateY(26px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes tmk-float {
+  0%, 100% { transform: translateY(0) translateX(-50%); }
+  50%      { transform: translateY(-9px) translateX(-50%); }
+}
+@keyframes tmk-float-svg {
+  0%, 100% { transform: translateY(0) rotate(-1.5deg); }
+  50%      { transform: translateY(-9px) rotate(1.5deg); }
+}
+@keyframes tmk-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-28px, 30px) scale(1.08); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+@keyframes tmk-drift-slow {
+  0%   { transform: translateX(0) scale(1); }
+  50%  { transform: translateX(40px) scale(1.06); }
+  100% { transform: translateX(0) scale(1); }
+}
+@keyframes tmk-spin { to { transform: rotate(360deg); } }
+@keyframes tmk-shake {
+  0%, 100% { transform: scale(var(--grow, 1)) rotate(0deg); }
+  20%      { transform: scale(var(--grow, 1)) rotate(-6deg); }
+  45%      { transform: scale(var(--grow, 1)) rotate(6deg); }
+  70%      { transform: scale(var(--grow, 1)) rotate(-3deg); }
+}
+@keyframes tmk-fall {
+  0%   { transform: translateY(0) rotate(45deg); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translateY(190px) rotate(45deg); opacity: 0; }
+}
+@keyframes tmk-waterline {
+  0%   { opacity: 0; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes tmk-water-flash {
+  0%   { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
+  30%  { opacity: 1; transform: translate(-50%, -8px) scale(1.2); }
+  100% { opacity: 0; transform: translate(-50%, -40px) scale(0.7); }
+}
+@keyframes tmk-stripes {
+  to { background-position: -200% 0; }
+}
+@keyframes tmk-shimmer {
+  100% { transform: translateX(100%); }
+}
+@keyframes tmk-fade-swap {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Aksesibilitas: kurangi gerak ── */
+@media (prefers-reduced-motion: reduce) {
+  .tmk-sun,
+  .tmk-cloud,
+  .tmk-blob,
+  .tmk-plant svg,
+  .tmk-fill::after {
+    animation: none !important;
+  }
+  .tmk-plant {
+    transition: transform 0.3s ease;
+  }
+}
