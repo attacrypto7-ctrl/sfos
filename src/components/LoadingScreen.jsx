@@ -2,14 +2,14 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import '../css/loading.css';
 
 const STEPS = [
-  'Memeriksa lembab tanah…',
+  'Memeriksa kelembapan tanah…',
   'Menghubungkan sensor kebun…',
-  'Menyiapkan sistem irigasi…',
+  'Menyiapkan data tanaman…',
   'Menghitung skor kesehatan…',
   'Merawat tanaman terbaik…',
 ];
 
-export default function LoadingScreen({ label = 'Memuat kebun anda', sublabel, inline = false }) {
+export default function LoadingScreen({ label = 'Memuat kebun anda...', sublabel, inline = false }) {
   const [progress, setProgress] = useState(0);
   const [step, setStep] = useState(0);
   const [bursts, setBursts] = useState([]);
@@ -30,11 +30,11 @@ export default function LoadingScreen({ label = 'Memuat kebun anda', sublabel, i
     setStep(idx);
   }, [progress]);
 
-  // Interaksi: klik/siram untuk mempercepat loading
+  // Interaksi: klik/siram untuk mempercepat loading (+5% per klik)
   const water = useCallback(() => {
     const id = ++burstId.current;
     setBursts((b) => [...b, { id, x: 18 + Math.random() * 64 }]);
-    setProgress((p) => Math.min(100, p + 9));
+    setProgress((p) => Math.min(100, p + 5));
     setJustWatered(true);
     window.setTimeout(() => {
       setBursts((b) => b.filter((d) => d.id !== id));
@@ -108,11 +108,11 @@ export default function LoadingScreen({ label = 'Memuat kebun anda', sublabel, i
           </div>
         </div>
 
-        <button type="button" className="tmk-water-btn" onClick={water} aria-label="Siram tanaman agar loading lebih cepat">
+        <button type="button" className="tmk-water-btn" onClick={water} aria-label="Siram tanaman agar loading lebih cepat (+5%)">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
             <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
           </svg>
-          Siram untuk mempercepat
+          Siram untuk mempercepat +5%
         </button>
       </div>
     </div>

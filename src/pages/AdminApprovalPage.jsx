@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Layout from '../components/Layout';
+import ConfirmModal from '../components/ConfirmModal';
 import { useApp } from '../context/AppContext';
 import {
   adminListUsersApi,
@@ -27,6 +28,7 @@ export default function AdminApprovalPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState(null); // id yang sedang diproses
+  const [rejectTarget, setRejectTarget] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -56,7 +58,7 @@ export default function AdminApprovalPage() {
   };
 
   const handleReject = async (u) => {
-    if (!window.confirm(`Tolak akun ${u.name}?`)) return;
+    setRejectTarget(null);
     setActionId(u.id);
     try {
       await adminRejectUserApi(u.id);
@@ -280,7 +282,7 @@ export default function AdminApprovalPage() {
                             {u.approvalStatus !== 'rejected' && (
                               <button
                                 className="btn btn-xs"
-                                onClick={() => handleReject(u)}
+                                onClick={() => setRejectTarget(u)}
                                 disabled={busy}
                                 style={{ background: 'var(--color-danger-pale)', color: 'var(--color-danger)', borderRadius: 'var(--radius-full)' }}
                               >
@@ -299,6 +301,17 @@ export default function AdminApprovalPage() {
         )}
       </div>
 
+      {/* Konfirmasi tolak akun */}
+      <ConfirmModal
+        open={!!rejectTarget}
+        title={rejectTarget ? `Tolak akun ${rejectTarget.name}?` : ''}
+        message="Akun ini tidak akan bisa masuk sampai admin menyetujui kembali."
+        confirmLabel="Ya, Tolak"
+        cancelLabel="Batal"
+        danger
+        onConfirm={() => handleReject(rejectTarget)}
+        onCancel={() => setRejectTarget(null)}
+      />
     </Layout>
   );
 }

@@ -1,10 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import LoadingScreen from '../components/LoadingScreen';
 import '../css/landing.css';
 
 export default function LandingPage() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Ref untuk tilt floating cards
+  const cardTiltRefs = useRef([]);
 
   // Counter states
   const [petani, setPetani] = useState(0);
@@ -60,6 +65,36 @@ export default function LandingPage() {
     return () => revealObserver.disconnect();
   }, []);
 
+  // Loading screen untuk kunjungan pertama — tampil beberapa detik lalu hilang
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLoading(false), 3600);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  // Lock scroll saat loading screen tampil
+  useEffect(() => {
+    document.body.style.overflow = loading ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [loading]);
+
+  // Efek 3D tilt pada floating cards yang merespons gerakan mouse
+  const handleCardMove = (e, index) => {
+    const card = cardTiltRefs.current[index];
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const px = (e.clientX - rect.left) / rect.width - 0.5;
+    const py = (e.clientY - rect.top) / rect.height - 0.5;
+    card.style.setProperty('--rx', `${(-py * 10).toFixed(2)}deg`);
+    card.style.setProperty('--ry', `${(px * 12).toFixed(2)}deg`);
+  };
+
+  const resetCardTilt = (index) => {
+    const card = cardTiltRefs.current[index];
+    if (!card) return;
+    card.style.setProperty('--rx', '0deg');
+    card.style.setProperty('--ry', '0deg');
+  };
+
   const animateValue = (start, end, duration, setter, suffix) => {
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -75,7 +110,15 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="landing-body">
+    <div className={`landing-body${loading ? ' is-loading' : ' is-loaded'}`}>
+      {/* Loading Screen interaktif untuk kunjungan pertama */}
+      {loading && (
+        <LoadingScreen
+          label="Memuat kebun anda..."
+          sublabel="Pengunjung dapat menyiram bibit untuk mempercepat proses"
+        />
+      )}
+
       {/* Navbar */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
         <Link to="/" className="nav-logo" aria-label="Tanamanku beranda">
@@ -142,13 +185,13 @@ export default function LandingPage() {
               Tanamanku memantau dan menyiram tanamanmu secara otomatis, kapan pun, di mana pun kamu berada.
             </p>
             <div className="hero-cta">
-              <Link to="/register" className="btn btn-primary btn-lg">
+              <Link to="/register" className="btn btn-primary btn-lg hero-cta-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 </svg>
                 Mulai Sekarang
               </Link>
-              <Link to="/login" className="btn btn-outline btn-lg">Masuk Akun</Link>
+              <Link to="/login" className="btn btn-outline btn-lg hero-cta-btn">Masuk Akun</Link>
             </div>
             <div className="hero-trust">
               <div className="trust-avatars" aria-hidden="true">
@@ -244,31 +287,52 @@ export default function LandingPage() {
               </svg>
             </div>
 
-            {/* Floating cards */}
-            <div className="hero-float-card card-1 ambient-float" style={{ animationDelay: '0.2s' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2.5">
-                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-              </svg>
-              <div>
-                <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kelembaban</div>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#1D9E75' }}>72%</div>
+            {/* Floating cards — efek 3D tilt mengikuti gerakan mouse */}
+            <div
+              className="hero-float-card card-1"
+              ref={(el) => (cardTiltRefs.current[0] = el)}
+              onMouseMove={(e) => handleCardMove(e, 0)}
+              onMouseLeave={() => resetCardTilt(0)}
+            >
+              <div className="hero-float-inner" style={{ animationDelay: '0.2s' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2.5">
+                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                </svg>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kelembaban</div>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#1D9E75' }}>72%</div>
+                </div>
               </div>
             </div>
-            <div className="hero-float-card card-2 ambient-float" style={{ animationDelay: '0.9s' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2.5">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              <div>
-                <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Siram Otomatis</div>
-                <div style={{ fontSize: '12px', fontWeight: 700 }}>Aktif ✓</div>
+            <div
+              className="hero-float-card card-2"
+              ref={(el) => (cardTiltRefs.current[1] = el)}
+              onMouseMove={(e) => handleCardMove(e, 1)}
+              onMouseLeave={() => resetCardTilt(1)}
+            >
+              <div className="hero-float-inner" style={{ animationDelay: '0.9s' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2.5">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Siram Otomatis</div>
+                  <div style={{ fontSize: '12px', fontWeight: 700 }}>Aktif ✓</div>
+                </div>
               </div>
             </div>
-            <div className="hero-float-card card-3 ambient-float" style={{ animationDelay: '1.6s' }}>
-              <span style={{ fontSize: '18px' }}>🌳</span>
-              <div>
-                <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kondisi</div>
-                <div style={{ fontSize: '12px', fontWeight: 700, color: '#1D9E75' }}>Sangat Baik</div>
+            <div
+              className="hero-float-card card-3"
+              ref={(el) => (cardTiltRefs.current[2] = el)}
+              onMouseMove={(e) => handleCardMove(e, 2)}
+              onMouseLeave={() => resetCardTilt(2)}
+            >
+              <div className="hero-float-inner" style={{ animationDelay: '1.6s' }}>
+                <span style={{ fontSize: '18px' }}>🌳</span>
+                <div>
+                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kondisi</div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1D9E75' }}>Sangat Baik</div>
+                </div>
               </div>
             </div>
           </div>

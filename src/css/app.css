@@ -3,6 +3,37 @@
    ============================================================ */
 
 /* ── Dashboard ── */
+.dash-content > * {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.dash-content.is-ready > * {
+  animation: dashRise 0.55s var(--ease-float) forwards;
+}
+.dash-content.is-ready > *:nth-child(1) { animation-delay: 0.05s; }
+.dash-content.is-ready > *:nth-child(2) { animation-delay: 0.13s; }
+.dash-content.is-ready > *:nth-child(3) { animation-delay: 0.21s; }
+.dash-content.is-ready > *:nth-child(4) { animation-delay: 0.29s; }
+@keyframes dashRise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Boot overlay full-screen (dashboard initial load) */
+.boot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.7s ease;
+}
+.boot-overlay .tmk-loader { z-index: auto; }
+.boot-overlay.is-fading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Greeting ── */
 .greeting-section {
   margin-bottom: var(--space-8);
 }
@@ -36,7 +67,7 @@
   transition: var(--transition-normal);
 }
 .summary-card:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px) scale(1.02);
   box-shadow: var(--shadow-md);
 }
 .summary-icon {
@@ -88,16 +119,25 @@
   padding: var(--space-5);
   border: 1px solid var(--color-border-soft);
   box-shadow: var(--shadow-xs);
-  transition: var(--transition-normal);
+  transition: transform 0.3s var(--ease-float), box-shadow 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+  transform: perspective(900px);
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.plant-card.is-in {
+  animation:
+    dashRise 0.55s var(--ease-float) var(--d, 0s) both,
+    float 4.5s var(--ease-float) var(--d, 0s) infinite;
 }
 .plant-card:hover {
-  transform: translateY(-4px);
+  animation: none;
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)) translateY(-2px) scale(1.02);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-primary-light);
 }
@@ -185,6 +225,110 @@
 .plant-actions {
   display: flex;
   gap: var(--space-2);
+}
+
+/* ── Confirmation Modal (spring bounce) ── */
+.confirm-modal {
+  max-width: 380px;
+  text-align: center;
+  padding: var(--space-8);
+}
+.confirm-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--color-primary-pale);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-5);
+}
+.confirm-modal.danger .confirm-icon {
+  background: var(--color-danger-pale);
+  color: var(--color-danger);
+}
+.confirm-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
+}
+.confirm-message {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: var(--space-6);
+}
+.confirm-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+/* ── Skeleton Loading (chart / statistik) ── */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-primary-pale);
+  border-radius: var(--radius-md);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: translateX(-100%);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-sweep {
+  100% { transform: translateX(100%); }
+}
+.chart-skeleton {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  height: 200px;
+  padding: 8px 10px 20px;
+}
+.skeleton-bar {
+  flex: 1;
+  min-width: 22px;
+  border-radius: 8px 8px 4px 4px;
+  background: var(--color-primary-pale);
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: translateX(-100%);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+.chart-skeleton-line {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 200px;
+  justify-content: flex-end;
+  padding-bottom: 16px;
+}
+.skeleton-line {
+  height: 14px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-pale);
+  position: relative;
+  overflow: hidden;
+}
+.skeleton-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: translateX(-100%);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
 }
 
 /* FAB */
@@ -1067,7 +1211,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 }
 
 .garden-heat-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) scale(1.02);
   box-shadow: var(--shadow-lg);
   border-color: var(--card-accent, var(--color-primary-light));
 }
@@ -1271,5 +1415,16 @@ input[type="range"]::-webkit-slider-thumb:hover {
 @media (max-width: 480px) {
   .garden-stats-col {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dash-content > *,
+  .plant-card.is-in,
+  .boot-overlay {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
   }
 }

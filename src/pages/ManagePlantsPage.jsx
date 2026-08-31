@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
+import ConfirmModal from '../components/ConfirmModal';
 import {
   createPlantApi,
   updatePlantApi,
@@ -39,6 +40,7 @@ export default function ManagePlantsPage() {
   const [moistureMin, setMoistureMin] = useState(50);
   const [moistureMax, setMoistureMax] = useState(80);
   const [submitting, setSubmitting] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,7 +93,7 @@ export default function ManagePlantsPage() {
   };
 
   const handleDelete = async (plant) => {
-    if (!window.confirm(`Hapus ${plant.name}? Data tidak dapat dipulihkan.`)) return;
+    setDeleteTarget(null);
     try {
       await deletePlantApi(plant.id);
       showToast(`🗑️ ${plant.name} dihapus`, 'warning');
@@ -179,7 +181,7 @@ export default function ManagePlantsPage() {
                   {isWorkerOrAdmin && (
                     <div className="plant-list-actions">
                       <button className="btn btn-secondary btn-xs" onClick={() => handleEdit(plant)}>Edit</button>
-                      <button className="btn btn-danger btn-xs" onClick={() => handleDelete(plant)}>Hapus</button>
+                      <button className="btn btn-danger btn-xs" onClick={() => setDeleteTarget(plant)}>Hapus</button>
                     </div>
                   )}
                 </div>
@@ -366,6 +368,18 @@ export default function ManagePlantsPage() {
           </div>
         )}
       </div>
+
+      {/* Konfirmasi hapus tanaman */}
+      <ConfirmModal
+        open={!!deleteTarget}
+        title={deleteTarget ? `Hapus ${deleteTarget.name}?` : ''}
+        message="Data tanaman ini tidak dapat dipulihkan setelah dihapus."
+        confirmLabel="Ya, Hapus"
+        cancelLabel="Batal"
+        danger
+        onConfirm={() => handleDelete(deleteTarget)}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </Layout>
   );
 }

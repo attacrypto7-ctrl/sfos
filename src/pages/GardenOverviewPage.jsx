@@ -67,7 +67,7 @@ function formatTime(minutes) {
 
 // ── Bar Chart Canvas ─────────────────────────────────────────
 
-function MoistureBarChart({ plants }) {
+function MoistureBarChart({ plants, loading }) {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -172,8 +172,17 @@ function MoistureBarChart({ plants }) {
       const label = plant.name.length > 8 ? plant.name.slice(0, 7) + '…' : plant.name;
       ctx.fillText(label, cx, H - padB + 36);
     });
-  }, [plants]);
+  }, [plants, loading]);
 
+  if (loading) {
+    return (
+      <div className="chart-skeleton" aria-hidden="true">
+        {[58, 44, 72, 52, 66, 40, 78, 47].map((h, i) => (
+          <div key={i} className="skeleton-bar" style={{ height: `${h}%` }}></div>
+        ))}
+      </div>
+    );
+  }
   if (!plants.length) return null;
   return <canvas ref={canvasRef} aria-label="Bar chart perbandingan kelembaban tanaman" role="img" />;
 }
@@ -236,7 +245,7 @@ function HealthGauge({ score, animated }) {
 // ── Main Page ─────────────────────────────────────────────────
 
 export default function GardenOverviewPage() {
-  const { plants, showToast, loadPlants } = useApp();
+  const { plants, plantsLoading, showToast, loadPlants } = useApp();
   const navigate = useNavigate();
   const [wateringId, setWateringId] = useState(null);
   const [gaugeAnimated, setGaugeAnimated] = useState(false);
@@ -429,7 +438,7 @@ export default function GardenOverviewPage() {
           </div>
         </div>
         <div className="garden-chart-wrap">
-          <MoistureBarChart plants={plants} />
+          <MoistureBarChart plants={plants} loading={plantsLoading} />
         </div>
       </div>
 

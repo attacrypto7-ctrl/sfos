@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
+import ConfirmModal from '../components/ConfirmModal';
 import { updateProfileApi, updateNotificationsApi, changePasswordApi } from '../services/plantService';
 import '../css/app.css';
 
@@ -30,6 +31,7 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [savingPassword, setSavingPassword] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const handleSaveProfile = async (e) => {
     e.preventDefault();
@@ -67,10 +69,9 @@ export default function ProfilePage() {
   };
 
   const handleLogout = () => {
-    if (window.confirm('Keluar dari akun ini?')) {
-      logoutUser();
-      navigate('/login');
-    }
+    setShowLogoutConfirm(false);
+    logoutUser();
+    navigate('/login');
   };
 
   const handleChangePassword = () => {
@@ -200,7 +201,7 @@ export default function ProfilePage() {
                 </svg>
                 Ganti Kata Sandi
               </button>
-              <button className="profile-menu-item danger" onClick={handleLogout} role="menuitem" aria-label="Keluar dari akun">
+              <button className="profile-menu-item danger" onClick={() => setShowLogoutConfirm(true)} role="menuitem" aria-label="Keluar dari akun">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                   <polyline points="16 17 21 12 16 7" />
@@ -469,6 +470,18 @@ export default function ProfilePage() {
           </div>
         </div>
       )}
+
+      {/* Konfirmasi keluar akun */}
+      <ConfirmModal
+        open={showLogoutConfirm}
+        title="Keluar dari akun ini?"
+        message="Kamu perlu masuk kembali untuk mengakses kebunmu."
+        confirmLabel="Ya, Keluar"
+        cancelLabel="Batal"
+        danger
+        onConfirm={handleLogout}
+        onCancel={() => setShowLogoutConfirm(false)}
+      />
     </>
   );
 }

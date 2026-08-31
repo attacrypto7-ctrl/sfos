@@ -21,6 +21,7 @@ export default function PlantDetailPage() {
   const [loading, setLoading] = useState(true);
   const [chartMode, setChartMode] = useState('daily');
   const [chartData, setChartData] = useState(null);
+  const [chartLoading, setChartLoading] = useState(false);
   const [watering, setWatering] = useState(false);
   const [waterMsg, setWaterMsg] = useState('');
   const canvasRef = useRef(null);
@@ -44,11 +45,14 @@ export default function PlantDetailPage() {
   // Load chart data
   const loadChartData = async () => {
     if (!plantId) return;
+    setChartLoading(true);
     try {
       const data = await fetchPlantChartHistory(plantId, chartMode);
       setChartData(data);
     } catch (err) {
       console.error('Gagal load chart:', err.message);
+    } finally {
+      setChartLoading(false);
     }
   };
 
@@ -395,7 +399,16 @@ export default function PlantDetailPage() {
               </div>
             </div>
             <div className="chart-canvas-wrap">
-              <canvas id="moistureChart" ref={canvasRef} aria-label="Grafik kelembaban tanah" role="img"></canvas>
+              {chartLoading || !chartData ? (
+                <div className="chart-skeleton-line" aria-hidden="true">
+                  <div className="skeleton-line" style={{ width: '92%' }}></div>
+                  <div className="skeleton-line" style={{ width: '76%' }}></div>
+                  <div className="skeleton-line" style={{ width: '84%' }}></div>
+                  <div className="skeleton-line" style={{ width: '62%' }}></div>
+                </div>
+              ) : (
+                <canvas id="moistureChart" ref={canvasRef} aria-label="Grafik kelembaban tanah" role="img"></canvas>
+              )}
             </div>
           </div>
 

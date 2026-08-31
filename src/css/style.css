@@ -85,6 +85,7 @@
   --ease-drift: cubic-bezier(0.44, 0.05, 0.55, 0.95);
   --ease-float: cubic-bezier(0.37, 0, 0.63, 1);
   --ease-sonar: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   
   --duration-pulse: 2s;
   --duration-drift: 25s;
@@ -193,7 +194,7 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
   transition: var(--transition-normal);
   white-space: nowrap;
 }
-.btn:active { transform: scale(0.97); }
+.btn:active { transform: scale(0.95); }
 
 .btn-primary {
   background: var(--color-primary);
@@ -270,6 +271,49 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
 .btn-icon-sm {
   width: 32px;
   height: 32px;
+}
+
+/* ── Click Particle FX Layer ── */
+.fx-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  overflow: hidden;
+}
+.fx-particle {
+  position: fixed;
+  width: 12px;
+  height: 12px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: var(--color-primary);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  animation: fx-burst 0.95s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+.fx-particle.water {
+  width: 9px;
+  height: 13px;
+  background: linear-gradient(135deg, #a8dcff, #5cb8ea);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+}
+.fx-particle.leaf {
+  width: 11px;
+  height: 14px;
+  background: linear-gradient(135deg, #4dd9a8, var(--color-primary-mid));
+  border-radius: 0 50% 0 50%;
+}
+@keyframes fx-burst {
+  0% {
+    transform: translate(-50%, -50%) translate(0, 0) rotate(0deg) scale(0.4);
+    opacity: 0;
+  }
+  18% { opacity: 1; }
+  100% {
+    transform: translate(-50%, -50%) translate(var(--tx, 0), var(--ty, 0)) rotate(var(--rot, 0deg)) scale(1);
+    opacity: 0;
+  }
 }
 
 /* ── Cards ── */
@@ -616,7 +660,7 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
   justify-content: center;
   padding: var(--space-4);
   opacity: 0;
-  animation: fadeIn 0.2s ease forwards;
+  animation: fadeIn 0.25s ease forwards;
 }
 .modal {
   background: var(--color-white);
@@ -625,10 +669,21 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
   max-width: 480px;
   width: 100%;
   box-shadow: var(--shadow-xl);
-  animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  animation: springIn 0.55s var(--ease-spring) both;
 }
-@keyframes fadeIn  { to { opacity: 1; } }
-@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes springIn {
+  0%   { opacity: 0; transform: translateY(34px) scale(0.92); }
+  55%  { opacity: 1; transform: translateY(-6px) scale(1.02); }
+  75%  { transform: translateY(2px) scale(0.995); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* Dipakai oleh modal inline (PendingApprovalModal, Ganti Kata Sandi) */
+@keyframes slideUp {
+  0%   { opacity: 0; transform: translateY(34px) scale(0.94); }
+  60%  { opacity: 1; transform: translateY(-5px) scale(1.02); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 /* ── App Layout ── */
 .app-layout {
@@ -995,7 +1050,8 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
   .ambient-float,
   .ambient-drift,
   .sonar-ring,
-  .shimmer-wrap::after {
+  .shimmer-wrap::after,
+  .fx-particle {
     animation: none !important;
     transform: none !important;
     opacity: 1 !important;

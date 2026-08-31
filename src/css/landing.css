@@ -176,7 +176,6 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: var(--space-5);
-  animation: fadeUp 0.6s ease both;
 }
 
 .hero-title {
@@ -184,7 +183,6 @@
   font-weight: 800;
   line-height: 1.15;
   margin-bottom: var(--space-5);
-  animation: fadeUp 0.7s ease 0.1s both;
 }
 .hero-title .highlight {
   color: var(--color-primary);
@@ -206,14 +204,12 @@
   color: var(--color-text-sub);
   margin-bottom: var(--space-8);
   line-height: 1.7;
-  animation: fadeUp 0.7s ease 0.2s both;
 }
 
 .hero-cta {
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  animation: fadeUp 0.7s ease 0.3s both;
   flex-wrap: wrap;
 }
 
@@ -222,7 +218,6 @@
   align-items: center;
   gap: var(--space-3);
   margin-top: var(--space-8);
-  animation: fadeUp 0.7s ease 0.4s both;
 }
 .trust-avatars {
   display: flex;
@@ -254,45 +249,45 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: fadeIn 0.8s ease 0.3s both;
 }
 .hero-illustration {
   width: 100%;
   max-width: 520px;
   position: relative;
+  transform: translateZ(0);
 }
 
 /* Floating cards on hero */
 .hero-float-card {
   position: absolute;
-  background: white;
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  box-shadow: var(--shadow-lg);
+  z-index: 5;
+  transform-style: preserve-3d;
+  transform: perspective(700px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.18s var(--ease-float), box-shadow 0.3s ease;
+  will-change: transform;
+}
+.hero-float-inner {
   display: flex;
   align-items: center;
   gap: var(--space-2);
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--color-text);
+  background: white;
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  box-shadow: var(--shadow-lg);
   animation: float 4s ease-in-out infinite;
-  z-index: 5;
 }
-.hero-float-card.card-1 {
-  top: 10%;
-  right: -5%;
-  animation-delay: 0s;
+.hero-float-card:hover .hero-float-inner {
+  box-shadow: 0 18px 40px rgba(15, 110, 86, 0.2);
 }
-.hero-float-card.card-2 {
-  bottom: 25%;
-  left: -8%;
-  animation-delay: 1.5s;
-}
-.hero-float-card.card-3 {
-  bottom: 8%;
-  right: 5%;
-  animation-delay: 0.75s;
-}
+.hero-float-card.card-1 { top: 10%; right: -5%; animation-delay: 0s; }
+.hero-float-card.card-2 { bottom: 25%; left: -8%; }
+.hero-float-card.card-3 { bottom: 8%; right: 5%; }
+.hero-float-card.card-1 .hero-float-inner { animation-delay: 0s; }
+.hero-float-card.card-2 .hero-float-inner { animation-delay: 1.5s; }
+.hero-float-card.card-3 .hero-float-inner { animation-delay: 0.75s; }
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -591,6 +586,75 @@
 .reveal.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* ════════════════════════════════════════════
+   ENTRANCE — tampil berurutan (staggered) setelah
+   loading screen selesai (class .is-loaded)
+   ════════════════════════════════════════════ */
+.landing-body .hero-eyebrow,
+.landing-body .hero-title,
+.landing-body .hero-desc,
+.landing-body .hero-cta,
+.landing-body .hero-trust,
+.landing-body .hero-visual {
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 0.85s var(--ease-float),
+    transform 0.85s var(--ease-float);
+  will-change: opacity, transform;
+}
+.landing-body.is-loaded .hero-eyebrow {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.05s;
+}
+.landing-body.is-loaded .hero-title {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
+.landing-body.is-loaded .hero-desc {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.34s;
+}
+.landing-body.is-loaded .hero-cta {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.48s;
+}
+.landing-body.is-loaded .hero-trust {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.6s;
+}
+.landing-body.is-loaded .hero-visual {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.15s;
+}
+
+/* ── Mikro-interaksi tombol Hero ── */
+.hero-cta-btn {
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease, background 0.3s ease;
+  will-change: transform;
+}
+.hero-cta-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  animation: heroBounce 0.55s var(--ease-spring) both;
+}
+.hero-cta-btn:active {
+  transform: scale(0.95);
+  animation: none;
+}
+@keyframes heroBounce {
+  0%   { transform: translateY(0) scale(1); }
+  30%  { transform: translateY(-7px) scale(1.05); }
+  55%  { transform: translateY(0) scale(1.02); }
+  75%  { transform: translateY(-2px) scale(1); }
+  100% { transform: translateY(-3px) scale(1.04); }
 }
 
 /* ── Responsive Landing ── */

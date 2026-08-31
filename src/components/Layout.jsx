@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import VoiceOrb from './VoiceOrb';
 import LoadingScreen from './LoadingScreen';
@@ -8,6 +8,10 @@ export default function Layout({ children, title }) {
   const { user, plants, showToast, plantsLoading } = useApp();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Dashboard punya Loading Screen full-screen sendiri → inline loader tidak perlu
+  const inlineLoader = plantsLoading && plants.length === 0 && location.pathname !== '/dashboard';
 
   // Theme state management
   const [theme, setTheme] = useState(() => {
@@ -204,14 +208,17 @@ export default function Layout({ children, title }) {
           </header>
 
           <main className="app-main" id="main-content">
-            {plantsLoading && plants.length === 0 ? (
-              <LoadingScreen label="Memuat kebun anda" sublabel="Mengambil data terbaru dari sensor kebun…" inline />
+            {inlineLoader ? (
+              <LoadingScreen label="Memuat kebun anda..." sublabel="Mengambil data terbaru dari sensor kebun…" inline />
             ) : (
               children
             )}
           </main>
         </div>
       </div>
+
+      {/* Click Particle FX Layer */}
+      <div id="fx-layer" className="fx-layer" aria-hidden="true"></div>
 
       {/* Bottom Navigation (mobile) */}
       <nav className="bottom-nav" role="navigation" aria-label="Navigasi bawah">
