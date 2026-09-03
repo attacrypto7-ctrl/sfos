@@ -326,7 +326,7 @@ export default function DashboardPage() {
           className={`boot-overlay${bootState === 'reveal' ? ' is-fading' : ''}`}
           aria-hidden={bootState === 'reveal'}
         >
-          <LoadingScreen label="Memuat kebun anda..." sublabel="Menyiapkan tanaman dan sensor terbaik untukmu…" />
+          <LoadingScreen label="Memuat kebun anda..." />
         </div>
       )}
     </>

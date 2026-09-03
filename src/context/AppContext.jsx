@@ -11,6 +11,12 @@ export const AppProvider = ({ children }) => {
   const [authLoading, setAuthLoading] = useState(true);
   const [plantsLoading, setPlantsLoading] = useState(false);
 
+  // State in-memory: menandai apakah LandingPage sudah pernah ditampilkan.
+  // Bisa di-mount ulang dari rute lain (mis. dari /login kembali ke Beranda)
+  // tanpa loading screen berulang. Akan reset saat aplikasi di-reload penuh.
+  const [landingSeen, setLandingSeen] = useState(false);
+  const markLandingSeen = useCallback(() => setLandingSeen(true), []);
+
   // Worker/admin: ID user yang sedang dikelola (null = diri sendiri untuk role user)
   const [selectedManagedUserId, setSelectedManagedUserId] = useState(null);
 
@@ -126,6 +132,8 @@ export const AppProvider = ({ children }) => {
       plantsLoading,
       selectedManagedUserId,
       setSelectedManagedUserId,
+      landingSeen,
+      markLandingSeen,
     }}>
       {children}
       {/* Global Toast UI */}

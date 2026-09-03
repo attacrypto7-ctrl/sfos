@@ -250,11 +250,29 @@
   justify-content: center;
   align-items: center;
 }
-.hero-illustration {
+.hero-illustration-wrap {
+  position: relative;
   width: 100%;
   max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.hero-illustration {
+  width: 100%;
   position: relative;
   transform: translateZ(0);
+}
+
+/* Keterangan kecil "Ilustrasi" — di atas kotak hijau, rata kiri */
+.hero-illustration-caption {
+  font-size: 12px; /* text-xs */
+  line-height: 1;
+  font-weight: 400;
+  color: #9ca3af; /* text-gray-400 */
+  letter-spacing: 0.02em;
+  margin-bottom: 8px; /* mb-2 */
+  pointer-events: none;
 }
 
 /* Floating cards on hero */
@@ -380,6 +398,12 @@
 }
 
 /* ── Stats Section ── */
+/* Section target navigasi: beri jarak agar tidak tertutup navbar fixed */
+#features,
+#how-it-works,
+#stats {
+  scroll-margin-top: 72px;
+}
 .stats-section {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
   padding: var(--space-16) var(--space-8);
@@ -388,12 +412,13 @@
 .stats-grid {
   max-width: 900px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-8);
+  display: flex;
+  justify-content: center;
   text-align: center;
 }
-.stat-item {}
+.stat-item {
+  min-width: 320px;
+}
 .stat-number {
   font-size: 52px;
   font-weight: 800;
@@ -591,49 +616,44 @@
 /* ════════════════════════════════════════════
    ENTRANCE — tampil berurutan (staggered) setelah
    loading screen selesai (class .is-loaded)
+   ────────────────────────────────────────────
+   Konten Hero SELALU TAMPAK secara default (opacity 1)
+   agar tidak pernah blank screen. Elemen hanya
+   disembunyikan saat .is-loading (ditutupi overlay),
+   lalu dimunculkan lewat CSS animation yang
+   dijamin berakhir pada keadaan terlihat.
    ════════════════════════════════════════════ */
 .landing-body .hero-eyebrow,
 .landing-body .hero-title,
 .landing-body .hero-desc,
 .landing-body .hero-cta,
-.landing-body .hero-trust,
 .landing-body .hero-visual {
+  opacity: 1;
+  transform: none;
+}
+
+/* Saat loading: sembunyikan (overlay loading menutupi layar) */
+.landing-body.is-loading .hero-eyebrow,
+.landing-body.is-loading .hero-title,
+.landing-body.is-loading .hero-desc,
+.landing-body.is-loading .hero-cta,
+.landing-body.is-loading .hero-visual {
   opacity: 0;
   transform: translateY(26px);
-  transition:
-    opacity 0.85s var(--ease-float),
-    transform 0.85s var(--ease-float);
-  will-change: opacity, transform;
 }
-.landing-body.is-loaded .hero-eyebrow {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.05s;
-}
-.landing-body.is-loaded .hero-title {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.2s;
-}
-.landing-body.is-loaded .hero-desc {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.34s;
-}
-.landing-body.is-loaded .hero-cta {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.48s;
-}
-.landing-body.is-loaded .hero-trust {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.6s;
-}
-.landing-body.is-loaded .hero-visual {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: 0.15s;
+
+/* Setelah loading selesai: muncul berurutan via CSS animation
+   (animation-fill-mode: backwards → selama delay tetap hidden,
+   dan selalu berakhir opacity:1 / visible) */
+.landing-body.is-loaded .hero-eyebrow { animation: heroEntrance 0.85s var(--ease-float) 0.05s backwards; }
+.landing-body.is-loaded .hero-title   { animation: heroEntrance 0.85s var(--ease-float) 0.2s backwards; }
+.landing-body.is-loaded .hero-desc    { animation: heroEntrance 0.85s var(--ease-float) 0.34s backwards; }
+.landing-body.is-loaded .hero-cta     { animation: heroEntrance 0.85s var(--ease-float) 0.48s backwards; }
+.landing-body.is-loaded .hero-visual  { animation: heroEntrance 0.85s var(--ease-float) 0.15s backwards; }
+
+@keyframes heroEntrance {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Mikro-interaksi tombol Hero ── */
@@ -668,7 +688,6 @@
   .features-grid { grid-template-columns: repeat(2, 1fr); }
   .steps-grid    { grid-template-columns: 1fr; gap: var(--space-6); }
   .steps-grid::before { display: none; }
-  .stats-grid    { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 768px) {
   .landing-nav { padding: 0 var(--space-4); }
@@ -677,7 +696,7 @@
   .hero-inner   { padding: 0 var(--space-4); }
   .features     { padding: var(--space-12) var(--space-4); }
   .features-grid { grid-template-columns: 1fr; }
-  .stats-grid    { grid-template-columns: 1fr; gap: var(--space-6); }
+  .stat-item    { min-width: 0; width: 100%; }
   .how-it-works  { padding: var(--space-12) var(--space-4); }
   .cta-section   { padding: var(--space-12) var(--space-4); }
   .hero-float-card { display: none; }

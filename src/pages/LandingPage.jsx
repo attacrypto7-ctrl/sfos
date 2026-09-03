@@ -1,23 +1,21 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
+import { useApp } from '../context/AppContext';
 import '../css/landing.css';
 
 export default function LandingPage() {
+  const { landingSeen, markLandingSeen } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // State in-memory global (Context): loading hanya saat aplikasi pertama
+  // kali dibuka (landingSeen = false). Saat komponen di-mount ulang dari
+  // rute lain (mis. kembali dari /login), landingSeen sudah true → loading
+  // langsung dilewati. Konten Hero selalu di-render.
+  const [loading, setLoading] = useState(!landingSeen);
 
   // Ref untuk tilt floating cards
   const cardTiltRefs = useRef([]);
-
-  // Counter states
-  const [petani, setPetani] = useState(0);
-  const [kepuasan, setKepuasan] = useState(0);
-  const [air, setAir] = useState(0);
-
-  const statsSectionRef = useRef(null);
-  const [statsAnimated, setStatsAnimated] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,26 +24,6 @@ export default function LandingPage() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  // Intersection observer for counters
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !statsAnimated) {
-          setStatsAnimated(true);
-          animateValue(0, 2400, 1600, setPetani, '+');
-          animateValue(0, 98, 1600, setKepuasan, '%');
-          animateValue(0, 1200000, 1600, setAir, '');
-        }
-      },
-      { threshold: 0.4 }
-    );
-
-    if (statsSectionRef.current) {
-      observer.observe(statsSectionRef.current);
-    }
-    return () => observer.disconnect();
-  }, [statsAnimated]);
 
   // Reveal scroll animations
   useEffect(() => {
@@ -65,11 +43,17 @@ export default function LandingPage() {
     return () => revealObserver.disconnect();
   }, []);
 
-  // Loading screen untuk kunjungan pertama — tampil beberapa detik lalu hilang
+  // Loading screen untuk kunjungan pertama dalam sesi ini.
+  // Timer menandai state global (markLandingSeen) + melepas LoadingScreen
+  // setelah ~3,6 detik. Prioritas: konten Hero tidak pernah terblokir.
   useEffect(() => {
-    const timer = window.setTimeout(() => setLoading(false), 3600);
+    if (!loading) return;
+    const timer = window.setTimeout(() => {
+      markLandingSeen();
+      setLoading(false);
+    }, 3600);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [loading, markLandingSeen]);
 
   // Lock scroll saat loading screen tampil
   useEffect(() => {
@@ -78,6 +62,17 @@ export default function LandingPage() {
   }, [loading]);
 
   // Efek 3D tilt pada floating cards yang merespons gerakan mouse
+  // Smooth scroll ke section yang dituju (mis. #stats) dengan presisi.
+  // Menggunakan scrollIntoView({ behavior: 'smooth' }) agar tidak melompat
+  // kaku, dan mencegah default anchor melompat tiba-tiba.
+  const handleAnchorClick = (e, selector) => {
+    const target = document.querySelector(selector);
+    if (target && target.scrollIntoView) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const handleCardMove = (e, index) => {
     const card = cardTiltRefs.current[index];
     if (!card) return;
@@ -95,44 +90,27 @@ export default function LandingPage() {
     card.style.setProperty('--ry', '0deg');
   };
 
-  const animateValue = (start, end, duration, setter, suffix) => {
-    let startTimestamp = null;
-    const step = (timestamp) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const current = Math.floor(progress * (end - start) + start);
-      setter(current.toLocaleString('id-ID') + suffix);
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
-    };
-    window.requestAnimationFrame(step);
-  };
-
   return (
     <div className={`landing-body${loading ? ' is-loading' : ' is-loaded'}`}>
       {/* Loading Screen interaktif untuk kunjungan pertama */}
       {loading && (
-        <LoadingScreen
-          label="Memuat kebun anda..."
-          sublabel="Pengunjung dapat menyiram bibit untuk mempercepat proses"
-        />
+        <LoadingScreen label="Memuat kebun anda..." />
       )}
 
       {/* Navbar */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
-        <Link to="/" className="nav-logo" aria-label="Tanamanku beranda">
+        <Link to="/" className="nav-logo" aria-label="Kebunku beranda">
           <div className="nav-logo-mark">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
             </svg>
           </div>
-          <span className="nav-logo-name">Tanamanku</span>
+          <span className="nav-logo-name">Kebunku</span>
         </Link>
         <div className="nav-links" role="list">
-          <a href="#features" role="listitem">Fitur</a>
-          <a href="#how-it-works" role="listitem">Cara Kerja</a>
-          <a href="#stats" role="listitem">Statistik</a>
+          <a href="#features" role="listitem" onClick={(e) => handleAnchorClick(e, '#features')}>Fitur</a>
+          <a href="#how-it-works" role="listitem" onClick={(e) => handleAnchorClick(e, '#how-it-works')}>Cara Kerja</a>
+          <a href="#stats" role="listitem" onClick={(e) => handleAnchorClick(e, '#stats')}>Statistik</a>
         </div>
         <div className="nav-actions">
           <Link to="/login" className="btn btn-ghost btn-sm">Masuk</Link>
@@ -151,9 +129,9 @@ export default function LandingPage() {
       {/* Mobile nav links toggle */}
       {mobileMenuOpen && (
         <div className="mobile-nav-panel">
-          <a href="#features" onClick={() => setMobileMenuOpen(false)}>Fitur</a>
-          <a href="#how-it-works" onClick={() => setMobileMenuOpen(false)}>Cara Kerja</a>
-          <a href="#stats" onClick={() => setMobileMenuOpen(false)}>Statistik</a>
+          <a href="#features" onClick={(e) => { handleAnchorClick(e, '#features'); setMobileMenuOpen(false); }}>Fitur</a>
+          <a href="#how-it-works" onClick={(e) => { handleAnchorClick(e, '#how-it-works'); setMobileMenuOpen(false); }}>Cara Kerja</a>
+          <a href="#stats" onClick={(e) => { handleAnchorClick(e, '#stats'); setMobileMenuOpen(false); }}>Statistik</a>
           <Link to="/login" className="btn btn-outline btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Masuk</Link>
           <Link to="/register" className="btn btn-primary btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Mulai Gratis</Link>
         </div>
@@ -175,7 +153,7 @@ export default function LandingPage() {
           <div className="hero-content">
             <div className="hero-eyebrow" aria-label="Tag produk">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" /></svg>
-              Pertanian Berbasis IoT & AI
+              Pertanian Berbasis AIoT
             </div>
             <h1 className="hero-title" id="hero-headline">
               Kebunmu Tumbuh,<br />
@@ -193,20 +171,13 @@ export default function LandingPage() {
               </Link>
               <Link to="/login" className="btn btn-outline btn-lg hero-cta-btn">Masuk Akun</Link>
             </div>
-            <div className="hero-trust">
-              <div className="trust-avatars" aria-hidden="true">
-                <div className="trust-avatar">BS</div>
-                <div className="trust-avatar">AR</div>
-                <div className="trust-avatar">DW</div>
-                <div className="trust-avatar">+</div>
-              </div>
-              <p className="trust-text"><strong>2,400+</strong> petani sudah bergabung</p>
-            </div>
           </div>
 
           <div className="hero-visual" aria-hidden="true">
-            <div className="hero-illustration">
-              <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="hero-illustration-wrap">
+              <span className="hero-illustration-caption">Ilustrasi</span>
+              <div className="hero-illustration">
+                <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <rect width="480" height="420" rx="24" fill="#F2FBF7" />
                 <ellipse cx="240" cy="360" rx="200" ry="40" fill="#E1F5EE" />
                 <path d="M40 340 Q120 300 200 330 Q280 300 360 330 Q430 310 440 340 L440 400 L40 400 Z" fill="#9FE1CB" opacity="0.5" />
@@ -285,6 +256,7 @@ export default function LandingPage() {
                   <line x1="15" y1="0" x2="15" y2="20" stroke="#0F6E56" strokeWidth="1" />
                 </g>
               </svg>
+            </div>
             </div>
 
             {/* Floating cards — efek 3D tilt mengikuti gerakan mouse */}
@@ -389,19 +361,11 @@ export default function LandingPage() {
       </section>
 
       {/* Stats */}
-      <section className="stats-section" id="stats" ref={statsSectionRef}>
+      <section className="stats-section" id="stats">
         <div className="stats-grid">
           <div className="stat-item reveal">
-            <div className="stat-number">{petani || '0+'}</div>
-            <div className="stat-label">Petani Aktif</div>
-          </div>
-          <div className="stat-item reveal" style={{ transitionDelay: '.1s' }}>
-            <div className="stat-number">{kepuasan || '0%'}</div>
+            <div className="stat-number">0%</div>
             <div className="stat-label">Kepuasan Pengguna</div>
-          </div>
-          <div className="stat-item reveal" style={{ transitionDelay: '.2s' }}>
-            <div className="stat-number">{air || '0'}</div>
-            <div className="stat-label">Liter Air Dihemat</div>
           </div>
         </div>
       </section>

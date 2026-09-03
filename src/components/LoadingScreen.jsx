@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../css/loading.css';
 
 const STEPS = [
@@ -9,12 +9,9 @@ const STEPS = [
   'Merawat tanaman terbaik…',
 ];
 
-export default function LoadingScreen({ label = 'Memuat kebun anda...', sublabel, inline = false }) {
+export default function LoadingScreen({ label = 'Memuat kebun anda...', inline = false }) {
   const [progress, setProgress] = useState(0);
   const [step, setStep] = useState(0);
-  const [bursts, setBursts] = useState([]);
-  const [justWatered, setJustWatered] = useState(false);
-  const burstId = useRef(0);
 
   // Biarkan progress tumbuh alami / otomatis
   useEffect(() => {
@@ -29,18 +26,6 @@ export default function LoadingScreen({ label = 'Memuat kebun anda...', sublabel
     const idx = Math.min(Math.floor((progress / 100) * STEPS.length), STEPS.length - 1);
     setStep(idx);
   }, [progress]);
-
-  // Interaksi: klik/siram untuk mempercepat loading (+5% per klik)
-  const water = useCallback(() => {
-    const id = ++burstId.current;
-    setBursts((b) => [...b, { id, x: 18 + Math.random() * 64 }]);
-    setProgress((p) => Math.min(100, p + 5));
-    setJustWatered(true);
-    window.setTimeout(() => {
-      setBursts((b) => b.filter((d) => d.id !== id));
-      setJustWatered(false);
-    }, 1100);
-  }, []);
 
   const grow = 0.22 + (progress / 100) * 0.78;
   const pct = Math.round(progress);
@@ -67,15 +52,14 @@ export default function LoadingScreen({ label = 'Memuat kebun anda...', sublabel
         </div>
 
         <h2 className="tmk-title">{label}</h2>
-        {sublabel && <p className="tmk-sub">{sublabel}</p>}
 
-        {/* Skena tumbuhan interaktif */}
-        <div className="tmk-scene" onClick={water} onKeyDown={(e) => e.key === 'Enter' && water()} role="button" tabIndex={0} aria-label="Klik untuk menyiram tanaman">
-          <div className="tmk-hills" aria-hidden="true"></div>
-          <div className="tmk-pot" aria-hidden="true">
+        {/* Skena tumbuhan — tumbuh otomatis mengikuti progress */}
+        <div className="tmk-scene" aria-hidden="true">
+          <div className="tmk-hills"></div>
+          <div className="tmk-pot">
             <span
-              className={`tmk-plant${justWatered ? ' shake' : ''}`}
-              style={{ transform: `scale(${grow})`, '--grow': grow }}
+              className="tmk-plant"
+              style={{ transform: `scale(${grow})` }}
             >
               <svg viewBox="0 0 120 170" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M32 110h56l-7 34h-42z" fill="#7A5C12" />
@@ -89,12 +73,7 @@ export default function LoadingScreen({ label = 'Memuat kebun anda...', sublabel
                 <path d="M40 55 C26 50 16 40 18 28 C32 28 40 40 40 55Z" fill="#2AB88A" />
                 <path d="M80 52 C94 48 102 40 100 28 C86 28 80 40 80 52Z" fill="#28B585" />
               </svg>
-              <span className="tmk-glow" aria-hidden="true"></span>
             </span>
-            <span className="tmk-droplets" aria-hidden="true">
-              {bursts.map((d) => <i key={d.id} style={{ left: `${d.x}%` }}></i>)}
-            </span>
-            <span className="tmk-waterline" aria-hidden="true"></span>
           </div>
         </div>
 
@@ -107,13 +86,6 @@ export default function LoadingScreen({ label = 'Memuat kebun anda...', sublabel
             <span className="tmk-pct">{pct}%</span>
           </div>
         </div>
-
-        <button type="button" className="tmk-water-btn" onClick={water} aria-label="Siram tanaman agar loading lebih cepat (+5%)">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
-          </svg>
-          Siram untuk mempercepat +5%
-        </button>
       </div>
     </div>
   );

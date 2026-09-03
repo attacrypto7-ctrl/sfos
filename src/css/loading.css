@@ -5,7 +5,8 @@
 .tmk-loader {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 100;
+  pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,7 +170,6 @@
   position: relative;
   height: 210px;
   margin: 0 auto var(--space-6);
-  cursor: pointer;
   border-radius: var(--radius-lg);
   background:
     linear-gradient(180deg, rgba(159, 225, 203, 0.25) 0%, rgba(226, 245, 238, 0) 55%),
@@ -216,49 +216,6 @@
   width: 100%;
   height: 100%;
   animation: tmk-float-svg 4s var(--ease-float) infinite;
-}
-.tmk-plant.shake { animation: tmk-shake 0.55s ease; }
-.tmk-plant .tmk-glow {
-  position: absolute;
-  left: 50%;
-  bottom: 10px;
-  width: 26px;
-  height: 26px;
-  transform: translate(-50%, 0);
-  border-radius: 50%;
-  background: radial-gradient(circle, #FDD34D 0%, transparent 70%);
-  opacity: 0;
-  animation: tmk-water-flash 1.1s ease;
-}
-
-/* Tetesan air */
-.tmk-droplets {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 3;
-}
-.tmk-droplets i {
-  position: absolute;
-  top: 6%;
-  width: 8px;
-  height: 11px;
-  background: #BFE9FF;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  box-shadow: 0 0 6px rgba(191, 233, 255, 0.8);
-  animation: tmk-fall 1s ease-in forwards;
-}
-.tmk-waterline {
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  bottom: 22px;
-  height: 5px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(90deg, transparent, rgba(191, 233, 255, 0.9) 30% 70%, transparent);
-  opacity: 0;
-  animation: tmk-waterline 1.1s ease;
-  pointer-events: none;
 }
 
 /* ── Progress ── */
@@ -310,33 +267,6 @@
   border-radius: var(--radius-full);
 }
 
-/* Tombol interaktif */
-.tmk-water-btn {
-  margin-top: var(--space-6);
-  width: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: 12px 20px;
-  border-radius: var(--radius-full);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-  color: white;
-  font-size: var(--font-size-sm);
-  font-weight: 700;
-  box-shadow: 0 6px 20px rgba(29, 158, 117, 0.4);
-  transition: var(--transition-normal);
-}
-.tmk-water-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 26px rgba(29, 158, 117, 0.5);
-}
-.tmk-water-btn:active { transform: scale(0.97); }
-.tmk-water-btn:focus-visible {
-  outline: 2px solid var(--color-primary-dark);
-  outline-offset: 3px;
-}
-
 /* ── Keyframes ── */
 @keyframes tmk-pop {
   from { opacity: 0; transform: translateY(26px) scale(0.96); }
@@ -361,27 +291,6 @@
   100% { transform: translateX(0) scale(1); }
 }
 @keyframes tmk-spin { to { transform: rotate(360deg); } }
-@keyframes tmk-shake {
-  0%, 100% { transform: scale(var(--grow, 1)) rotate(0deg); }
-  20%      { transform: scale(var(--grow, 1)) rotate(-6deg); }
-  45%      { transform: scale(var(--grow, 1)) rotate(6deg); }
-  70%      { transform: scale(var(--grow, 1)) rotate(-3deg); }
-}
-@keyframes tmk-fall {
-  0%   { transform: translateY(0) rotate(45deg); opacity: 0; }
-  15%  { opacity: 1; }
-  100% { transform: translateY(190px) rotate(45deg); opacity: 0; }
-}
-@keyframes tmk-waterline {
-  0%   { opacity: 0; }
-  20%  { opacity: 1; }
-  100% { opacity: 0; }
-}
-@keyframes tmk-water-flash {
-  0%   { opacity: 0; transform: translate(-50%, 0) scale(0.4); }
-  30%  { opacity: 1; transform: translate(-50%, -8px) scale(1.2); }
-  100% { opacity: 0; transform: translate(-50%, -40px) scale(0.7); }
-}
 @keyframes tmk-stripes {
   to { background-position: -200% 0; }
 }

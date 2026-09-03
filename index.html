@@ -1,10 +1,48 @@
 <!doctype html>
-<html lang="en">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tanamanku</title>
+    <title>Kebunku - Kendali Pintar untuk Perawatan Maksimal</title>
+      <script>
+    (function() {
+        var fullTitle = "Kebunku - Kendali Pintar untuk Perawatan Maksimal";
+        var padding = "                              "; // 30 spasi agar masuk dari kanan dengan lapang
+        var displayText = padding + fullTitle + padding;
+        var pos = 0;              // posisi dalam floating point untuk gerakan halus
+        var speed = 0.15;         // karakter per frame – sangat lambat agar mulus
+        var visibleLen = 35;      // panjang teks yang tampil (cukup untuk baca nyaman)
+        var lastStart = -1;
+
+        function update() {
+            var start = Math.floor(pos);
+
+            if (start !== lastStart) {
+                var snippet = displayText.substring(start, start + visibleLen);
+                while (snippet.length < visibleLen) snippet += " ";
+                document.title = snippet;
+                lastStart = start;
+            }
+
+            pos += speed;
+            // Reset posisi dengan smoothing agar tidak loncat
+            if (pos > displayText.length - visibleLen) {
+                pos = 0;
+            }
+        }
+
+        // Gunakan requestAnimationFrame tanpa throttling tambahan
+        // agar sinkron dengan refresh rate monitor (60Hz atau lebih)
+        function tick(time) {
+            update();
+            requestAnimationFrame(tick);
+        }
+
+        // Mulai animasi
+        requestAnimationFrame(tick);
+    })();
+      </script>
   </head>
   <body>
     <div id="root"></div>

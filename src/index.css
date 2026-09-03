@@ -1,1 +1,4 @@
 /* Reset styles done globally via style.css */
+html {
+  scroll-behavior: smooth;
+}

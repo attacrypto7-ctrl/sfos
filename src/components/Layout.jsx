@@ -209,7 +209,7 @@ export default function Layout({ children, title }) {
 
           <main className="app-main" id="main-content">
             {inlineLoader ? (
-              <LoadingScreen label="Memuat kebun anda..." sublabel="Mengambil data terbaru dari sensor kebun…" inline />
+              <LoadingScreen label="Memuat kebun anda..." inline />
             ) : (
               children
             )}

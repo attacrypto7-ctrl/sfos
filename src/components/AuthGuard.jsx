@@ -10,7 +10,6 @@ export default function AuthGuard({ children }) {
     return (
       <LoadingScreen
         label="Memuat kebun anda..."
-        sublabel="Menyiapkan pandangan terbaik untuk kebun Anda…"
       />
     );
   }
