@@ -60,12 +60,10 @@ export default function LoginPage() {
         <div className="auth-panel-left" role="complementary" aria-label="Informasi produk">
           <div className="auth-brand">
             <div className="auth-brand-logo">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
+              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
             </div>
-            <h1 className="auth-brand-name">Tanamanku</h1>
-            <p className="auth-brand-tagline">Aplikasi Pertanian Nomor Satu</p>
+            <h1 className="auth-brand-name">Kebunku</h1>
+            <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
           </div>
 
           <div className="auth-illustration ambient-drift" aria-hidden="true">
@@ -103,26 +101,23 @@ export default function LoginPage() {
             <div className="auth-feature-item" role="listitem">
               <div className="auth-feature-icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <span>Pantau kelembaban tanah real-time</span>
             </div>
             <div className="auth-feature-item" role="listitem">
               <div className="auth-feature-icon" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M19.07 4.93a10 10 0 1 1-14.14 0" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <span>Sistem Irigasi Otomatis berbasis AI</span>
             </div>
             <div className="auth-feature-item" role="listitem">
               <div className="auth-feature-icon" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
               <span>Riwayat penyiraman lengkap</span>

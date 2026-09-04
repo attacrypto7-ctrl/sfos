@@ -67,18 +67,15 @@ export default function RegisterPage() {
           <div className="auth-panel-left" role="complementary">
             <div className="auth-brand">
               <div className="auth-brand-logo">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
+                <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
               </div>
-              <h1 className="auth-brand-name">Tanamanku</h1>
-              <p className="auth-brand-tagline">Aplikasi Pertanian Nomor Satu</p>
+              <h1 className="auth-brand-name">Kebunku</h1>
+              <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
             </div>
           </div>
 
           <div className="auth-panel-right" role="main">
             <div style={{ textAlign: 'center', padding: '40px 0' }}>
-              {/* Success icon */}
               <div style={{
                 width: '72px', height: '72px', borderRadius: '50%',
                 background: 'rgba(29,158,117,0.1)',
@@ -148,12 +145,10 @@ export default function RegisterPage() {
         <div className="auth-panel-left" role="complementary" aria-label="Informasi pendaftaran">
           <div className="auth-brand">
             <div className="auth-brand-logo">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
+              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
             </div>
-            <h1 className="auth-brand-name">Tanamanku</h1>
-            <p className="auth-brand-tagline">Aplikasi Pertanian Nomor Satu</p>
+            <h1 className="auth-brand-name">Kebunku</h1>
+            <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
           </div>
 
           <div className="auth-illustration ambient-drift" aria-hidden="true">
