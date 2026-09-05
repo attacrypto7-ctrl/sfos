@@ -57,7 +57,7 @@ export default function Layout({ children, title }) {
               </svg>
             </div>
             <div className="sidebar-logo-text">
-              <div className="brand-name">Tanamanku</div>
+              <div className="brand-name">Kebunku</div>
               <div className="brand-tag">Pertanian Cerdas</div>
             </div>
           </div>

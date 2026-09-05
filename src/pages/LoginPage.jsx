@@ -60,10 +60,10 @@ export default function LoginPage() {
         <div className="auth-panel-left" role="complementary" aria-label="Informasi produk">
           <div className="auth-brand">
             <div className="auth-brand-logo">
-              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
+              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="112" height="112" />
             </div>
             <h1 className="auth-brand-name">Kebunku</h1>
-            <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
+            <p className="auth-brand-tagline">Kendali Pintar untuk Perawatan Maksimal</p>
           </div>
 
           <div className="auth-illustration ambient-drift" aria-hidden="true">
@@ -112,7 +112,7 @@ export default function LoginPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span>Sistem Irigasi Otomatis berbasis AI</span>
+              <span>Sistem Irigasi Otomatis berbasis IoT</span>
             </div>
             <div className="auth-feature-item" role="listitem">
               <div className="auth-feature-icon" aria-hidden="true">

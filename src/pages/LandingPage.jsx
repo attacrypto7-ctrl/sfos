@@ -93,7 +93,6 @@ export default function LandingPage() {
         <div className="nav-links" role="list">
           <a href="#features" role="listitem" onClick={(e) => handleAnchorClick(e, '#features')}>Fitur</a>
           <a href="#how-it-works" role="listitem" onClick={(e) => handleAnchorClick(e, '#how-it-works')}>Cara Kerja</a>
-          <a href="#stats" role="listitem" onClick={(e) => handleAnchorClick(e, '#stats')}>Statistik</a>
         </div>
         <div className="nav-actions">
           <Link to="/login" className="btn btn-ghost btn-sm">Masuk</Link>
@@ -113,7 +112,6 @@ export default function LandingPage() {
         <div className="mobile-nav-panel">
           <a href="#features" onClick={(e) => { handleAnchorClick(e, '#features'); setMobileMenuOpen(false); }}>Fitur</a>
           <a href="#how-it-works" onClick={(e) => { handleAnchorClick(e, '#how-it-works'); setMobileMenuOpen(false); }}>Cara Kerja</a>
-          <a href="#stats" onClick={(e) => { handleAnchorClick(e, '#stats'); setMobileMenuOpen(false); }}>Statistik</a>
           <Link to="/login" className="btn btn-outline btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Masuk</Link>
           <Link to="/register" className="btn btn-primary btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Mulai Gratis</Link>
         </div>
@@ -338,16 +336,6 @@ export default function LandingPage() {
               <h3 className="feature-title">Riwayat Lengkap</h3>
               <p className="feature-desc">Pantau perjalanan setiap tanamanmu, dari awal ditanam hingga sekarang. Data historis untuk keputusan yang lebih cerdas.</p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Stats ── */}
-      <section className="stats-section" id="stats">
-        <div className="stats-grid">
-          <div className="stat-item reveal">
-            <div className="stat-number">0%</div>
-            <div className="stat-label">Kepuasan Pengguna</div>
           </div>
         </div>
       </section>
