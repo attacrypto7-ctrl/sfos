@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '../css/loading.css';
 
 const STEPS = [
@@ -9,17 +9,43 @@ const STEPS = [
   'Merawat tanaman terbaik…',
 ];
 
-export default function LoadingScreen({ label = 'Memuat kebun anda...', inline = false }) {
+// Total durasi loading: 2.5–3 detik (diambil 2750ms)
+const DURATION_MS = 2750;
+
+export default function LoadingScreen({ label = 'Memuat kebun anda...', inline = false, onComplete }) {
   const [progress, setProgress] = useState(0);
   const [step, setStep] = useState(0);
+  const completedRef = useRef(false);
 
-  // Biarkan progress tumbuh alami / otomatis
+  // Progress bar bergerak mulus dari 0% → 100% tepat dalam DURATION_MS,
+  // lalu (hanya bila disediakan) panggil onComplete ketika menyentuh 100%.
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((p) => (p >= 100 ? 100 : Math.min(100, p + Math.random() * 2.4 + 0.8)));
-    }, 280);
-    return () => clearInterval(timer);
-  }, []);
+    const start = performance.now();
+    let raf;
+
+    const tick = (now) => {
+      // t = 0..1 linear terhadap waktu
+      const t = Math.min(1, (now - start) / DURATION_MS);
+      // easeOutCubic agar percepatan awal lalu melambat di akhir (terasa halus)
+      const eased = 1 - Math.pow(1 - t, 3);
+      const pct = Math.round(eased * 100);
+
+      if (t >= 1) {
+        setProgress(100);
+        if (!completedRef.current) {
+          completedRef.current = true;
+          if (typeof onComplete === 'function') onComplete();
+        }
+        return; // berhenti di 100%, tidak perlu tick berikutnya
+      }
+
+      setProgress(pct);
+      raf = requestAnimationFrame(tick);
+    };
+
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [onComplete]);
 
   // Rotasi pesan mengikuti progress
   useEffect(() => {

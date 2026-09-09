@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
-import LoadingScreen from '../components/LoadingScreen';
 import { waterPlantApi } from '../services/plantService';
 import '../css/app.css';
 
@@ -33,29 +32,6 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const [greeting, setGreeting] = useState('');
 
-  // Loading screen full-screen saat pertama kali masuk dashboard
-  const [bootState, setBootState] = useState('loading'); // 'loading' | 'reveal' | 'done'
-  const firstBoot = useRef(!sessionStorage.getItem('tmk_dash_booted'));
-
-  useEffect(() => {
-    sessionStorage.setItem('tmk_dash_booted', '1');
-  }, []);
-
-  useEffect(() => {
-    if (bootState !== 'loading') return;
-    const startedAt = Date.now();
-    const minShow = firstBoot.current ? 1900 : 650;
-    const timer = setInterval(() => {
-      const elapsed = Date.now() - startedAt;
-      if (!plantsLoading && elapsed >= minShow) {
-        clearInterval(timer);
-        setBootState('reveal');
-        window.setTimeout(() => setBootState('done'), 750);
-      }
-    }, 120);
-    return () => clearInterval(timer);
-  }, [plantsLoading, bootState]);
-
   useEffect(() => {
     const getGreeting = () => {
       const h = new Date().getHours();
@@ -66,8 +42,6 @@ export default function DashboardPage() {
     };
     setGreeting(getGreeting());
   }, []);
-
-  const contentReady = bootState === 'reveal' || bootState === 'done';
 
   const totalPlants = plants.length;
   const goodCount = plants.filter((p) => p.status === 'good').length;
@@ -141,7 +115,7 @@ export default function DashboardPage() {
   return (
     <>
       <Layout title="Dashboard">
-        <div className={`dash-content${contentReady ? ' is-ready' : ''}`}>
+        <div className="dash-content is-ready">
           {/* Greeting */}
           <div className="greeting-section">
             <h2 className="greeting-title" id="greeting-text">
@@ -156,12 +130,14 @@ export default function DashboardPage() {
           <div className="summary-grid" role="region" aria-label="Ringkasan kebun">
             <div className="summary-card">
               <div className="summary-icon green" aria-hidden="true">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                {/* Leaf — Lucide */}
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
                 </svg>
               </div>
               <div>
-                <div className="summary-count"><CountUp value={totalPlants} activate={contentReady} /></div>
+                <div className="summary-count"><CountUp value={totalPlants} activate={true} /></div>
                 <div className="summary-label">Total Tanaman</div>
               </div>
             </div>
@@ -173,7 +149,7 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <div className="summary-count"><CountUp value={goodCount} activate={contentReady} /></div>
+                <div className="summary-count"><CountUp value={goodCount} activate={true} /></div>
                 <div className="summary-label">Kondisi Baik</div>
               </div>
             </div>
@@ -186,7 +162,7 @@ export default function DashboardPage() {
                 </svg>
               </div>
               <div>
-                <div className="summary-count"><CountUp value={warningCount} activate={contentReady} /></div>
+                <div className="summary-count"><CountUp value={warningCount} activate={true} /></div>
                 <div className="summary-label">Perlu Perhatian</div>
               </div>
             </div>
@@ -211,8 +187,12 @@ export default function DashboardPage() {
           {plants.length === 0 ? (
             <div className="empty-state">
               <div className="empty-state-icon">
-                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                {/* Sprout — Lucide */}
+                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M7 20h10" />
+                  <path d="M10 20c5.5-2.5.8-6.4 3-9" />
+                  <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
+                  <path d="M14.1 6a7 7 0 0 1 1.3 4.2 6 6 0 0 1-5.4.5 9 9 0 0 1 3.1-5.5 5 5 0 0 1 1 .8z" />
                 </svg>
               </div>
               <h3>Kebunmu masih kosong</h3>
@@ -233,7 +213,7 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={plant.id}
-                    className={`plant-card${contentReady ? ' is-in' : ''}`}
+                    className="plant-card is-in"
                     onClick={() => navigate(`/plant-detail?id=${plant.id}`)}
                     role="listitem"
                     style={{ '--d': `${index * 0.13}s` }}
@@ -276,9 +256,9 @@ export default function DashboardPage() {
                         <div
                           className="moisture-fill shimmer-wrap"
                           style={{
-                            width: `${contentReady && plant.moisture !== null && plant.moisture !== undefined ? plant.moisture : 0}%`,
+                            width: `${plant.moisture !== null && plant.moisture !== undefined ? plant.moisture : 0}%`,
                             background: `linear-gradient(90deg, ${mColor}88, ${mColor})`,
-                            transitionDelay: contentReady ? `${60 + index * 90}ms` : '0ms',
+                            transitionDelay: `${60 + index * 90}ms`,
                           }}
                         ></div>
                       </div>
@@ -320,15 +300,6 @@ export default function DashboardPage() {
         </div>
       </Layout>
 
-      {/* Full-screen boot overlay */}
-      {bootState !== 'done' && (
-        <div
-          className={`boot-overlay${bootState === 'reveal' ? ' is-fading' : ''}`}
-          aria-hidden={bootState === 'reveal'}
-        >
-          <LoadingScreen label="Memuat kebun anda..." />
-        </div>
-      )}
     </>
   );
 }

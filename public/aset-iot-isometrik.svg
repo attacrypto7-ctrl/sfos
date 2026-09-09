@@ -1,0 +1,87 @@
+<svg viewBox="0 0 800 470" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="isoLeaf1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(200,245,222,0.80)" />
+      <stop offset="1" stopColor="rgba(77,217,168,0.30)" />
+    </linearGradient>
+    <linearGradient id="isoLeaf2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(77,217,168,0.75)" />
+      <stop offset="1" stopColor="rgba(29,158,117,0.30)" />
+    </linearGradient>
+    <linearGradient id="isoLeaf3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(255,255,255,0.65)" />
+      <stop offset="1" stopColor="rgba(255,255,255,0.12)" />
+    </linearGradient>
+    <linearGradient id="isoPot" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(255,255,255,0.88)" />
+      <stop offset="1" stopColor="rgba(207,244,228,0.55)" />
+    </linearGradient>
+    <radialGradient id="isoGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stopColor="rgba(159,225,203,0.20)" />
+      <stop offset="1" stopColor="rgba(159,225,203,0)" />
+    </radialGradient>
+    <filter id="isoBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+  </defs>
+
+  <!-- Ambient glow + ground shadow -->
+  <circle cx="400" cy="300" r="210" fill="url(#isoGlow)" />
+  <ellipse cx="400" cy="368" rx="140" ry="20" fill="rgba(0,90,68,0.32)" filter="url(#isoBlur)" />
+
+  <!-- Floating droplet (left) -->
+  <path d="M292 206c20 26 34 40 34 58a34 34 0 1 1-68 0c0-18 14-32 34-58Z" fill="rgba(255,255,255,0.85)" />
+  <ellipse cx="283" cy="252" rx="7" ry="4" transform="rotate(-35 283 252)" fill="rgba(159,225,203,0.9)" />
+  <circle cx="240" cy="236" r="3" fill="rgba(255,255,255,0.35)" />
+  <circle cx="268" cy="176" r="2.5" fill="rgba(159,225,203,0.5)" />
+
+  <!-- Cloud (top-left) -->
+  <circle cx="302" cy="146" r="22" fill="rgba(255,255,255,0.32)" />
+  <circle cx="326" cy="136" r="17" fill="rgba(255,255,255,0.28)" />
+  <circle cx="282" cy="140" r="15" fill="rgba(255,255,255,0.26)" />
+  <rect x="276" y="150" width="56" height="16" rx="8" fill="rgba(255,255,255,0.24)" />
+
+  <!-- Plant pot (isometric, translucent) -->
+  <ellipse cx="400" cy="361" rx="60" ry="14" fill="rgba(255,255,255,0.72)" />
+  <path d="M362 364 L438 364 L426 408 L374 408 Z" fill="url(#isoPot)" />
+  <path d="M362 364 L374 408 L367 408 L355 364 Z" fill="rgba(29,158,117,0.30)" />
+  <path d="M438 364 L426 408 L433 408 L445 364 Z" fill="rgba(29,158,117,0.20)" />
+  <ellipse cx="400" cy="364" rx="46" ry="10" fill="rgba(15,110,86,0.55)" />
+
+  <!-- Plant stems -->
+  <path d="M400 360 C398 322 395 300 398 268" stroke="rgba(29,158,117,0.55)" strokeWidth="5" fill="none" strokeLinecap="round" />
+  <path d="M398 356 C374 336 350 320 330 308" stroke="rgba(29,158,117,0.45)" strokeWidth="4" fill="none" strokeLinecap="round" />
+  <path d="M402 354 C428 334 452 318 474 306" stroke="rgba(29,158,117,0.40)" strokeWidth="4" fill="none" strokeLinecap="round" />
+
+  <!-- Leaves (3D shaded) -->
+  <ellipse cx="330" cy="296" rx="52" ry="16" transform="rotate(-34 330 296)" fill="url(#isoLeaf1)" />
+  <path d="M330 296 L306 276" stroke="rgba(15,110,86,0.35)" strokeWidth="2" strokeLinecap="round" />
+  <ellipse cx="476" cy="292" rx="48" ry="15" transform="rotate(30 476 292)" fill="url(#isoLeaf2)" />
+  <path d="M476 292 L494 274" stroke="rgba(15,110,86,0.40)" strokeWidth="2" strokeLinecap="round" />
+  <ellipse cx="400" cy="254" rx="44" ry="15" transform="rotate(-8 400 254)" fill="url(#isoLeaf3)" />
+  <path d="M400 254 L400 238" stroke="rgba(15,110,86,0.35)" strokeWidth="2" strokeLinecap="round" />
+
+  <!-- Sensor tower (right) -->
+  <ellipse cx="520" cy="362" rx="12" ry="5" fill="rgba(255,255,255,0.55)" />
+  <path d="M520 360 L520 294" stroke="rgba(255,255,255,0.85)" strokeWidth="5" strokeLinecap="round" />
+  <circle cx="520" cy="290" r="8" fill="rgba(150,255,210,0.95)" filter="url(#isoBlur)" />
+  <circle cx="520" cy="290" r="4.5" fill="#C9FFE9" />
+
+  <!-- Signal arcs (pulse, no spin) -->
+  <path d="M480 290 a40 19 0 0 1 80 0" stroke="rgba(255,255,255,0.38)" strokeWidth="2.5" fill="none" strokeLinecap="round" class="iso-arc iso-arc-1" />
+  <path d="M466 290 a54 26 0 0 1 108 0" stroke="rgba(255,255,255,0.27)" strokeWidth="2.5" fill="none" strokeLinecap="round" class="iso-arc iso-arc-2" />
+  <path d="M452 290 a68 33 0 0 1 136 0" stroke="rgba(255,255,255,0.18)" strokeWidth="2.5" fill="none" strokeLinecap="round" class="iso-arc iso-arc-3" />
+
+  <!-- Wi-Fi glyph (top-right) -->
+  <path d="M540 168 a64 28 0 0 1 112 0" stroke="rgba(255,255,255,0.30)" strokeWidth="4" fill="none" strokeLinecap="round" class="iso-arc iso-arc-1" />
+  <path d="M556 186 a40 18 0 0 1 80 0" stroke="rgba(255,255,255,0.26)" strokeWidth="4" fill="none" strokeLinecap="round" class="iso-arc iso-arc-2" />
+  <circle cx="596" cy="202" r="6" fill="rgba(255,255,255,0.40)" />
+
+  <!-- Floating spark leaves & dots -->
+  <ellipse cx="204" cy="330" rx="16" ry="7" transform="rotate(-22 204 330)" fill="rgba(159,225,203,0.35)" />
+  <ellipse cx="618" cy="352" rx="14" ry="6" transform="rotate(26 618 352)" fill="rgba(255,255,255,0.25)" />
+  <circle cx="170" cy="286" r="3" fill="rgba(255,255,255,0.30)" />
+  <circle cx="652" cy="256" r="2.5" fill="rgba(159,225,203,0.40)" />
+  <circle cx="246" cy="392" r="2.5" fill="rgba(255,255,255,0.28)" />
+  <circle cx="560" cy="404" r="2" fill="rgba(159,225,203,0.35)" />
+</svg>

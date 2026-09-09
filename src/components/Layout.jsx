@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import VoiceOrb from './VoiceOrb';
 import LoadingScreen from './LoadingScreen';
+import NotificationPanel from './NotificationPanel';
 
 export default function Layout({ children, title }) {
-  const { user, plants, showToast, plantsLoading } = useApp();
+  const { user, plants, plantsLoading } = useApp();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -14,14 +15,25 @@ export default function Layout({ children, title }) {
   const inlineLoader = plantsLoading && plants.length === 0 && location.pathname !== '/dashboard';
 
   // Theme state management
+  // Dark mode TERISOLASI di layout dashboard/sidebar (bukan <html> global)
+  // sehingga landing page & halaman auth tetap light mode.
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('tmk_theme') || 'light';
   });
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
+    // Pastikan atribut global pada <html> selalu dibersihkan supaya
+    // tidak bocor ke halaman non-dashboard (landing page, login, register).
+    document.documentElement.removeAttribute('data-theme');
     localStorage.setItem('tmk_theme', theme);
   }, [theme]);
+
+  // Bersihkan kembali saat komponen Layout di-unmount (logout / keluar dashboard)
+  useEffect(() => {
+    return () => {
+      document.documentElement.removeAttribute('data-theme');
+    };
+  }, []);
 
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
@@ -36,10 +48,45 @@ export default function Layout({ children, title }) {
 
   const close = () => setSidebarOpen(false);
 
+  // Notification panel state — lokal di Layout, tidak naik ke context
+  const [notifOpen, setNotifOpen] = useState(false);
+  // "closing" = panel sedang fade-out tapi tetap ter-render (200ms) agar
+  // transisi keluar terlihat halus, bukan langsung hilang.
+  const [notifClosing, setNotifClosing] = useState(false);
+  const notifTimer = useRef(null);
+
+  // Buka panel — dipicu hover (onMouseEnter) pada area lonceng + panel.
+  const openNotifs = useCallback(() => {
+    if (notifTimer.current) clearTimeout(notifTimer.current);
+    setNotifClosing(false);
+    setNotifOpen(true);
+  }, []);
+
+  // Tutup panel — dipicu saat kursor keluar area ikon + panel.
+  // Panel dipertahankan 200ms untuk fade-out lalu benar-benar di-unmount.
+  const closeNotifs = useCallback(() => {
+    if (notifTimer.current) clearTimeout(notifTimer.current);
+    setNotifClosing(true);
+    notifTimer.current = setTimeout(() => {
+      setNotifOpen(false);
+      setNotifClosing(false);
+      notifTimer.current = null;
+    }, 200);
+  }, []);
+
+  // Bersihkan timer jika Layout di-unmount
+  useEffect(() => () => {
+    if (notifTimer.current) clearTimeout(notifTimer.current);
+  }, []);
+
+  // Badge count: tanaman warning + (admin: pending approval tidak dihitung di sini,
+  // karena butuh fetch — cukup tampilkan warningCount sebagai minimum badge)
+  const notifBadge = warningCount;
+
   const ROLE_LABEL = { user: 'User', worker: 'Worker', admin: 'Admin' };
 
   return (
-    <div>
+    <div className="app-shell" data-theme={theme}>
       {/* Sidebar Overlay (mobile) */}
       <div
         className={`sidebar-overlay ${sidebarOpen ? 'open' : ''}`}
@@ -52,9 +99,7 @@ export default function Layout({ children, title }) {
         <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`} role="navigation" aria-label="Navigasi aplikasi">
           <div className="sidebar-logo">
             <div className="sidebar-logo-mark" aria-hidden="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
+              <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="28" height="28" style={{ borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
             </div>
             <div className="sidebar-logo-text">
               <div className="brand-name">Kebunku</div>
@@ -197,13 +242,62 @@ export default function Layout({ children, title }) {
                 )}
               </button>
 
-              <button className="btn btn-ghost btn-icon" aria-label="Notifikasi"
-                onClick={() => showToast('Fitur notifikasi akan segera hadir! 🔔', 'success')}>
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-                </svg>
-              </button>
+              {/* Notifikasi — terbuka saat HOVER lonceng, tutup saat kursor
+                  keluar dari area lonceng + panel (tanpa klik). */}
+              <div
+                style={{ position: 'relative' }}
+                onMouseEnter={openNotifs}
+                onMouseLeave={closeNotifs}
+              >
+                <button
+                  className="btn btn-ghost btn-icon"
+                  aria-label="Notifikasi"
+                  aria-expanded={notifOpen}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                  </svg>
+                  {/* Badge merah angka notifikasi */}
+                  {notifBadge > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '4px', right: '4px',
+                      width: '16px', height: '16px',
+                      background: 'var(--color-danger)',
+                      color: '#fff',
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      borderRadius: 'var(--radius-full)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      lineHeight: 1,
+                      pointerEvents: 'none',
+                    }}>
+                      {notifBadge > 9 ? '9+' : notifBadge}
+                    </span>
+                  )}
+                </button>
+
+                {/* Jembatan hover: menutup celah antara dasar lonceng dan atas panel
+                  (10px) supaya kursor tidak "lepas" saat berpindah ke dalam
+                  panel — mencegah panel bergetar/tertutup tidak sengaja. */}
+                <div
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    height: '10px',
+                  }}
+                />
+
+                <NotificationPanel
+                  open={notifOpen}
+                  closing={notifClosing}
+                  onClose={closeNotifs}
+                />
+              </div>
             </div>
           </header>
 

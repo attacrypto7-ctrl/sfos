@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import { useApp } from '../context/AppContext';
@@ -37,14 +37,12 @@ export default function LandingPage() {
     return () => revealObserver.disconnect();
   }, []);
 
-  useEffect(() => {
-    if (!loading) return;
-    const timer = window.setTimeout(() => {
-      markLandingSeen();
-      setLoading(false);
-    }, 3600);
-    return () => window.clearTimeout(timer);
-  }, [loading, markLandingSeen]);
+  // Main landing page hanya di-render setelah progress loading menyentuh 100%.
+  // onComplete dipanggil dari LoadingScreen tepat saat progress = 100%.
+  const handleLoadingComplete = useCallback(() => {
+    markLandingSeen();
+    setLoading(false);
+  }, [markLandingSeen]);
 
   useEffect(() => {
     document.body.style.overflow = loading ? 'hidden' : '';
@@ -59,7 +57,7 @@ export default function LandingPage() {
     }
   };
 
-  const handleCardMove = (e, index) => {
+  const handleCardMove = useCallback((e, index) => {
     const card = cardTiltRefs.current[index];
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -67,26 +65,26 @@ export default function LandingPage() {
     const py = (e.clientY - rect.top) / rect.height - 0.5;
     card.style.setProperty('--rx', `${(-py * 10).toFixed(2)}deg`);
     card.style.setProperty('--ry', `${(px * 12).toFixed(2)}deg`);
-  };
+  }, []);
 
-  const resetCardTilt = (index) => {
+  const resetCardTilt = useCallback((index) => {
     const card = cardTiltRefs.current[index];
     if (!card) return;
     card.style.setProperty('--rx', '0deg');
     card.style.setProperty('--ry', '0deg');
-  };
+  }, []);
 
   return (
     <div className={`landing-body${loading ? ' is-loading' : ' is-loaded'}`}>
       {loading && (
-        <LoadingScreen label="Memuat kebun anda..." />
+        <LoadingScreen label="Memuat kebun anda..." onComplete={handleLoadingComplete} />
       )}
 
       {/* ── Navbar — Glassmorphism ── */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
         <Link to="/" className="nav-logo" aria-label="Kebunku beranda">
           <div className="nav-logo-mark">
-            <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="40" height="40" />
+            <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="40" height="40" fetchpriority="high" decoding="async" />
           </div>
           <span className="nav-logo-name">Kebunku</span>
         </Link>
@@ -144,9 +142,6 @@ export default function LandingPage() {
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn btn-primary btn-lg hero-cta-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
                 Mulai Sekarang
               </Link>
               <Link to="/login" className="btn btn-outline btn-lg hero-cta-btn">Masuk Akun</Link>
@@ -302,7 +297,7 @@ export default function LandingPage() {
         <div className="section-inner">
           <p className="section-eyebrow">Kenapa Kebunku?</p>
           <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk Kebunmu</h2>
-          <p className="section-sub">Dari sensor tanah hingga AI cerdas — semua bekerja bersama agar tanamanmu selalu mendapatkan yang terbaik.</p>
+          <p className="section-sub">Dari sensor tanah hingga <b>Sistem IoT cerdas</b> — semua bekerja bersama agar tanamanmu selalu terawat dengan baik.</p>
 
           <div className="features-grid">
             <div className="feature-card reveal">
@@ -312,7 +307,7 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="feature-title">Selalu Terpantau</h3>
-              <p className="feature-desc">Kelembaban tanah, kondisi tanaman, semua bisa kamu lihat langsung dari genggaman. Data real-time setiap saat.</p>
+              <p className="feature-desc">Kelembaban tanah, kondisi tanaman, semua bisa kamu lihat langsung dari genggaman secara <q>real-time</q> setiap saat.</p>
             </div>
             <div className="feature-card reveal" style={{ transitionDelay: '.1s' }}>
               <div className="feature-icon">
@@ -322,7 +317,7 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="feature-title">Siram Otomatis, Tanpa Ribet</h3>
-              <p className="feature-desc">Tanaman haus? Kebunku sudah tahu duluan dan langsung bertindak. AI kami memastikan tidak ada yang disiram berlebihan.</p>
+              <p className="feature-desc">Tanaman haus? Kebunku sudah tahu duluan dan langsung bertindak. Sistem IoT kami dengan kontrol jarak jauh memastikan tidak ada yang disiram berlebihan.</p>
             </div>
             <div className="feature-card reveal" style={{ transitionDelay: '.2s' }}>
               <div className="feature-icon">
@@ -370,13 +365,10 @@ export default function LandingPage() {
       {/* ── CTA ── */}
       <section className="cta-section" aria-labelledby="cta-title">
         <div className="cta-inner">
-          <h2 id="cta-title" className="reveal">Siap Mulai Bertani Lebih Cerdas?</h2>
-          <p className="reveal" style={{ transitionDelay: '.1s' }}>Bergabung dengan ribuan petani yang sudah merasakan kemudahan Kebunku. Gratis untuk 30 hari pertama.</p>
+          <h2 id="cta-title" className="reveal">Siap Mengotomatiskan Irigasi Kebun Anda?</h2>
+          <p className="reveal" style={{ transitionDelay: '.1s' }}>Pantau kelembapan tanah dan kendalikan penyiraman secara real-time dari mana saja dengan keandalan sistem IoT Kebunku.</p>
           <div className="cta-btns reveal" style={{ transitionDelay: '.2s' }}>
             <Link to="/register" className="btn btn-primary btn-lg">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
               Mulai Sekarang — Gratis
             </Link>
             <Link to="/login" className="btn btn-outline btn-lg">Sudah punya akun? Masuk</Link>
@@ -393,7 +385,7 @@ export default function LandingPage() {
           <div className="footer-brand-block">
             <div className="footer-logo">
               <div className="footer-logo-mark">
-                <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="36" height="36" />
+                <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="36" height="36" loading="lazy" decoding="async" />
               </div>
               <span className="footer-brand-name">Kebunku</span>
             </div>

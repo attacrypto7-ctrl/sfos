@@ -394,6 +394,8 @@
   background: var(--color-surface);
   padding: var(--space-20) var(--space-8);
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
 }
 .section-inner {
   max-width: 1200px;
@@ -510,6 +512,8 @@
   padding: var(--space-20) var(--space-8);
   background: white;
   position: relative;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 640px;
 }
 .steps-grid {
   display: grid;
@@ -599,6 +603,8 @@
   position: relative;
   overflow: hidden;
   color: white;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
 }
 .cta-section::before {
   content: '';
@@ -805,9 +811,7 @@
   transform: translateY(0);
 }
 
-/* ════════════════════════════════════════════
-   ENTRANCE — staggered after loading screen
-   ════════════════════════════════════════════ */
+/* ── Entrance — dibuka segera agar LCP cepat ── */
 .landing-body .hero-eyebrow,
 .landing-body .hero-title,
 .landing-body .hero-desc,
@@ -816,19 +820,21 @@
   opacity: 1;
   transform: none;
 }
+/* Hero tidak pernah disembunyikan (opacity:0) saat splash — menahan paint
+   LCP. Splash ditampilkan sebagai overlay fixed non-blocking di atas. */
 .landing-body.is-loading .hero-eyebrow,
 .landing-body.is-loading .hero-title,
 .landing-body.is-loading .hero-desc,
 .landing-body.is-loading .hero-cta,
 .landing-body.is-loading .hero-visual {
-  opacity: 0;
-  transform: translateY(26px);
+  opacity: 1;
+  transform: none;
 }
-.landing-body.is-loaded .hero-eyebrow { animation: heroEntrance 0.85s var(--ease-float) 0.05s backwards; }
-.landing-body.is-loaded .hero-title   { animation: heroEntrance 0.85s var(--ease-float) 0.2s backwards; }
-.landing-body.is-loaded .hero-desc    { animation: heroEntrance 0.85s var(--ease-float) 0.34s backwards; }
-.landing-body.is-loaded .hero-cta     { animation: heroEntrance 0.85s var(--ease-float) 0.48s backwards; }
-.landing-body.is-loaded .hero-visual  { animation: heroEntrance 0.85s var(--ease-float) 0.15s backwards; }
+.landing-body.is-loaded .hero-eyebrow { animation: heroEntrance 0.5s var(--ease-float) 0.02s backwards; }
+.landing-body.is-loaded .hero-title   { animation: heroEntrance 0.5s var(--ease-float) 0.05s backwards; }
+.landing-body.is-loaded .hero-desc    { animation: heroEntrance 0.5s var(--ease-float) 0.1s backwards; }
+.landing-body.is-loaded .hero-cta     { animation: heroEntrance 0.5s var(--ease-float) 0.15s backwards; }
+.landing-body.is-loaded .hero-visual  { animation: heroEntrance 0.5s var(--ease-float) 0.08s backwards; }
 
 @keyframes heroEntrance {
   from { opacity: 0; transform: translateY(26px); }

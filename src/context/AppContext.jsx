@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback, useMemo, useTransition } from 'react';
 import { getMeApi, loginApi, fetchPlants } from '../services/plantService';
 
 const AppContext = createContext();
@@ -10,6 +10,11 @@ export const AppProvider = ({ children }) => {
   const [toasts, setToasts] = useState([]);
   const [authLoading, setAuthLoading] = useState(true);
   const [plantsLoading, setPlantsLoading] = useState(false);
+
+  // startTransition untuk toast — toast adalah UI non-urgent (muncul setelah aksi),
+  // tidak perlu blok interaksi / paint utama. Dengan startTransition, React
+  // dapat menunda update setToasts jika ada render prioritas lebih tinggi.
+  const [, startTransition] = useTransition();
 
   // State in-memory: menandai apakah LandingPage sudah pernah ditampilkan.
   // Bisa di-mount ulang dari rute lain (mis. dari /login kembali ke Beranda)
@@ -44,7 +49,9 @@ export const AppProvider = ({ children }) => {
   /**
    * loadPlants — fetch tanaman sesuai role:
    *  - role 'user'          : fetch milik sendiri (tidak perlu userId param)
-   *  - role 'worker'/'admin': fetch untuk selectedManagedUserId kalau sudah dipilih
+   *  - role 'worker'/'admin': fetch untuk selectedManagedUserId (WAJIB ada,
+   *    server menolak tanpa userId → error 400). Kalau belum ada user yang
+   *    dipilih, jangan request ke API sama sekali.
    */
   const loadPlants = useCallback(async (overrideUserId = null) => {
     if (!loggedIn) return;
@@ -58,10 +65,18 @@ export const AppProvider = ({ children }) => {
         targetId = selectedManagedUserId;
       }
 
+      // Worker/admin wajib menyertakan userId — tanpa itu server mengembalikan
+      // 400. Kalau belum ada user terpilih, kosongkan list & jangan fetch.
+      if (currentUser && currentUser.role !== 'user' && !targetId) {
+        setPlants([]);
+        return;
+      }
+
       const data = await fetchPlants(targetId || null);
-      setPlants(data);
+      setPlants(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Gagal load tanaman:', err.message);
+      setPlants([]);
     } finally {
       setPlantsLoading(false);
     }
@@ -82,59 +97,68 @@ export const AppProvider = ({ children }) => {
     }
   }, [selectedManagedUserId]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const showToast = (message, type = 'success') => {
+  const showToast = useCallback((message, type = 'success') => {
     const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
+    // NON-URGENT: toast adalah feedback sekunder, tidak perlu blok paint utama
+    startTransition(() => {
+      setToasts((prev) => [...prev, { id, message, type }]);
+    });
     setTimeout(() => {
       setToasts((prev) => prev.map(t => t.id === id ? { ...t, out: true } : t));
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
       }, 300);
     }, 3500);
-  };
+  }, [startTransition]);
 
-  const loginUser = async (email, password) => {
+  const loginUser = useCallback(async (email, password) => {
     const data = await loginApi(email, password);
     setUser(data.user);
     setLoggedIn(true);
     showToast('Selamat datang kembali! 🌱', 'success');
     return data;
-  };
+  }, [showToast]);
 
-  const logoutUser = () => {
+  const logoutUser = useCallback(() => {
     localStorage.removeItem('tmk_token');
     setLoggedIn(false);
     setUser(null);
     setPlants([]);
     setSelectedManagedUserId(null);
     showToast('Berhasil keluar akun', 'success');
-  };
+  }, [showToast]);
 
-  const updatePlant = (updatedPlant) => {
+  const updatePlant = useCallback((updatedPlant) => {
     setPlants((prev) => prev.map(p => p.id === updatedPlant.id ? updatedPlant : p));
-  };
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    user,
+    setUser,
+    plants,
+    setPlants,
+    loggedIn,
+    setLoggedIn,
+    toasts,
+    showToast,
+    loginUser,
+    logoutUser,
+    updatePlant,
+    loadPlants,
+    authLoading,
+    plantsLoading,
+    selectedManagedUserId,
+    setSelectedManagedUserId,
+    landingSeen,
+    markLandingSeen,
+  }), [
+    user, plants, loggedIn, toasts, authLoading, plantsLoading,
+    selectedManagedUserId, landingSeen,
+    showToast, loginUser, logoutUser, updatePlant, loadPlants, markLandingSeen,
+  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <AppContext.Provider value={{
-      user,
-      setUser,
-      plants,
-      setPlants,
-      loggedIn,
-      setLoggedIn,
-      toasts,
-      showToast,
-      loginUser,
-      logoutUser,
-      updatePlant,
-      loadPlants,
-      authLoading,
-      plantsLoading,
-      selectedManagedUserId,
-      setSelectedManagedUserId,
-      landingSeen,
-      markLandingSeen,
-    }}>
+    <AppContext.Provider value={contextValue}>
       {children}
       {/* Global Toast UI */}
       <div id="toast-container" className="toast-container">

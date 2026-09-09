@@ -118,6 +118,43 @@
   max-width: 380px;
 }
 
+/* auth-ill-leaf / drop / ping removed — no longer used */
+
+/* iso-ill-seamless is replaced by AuthIllustration component — kept for fallback only */
+.iso-ill-seamless {
+  display: none;
+}
+
+/* Auth background — plant watermark decor */
+.auth-ill-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.auth-ill-decor svg {
+  position: absolute;
+  color: #fff;
+  animation: authDecorFloat 5s ease-in-out infinite;
+}
+.auth-decor-f1 { top: 5%;  left: 6%;  width: 26px; height: 26px; opacity: 0.18; animation-delay: 0s; }
+.auth-decor-f2 { top: 7%;  right: 8%; width: 20px; height: 20px; opacity: 0.16; animation-delay: 0.6s; }
+.auth-decor-f3 { top: 15%; left: 12%; width: 22px; height: 22px; opacity: 0.15; animation-delay: 1.2s; animation-duration: 5.5s; }
+.auth-decor-f4 { top: 16%; right: 12%; width: 24px; height: 24px; opacity: 0.17; animation-delay: 1.9s; }
+.auth-decor-f5 { bottom: 7%; left: 10%; width: 20px; height: 20px; opacity: 0.14; animation-delay: 2.4s; animation-duration: 4.5s; }
+.auth-decor-f6 { bottom: 6%; right: 9%; width: 26px; height: 26px; opacity: 0.20; animation-delay: 2.9s; animation-duration: 6s; }
+
+@keyframes authDecorFloat {
+  0%, 100% { transform: translateY(-10px); }
+  50%      { transform: translateY(10px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-ill-decor svg {
+    animation: none;
+  }
+}
+
 /* Feature list on left panel */
 .auth-features {
   position: relative;
@@ -358,4 +395,238 @@
   .auth-panel-right { padding: var(--space-8) var(--space-4); }
   .auth-header h1   { font-size: var(--font-size-2xl); }
   .auth-row         { grid-template-columns: 1fr; }
+}
+
+
+/* ============================================================
+   AuthIllustration — CSS animations
+   (Only affects .auth-ill-wrap, .auth-ill-svg, .ail-* classes)
+   NO rotate in any keyframe or transform.
+   ============================================================ */
+
+/* ── Wrapper: absolute bottom panel kiri, lebar penuh, transparan ── */
+.auth-ill-wrap {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 0;
+  pointer-events: none;
+  line-height: 0;
+}
+
+/* ── SVG ── */
+.auth-ill-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  opacity: 0.82;
+}
+
+/* ── Pot + plant group: float naik-turun ── */
+.ail-plant-group {
+  animation: ailPlantFloat 4.5s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes ailPlantFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
+}
+
+/* ── Droplet group: float diagonal ringan ── */
+.ail-drop-group {
+  animation: ailDropGroupFloat 5.2s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes ailDropGroupFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(5px, -8px); }
+}
+
+/* ── Individual droplets: jatuh ke bawah + fade ── */
+.ail-drop {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: ailDropFall 2.6s ease-in infinite;
+  will-change: transform, opacity;
+}
+.ail-drop-0 { animation-delay: 0s;    animation-duration: 2.4s; }
+.ail-drop-1 { animation-delay: 0.85s; animation-duration: 2.8s; }
+.ail-drop-2 { animation-delay: 1.6s;  animation-duration: 3.0s; }
+
+@keyframes ailDropFall {
+  0%   { transform: translateY(-14px); opacity: 0; }
+  18%  { opacity: 1; }
+  82%  { opacity: 0.85; }
+  100% { transform: translateY(18px);  opacity: 0; }
+}
+
+/* ── Sensor group: melayang horizontal sangat pelan ── */
+.ail-sensor-group {
+  animation: ailSensorDrift 6s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes ailSensorDrift {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(-6px); }
+}
+
+/* ── Sensor glow: pulse scale tanpa rotate ── */
+.ail-sensor-glow {
+  animation: ailSensorPulse 2.4s ease-in-out infinite;
+  will-change: opacity, transform;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes ailSensorPulse {
+  0%, 100% { opacity: 0.50; transform: scale(1); }
+  50%      { opacity: 1.00; transform: scale(1.40); }
+}
+
+/* ── Sensor LED: opacity pulse ── */
+.ail-sensor-dot {
+  animation: ailSensorBlink 2.4s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes ailSensorBlink {
+  0%, 100% { opacity: 0.65; }
+  50%      { opacity: 1.00; }
+}
+
+/* ── Signal arcs: fade in/out staggered, translateX only ── */
+.ail-arc {
+  animation: ailArcFade 2.2s ease-out infinite;
+  will-change: opacity;
+}
+.ail-arc-0 { animation-delay: 0s;    animation-duration: 2.0s; }
+.ail-arc-1 { animation-delay: 0.40s; animation-duration: 2.0s; }
+.ail-arc-2 { animation-delay: 0.80s; animation-duration: 2.0s; }
+
+@keyframes ailArcFade {
+  0%   { opacity: 0; }
+  25%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ── Sparkle dots: opacity pulse ── */
+.ail-spark {
+  animation: ailSparkle 3.8s ease-in-out infinite;
+  will-change: opacity;
+}
+.ail-spark-0 { animation-delay: 0s; }
+.ail-spark-1 { animation-delay: 1.2s; }
+.ail-spark-2 { animation-delay: 2.4s; }
+
+@keyframes ailSparkle {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 0.90; }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .ail-plant-group,
+  .ail-drop-group,
+  .ail-drop,
+  .ail-sensor-group,
+  .ail-sensor-glow,
+  .ail-sensor-dot,
+  .ail-arc,
+  .ail-spark,
+  .ail-sun-group,
+  .ail-tree-canopy,
+  .ail-grass,
+  .ail-soil-sensor-glow,
+  .ail-soil-sensor-dot {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* ============================================================
+   Illustration Zoom-In — efek transisi saat tombol submit diklik
+   Dipicu oleh class `.illustration-zoom` pada .auth-ill-wrap.
+   HANYA menggunakan `transform` + `opacity` → compositor thread,
+   tidak menyentuh layout/paint, tidak mempengaruhi INP.
+   State ini lokal di LoginPage/RegisterPage, tidak naik ke context.
+   ============================================================ */
+
+.auth-ill-wrap.illustration-zoom {
+  animation: ailZoomIn 500ms ease-out forwards;
+  /* will-change sudah tidak diperlukan karena animasi sekali jalan (forwards) */
+}
+
+@keyframes ailZoomIn {
+  0%   { transform: scale(1);    opacity: 0.82; }
+  60%  { transform: scale(1.10); opacity: 0.72; }
+  100% { transform: scale(1.15); opacity: 0.68; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-ill-wrap.illustration-zoom {
+    animation: none !important;
+  }
+}
+
+/* ============================================================
+   Scene elements — kebun background
+   ============================================================ */
+
+/* ── Matahari: opacity pulse halus ── */
+.ail-sun-group {
+  animation: ailSunPulse 3s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes ailSunPulse {
+  0%, 100% { opacity: 0.80; }
+  50%      { opacity: 1.00; }
+}
+
+/* ── Kanopi pohon: float naik-turun ── */
+.ail-tree-canopy {
+  animation: ailCanopyFloat 4s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes ailCanopyFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-5px); }
+}
+
+/* ── Rumput: sway kiri-kanan dari pangkal (rotate kecil ±2.5°) ── */
+.ail-grass {
+  animation: ailGrassSway 3.5s ease-in-out infinite;
+  will-change: transform;
+}
+/* Delay berbeda tiap rumpun untuk efek organik */
+.ail-grass-d0 { animation-delay: 0s; }
+.ail-grass-d1 { animation-delay: 0.6s; }
+.ail-grass-d2 { animation-delay: 1.2s; }
+.ail-grass-d3 { animation-delay: 1.8s; }
+.ail-grass-d4 { animation-delay: 2.4s; }
+
+@keyframes ailGrassSway {
+  0%, 100% { transform: rotate(-2.5deg); }
+  50%      { transform: rotate(2.5deg); }
+}
+
+/* ── Sensor tanah glow: pulse ── */
+.ail-soil-sensor-glow {
+  animation: ailSoilGlowPulse 2s ease-in-out infinite;
+  will-change: opacity, transform;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@keyframes ailSoilGlowPulse {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 1.00; transform: scale(1.5); }
+}
+
+/* ── Sensor tanah dot: blink ── */
+.ail-soil-sensor-dot {
+  animation: ailSoilDotBlink 2s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes ailSoilDotBlink {
+  0%, 100% { opacity: 0.65; }
+  50%      { opacity: 1.00; }
 }

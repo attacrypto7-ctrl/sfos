@@ -151,8 +151,9 @@ export default function ManagePlantsPage() {
             {plants.length === 0 ? (
               <div className="empty-state" style={{ padding: 'var(--space-12) var(--space-4)' }}>
                 <div className="empty-state-icon">
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
                   </svg>
                 </div>
                 <h3>Belum ada tanaman</h3>
@@ -319,7 +320,7 @@ export default function ManagePlantsPage() {
                 </div>
 
                 {/* Moisture threshold */}
-                <div className="form-group">
+                <div className="form-group" style={{ marginBottom: 24 }}>
                   <label className="form-label">Ambang Kelembaban Ideal</label>
                   <div className="threshold-row" role="group" aria-label="Pengaturan ambang kelembaban">
                     <div className="threshold-item">

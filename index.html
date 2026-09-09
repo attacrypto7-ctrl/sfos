@@ -4,45 +4,44 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/Logo Kebunku.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kebunku - Sistem IoT untuk memantau dan menyiram tanaman otomatis, kapan pun dan di mana pun." />
+    <meta name="theme-color" content="#F6FAF8" />
     <title>Kebunku - Kendali Pintar untuk Perawatan Maksimal</title>
-      <script>
-    (function() {
-        var fullTitle = "Kebunku - Kendali Pintar untuk Perawatan Maksimal";
-        var padding = "                              "; // 30 spasi agar masuk dari kanan dengan lapang
-        var displayText = padding + fullTitle + padding;
-        var pos = 0;              // posisi dalam floating point untuk gerakan halus
-        var speed = 0.15;         // karakter per frame – sangat lambat agar mulus
-        var visibleLen = 35;      // panjang teks yang tampil (cukup untuk baca nyaman)
-        var lastStart = -1;
 
+    <!-- Preconnect ke Google Fonts: mengurangi waktu tunggu font (CWV: LCP/CLS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="image" href="/Logo Kebunku.png" />
+
+    <script>
+    (function () {
+        var fullTitle = "Kebunku - Kendali Pintar untuk Perawatan Maksimal";
+        var padding = "                              ";
+        var displayText = padding + fullTitle + padding;
+        var pos = 0;
+        var speed = 0.6;          // karakter per tick
+        var visibleLen = 35;
+
+        // Interval (bukan requestAnimationFrame per-frame) agar tidak
+        // menghabiskan CPU/GPU terus-menerus → INP & baterai lebih baik.
+        // Update title hanya ~5x/detik, cukup untuk efek scroll halus.
         function update() {
             var start = Math.floor(pos);
-
-            if (start !== lastStart) {
-                var snippet = displayText.substring(start, start + visibleLen);
-                while (snippet.length < visibleLen) snippet += " ";
-                document.title = snippet;
-                lastStart = start;
-            }
-
+            var snippet = displayText.substring(start, start + visibleLen);
+            while (snippet.length < visibleLen) snippet += " ";
+            document.title = snippet;
             pos += speed;
-            // Reset posisi dengan smoothing agar tidak loncat
-            if (pos > displayText.length - visibleLen) {
-                pos = 0;
-            }
+            if (pos > displayText.length - visibleLen) pos = 0;
         }
 
-        // Gunakan requestAnimationFrame tanpa throttling tambahan
-        // agar sinkron dengan refresh rate monitor (60Hz atau lebih)
-        function tick(time) {
-            update();
-            requestAnimationFrame(tick);
-        }
-
-        // Mulai animasi
-        requestAnimationFrame(tick);
+        // Jeda saat tab tidak terlihat (visibilitychange) → hemat CPU
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) { clearInterval(timerId); }
+            else { timerId = setInterval(update, 200); }
+        });
+        var timerId = setInterval(update, 200);
     })();
-      </script>
+    </script>
   </head>
   <body>
     <div id="root"></div>

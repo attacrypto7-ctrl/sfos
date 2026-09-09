@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import PendingApprovalModal from '../components/PendingApprovalModal';
+import AuthIllustration from '../components/AuthIllustration';
 import '../css/auth.css';
 
 export default function LoginPage() {
@@ -19,25 +20,57 @@ export default function LoginPage() {
   const [apiError, setApiError] = useState('');
   const [showPendingModal, setShowPendingModal] = useState(false);
 
+  // Animasi zoom-in ilustrasi — state lokal, tidak naik ke context/parent besar.
+  // Saat isZooming true, class .illustration-zoom ditambah ke wrapper ilustrasi.
+  // CSS @keyframes murni (transform+opacity) yang menangani animasinya —
+  // berjalan di compositor thread, tidak membebani main thread / INP.
+  const [isZooming, setIsZooming] = useState(false);
+
+  // startTransition: tandai update error display sebagai non-urgent
+  // sehingga browser dapat memprioritaskan visual feedback klik (spinner)
+  // terlebih dahulu sebelum merender pesan error.
+  const [, startTransition] = useTransition();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // URGENT: Reset loading + trigger zoom-in ilustrasi — visual feedback langsung
+    setLoading(true);
+    setIsZooming(true);
+
+    // NON-URGENT: Reset error states — tidak perlu blok interaksi
+    startTransition(() => {
+      setEmailError('');
+      setPassError('');
+      setApiError('');
+    });
+
+    // Validasi sinkronus — ringan, hanya string check
     let valid = true;
-    setEmailError('');
-    setPassError('');
-    setApiError('');
+    let newEmailError = '';
+    let newPassError  = '';
 
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setEmailError('Masukkan alamat email yang valid.');
+      newEmailError = 'Masukkan alamat email yang valid.';
       valid = false;
     }
     if (!password || password.length < 6) {
-      setPassError('Kata sandi minimal 6 karakter.');
+      newPassError = 'Kata sandi minimal 6 karakter.';
       valid = false;
     }
 
-    if (!valid) return;
+    if (!valid) {
+      // NON-URGENT: tampilkan pesan error
+      startTransition(() => {
+        setEmailError(newEmailError);
+        setPassError(newPassError);
+      });
+      // URGENT: batalkan loading + zoom saat validasi gagal
+      setLoading(false);
+      setIsZooming(false);
+      return;
+    }
 
-    setLoading(true);
     try {
       await loginUser(email, password);
       navigate('/dashboard');
@@ -45,10 +78,14 @@ export default function LoginPage() {
       if (err.code === 'pending_approval') {
         setShowPendingModal(true);
       } else {
-        setApiError(err.message || 'Login gagal, coba lagi.');
+        // NON-URGENT: tampilkan error API
+        startTransition(() => {
+          setApiError(err.message || 'Login gagal, coba lagi.');
+        });
       }
     } finally {
       setLoading(false);
+      setIsZooming(false);
     }
   };
 
@@ -58,6 +95,32 @@ export default function LoginPage() {
       <div className="auth-layout">
         {/* Left Panel */}
         <div className="auth-panel-left" role="complementary" aria-label="Informasi produk">
+          <div className="auth-ill-decor" aria-hidden="true">
+            <svg className="auth-decor-leaf auth-decor-f1" viewBox="0 0 24 24" fill="none">
+              <ellipse cx="12" cy="12" rx="8.5" ry="5" transform="rotate(-30 12 12)" fill="currentColor" opacity="0.85" />
+              <path d="M12 15 L12 9" stroke="rgba(255,255,255,0.9)" strokeWidth="1" strokeLinecap="round" />
+            </svg>
+            <svg className="auth-decor-drop auth-decor-f2" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3.2c3.1 4.1 5.6 6.6 5.6 9.4a5.6 5.6 0 1 1-11.2 0C6.4 9.8 8.9 7.3 12 3.2Z" fill="currentColor" />
+            </svg>
+            <svg className="auth-decor-sprout auth-decor-f3" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22V15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M12 17c0-2.4-1.4-4.4-3.8-5.4.4 2.4 1.6 4.2 3.8 5.4Z" fill="currentColor" />
+              <path d="M12 15c0-2.4 1.4-4.4 3.8-5.4-.4 2.4-1.6 4.2-3.8 5.4Z" fill="currentColor" />
+            </svg>
+            <svg className="auth-decor-leaf auth-decor-f4" viewBox="0 0 24 24" fill="none">
+              <ellipse cx="12" cy="12" rx="8" ry="4.6" transform="rotate(32 12 12)" fill="currentColor" opacity="0.85" />
+              <path d="M12 9 L12 14" stroke="rgba(255,255,255,0.9)" strokeWidth="1" strokeLinecap="round" />
+            </svg>
+            <svg className="auth-decor-drop auth-decor-f5" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3.2c3.1 4.1 5.6 6.6 5.6 9.4a5.6 5.6 0 1 1-11.2 0C6.4 9.8 8.9 7.3 12 3.2Z" fill="currentColor" opacity="0.8" />
+            </svg>
+            <svg className="auth-decor-sprout auth-decor-f6" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22V15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M12 17c0-2.4-1.4-4.4-3.8-5.4.4 2.4 1.6 4.2 3.8 5.4Z" fill="currentColor" />
+              <path d="M12 15c0-2.4 1.4-4.4 3.8-5.4-.4 2.4-1.6 4.2-3.8 5.4Z" fill="currentColor" opacity="0.8" />
+            </svg>
+          </div>
           <div className="auth-brand">
             <div className="auth-brand-logo">
               <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="112" height="112" />
@@ -66,36 +129,7 @@ export default function LoginPage() {
             <p className="auth-brand-tagline">Kendali Pintar untuk Perawatan Maksimal</p>
           </div>
 
-          <div className="auth-illustration ambient-drift" aria-hidden="true">
-            <svg viewBox="0 0 360 260" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="360" height="260" rx="20" fill="rgba(255,255,255,0.08)" />
-              <ellipse cx="180" cy="220" rx="140" ry="28" fill="rgba(255,255,255,0.08)" />
-              <g transform="translate(120,80)">
-                <rect x="17" y="90" width="14" height="50" rx="4" fill="rgba(139,105,20,0.7)" />
-                <ellipse cx="24" cy="82" rx="38" ry="32" fill="rgba(255,255,255,0.2)" />
-                <ellipse cx="24" cy="64" rx="30" ry="26" fill="rgba(255,255,255,0.15)" />
-                <ellipse cx="24" cy="48" rx="22" ry="20" fill="rgba(255,255,255,0.1)" />
-              </g>
-              <g transform="translate(200,100)">
-                <rect x="13" y="75" width="12" height="40" rx="3" fill="rgba(139,105,20,0.7)" />
-                <ellipse cx="19" cy="68" rx="30" ry="26" fill="rgba(255,255,255,0.18)" />
-                <ellipse cx="19" cy="53" rx="24" ry="20" fill="rgba(255,255,255,0.12)" />
-                <ellipse cx="19" cy="40" rx="18" ry="15" fill="rgba(255,255,255,0.08)" />
-              </g>
-              <g transform="translate(80,130)">
-                <rect x="9" y="20" width="5" height="70" rx="2.5" fill="rgba(255,255,255,0.5)" />
-                <rect x="0" y="0" width="22" height="20" rx="5" fill="rgba(255,255,255,0.3)" />
-                <path d="M26 4 Q32 10 26 16" stroke="rgba(255,255,255,0.6)" strokeWidth="2" fill="none" strokeLinecap="round" />
-              </g>
-              <path d="M280 80 Q284 70 288 80 Q288 88 284 88 Q280 88 280 80Z" fill="rgba(255,255,255,0.4)" />
-              <path d="M295 60 Q298 52 301 60 Q301 66 298 66 Q295 66 295 60Z" fill="rgba(255,255,255,0.3)" />
-              <g transform="translate(75,120)" stroke="rgba(255,255,255,0.5)" fill="none" strokeLinecap="round">
-                <path d="M7 15 Q15 7 23 15" strokeWidth="2" />
-                <path d="M2 9 Q15 -1 28 9" strokeWidth="1.5" />
-                <circle cx="15" cy="19" r="2" fill="rgba(255,255,255,0.5)" />
-              </g>
-            </svg>
-          </div>
+          <AuthIllustration isZooming={isZooming} />
 
           <div className="auth-features" role="list">
             <div className="auth-feature-item" role="listitem">

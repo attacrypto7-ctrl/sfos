@@ -1,0 +1,74 @@
+<svg viewBox="0 0 800 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="leafA" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(159,225,203,0.55)" />
+      <stop offset="1" stopColor="rgba(77,217,168,0.16)" />
+    </linearGradient>
+    <linearGradient id="leafB" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(255,255,255,0.42)" />
+      <stop offset="1" stopColor="rgba(255,255,255,0.08)" />
+    </linearGradient>
+    <linearGradient id="leafC" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(77,217,168,0.50)" />
+      <stop offset="1" stopColor="rgba(15,110,86,0.14)" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stopColor="rgba(159,225,203,0.16)" />
+      <stop offset="1" stopColor="rgba(159,225,203,0)" />
+    </radialGradient>
+    <linearGradient id="groundA" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stopColor="rgba(159,225,203,0.16)" />
+      <stop offset="1" stopColor="rgba(29,158,117,0.05)" />
+    </linearGradient>
+    <filter id="softBlur" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7" />
+    </filter>
+  </defs>
+
+  <!-- Ambient glow behind foliage -->
+  <circle cx="400" cy="150" r="320" fill="url(#glow)" />
+
+  <!-- Ground with soft shadow -->
+  <ellipse cx="400" cy="206" rx="360" ry="26" fill="rgba(0,90,68,0.30)" filter="url(#softBlur)" />
+  <path d="M0 216 Q150 186 320 206 T680 200 T800 204 L800 260 L0 260 Z" fill="url(#groundA)" />
+  <path d="M0 228 Q260 204 520 226 T800 220 L800 260 L0 260 Z" fill="rgba(255,255,255,0.05)" />
+
+  <!-- ===== Left cluster ===== -->
+  <path d="M104 210 Q100 172 104 130" stroke="rgba(255,255,255,0.30)" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+  <ellipse cx="68" cy="152" rx="36" ry="15" transform="rotate(-42 68 152)" fill="url(#leafA)" />
+  <ellipse cx="140" cy="150" rx="34" ry="14" transform="rotate(34 140 150)" fill="url(#leafB)" />
+  <ellipse cx="104" cy="114" rx="28" ry="12" transform="rotate(-8 104 114)" fill="url(#leafC)" />
+  <ellipse cx="80" cy="158" rx="22" ry="9" transform="rotate(-40 80 158)" fill="rgba(15,110,86,0.18)" />
+  <path d="M104 98 L118 88" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" strokeLinecap="round" />
+
+  <!-- ===== Center cluster (tallest) ===== -->
+  <path d="M420 214 Q416 162 420 100" stroke="rgba(255,255,255,0.32)" strokeWidth="4" fill="none" strokeLinecap="round" />
+  <ellipse cx="372" cy="138" rx="38" ry="16" transform="rotate(-46 372 138)" fill="url(#leafA)" />
+  <ellipse cx="470" cy="136" rx="38" ry="16" transform="rotate(44 470 136)" fill="url(#leafB)" />
+  <ellipse cx="420" cy="96" rx="32" ry="14" transform="rotate(-5 420 96)" fill="url(#leafC)" />
+  <ellipse cx="356" cy="182" rx="22" ry="10" transform="rotate(-58 356 182)" fill="url(#leafB)" />
+  <ellipse cx="470" cy="180" rx="22" ry="10" transform="rotate(56 470 180)" fill="url(#leafA)" />
+  <ellipse cx="388" cy="144" rx="24" ry="10" transform="rotate(-44 388 144)" fill="rgba(15,110,86,0.16)" />
+  <path d="M420 78 L434 66" stroke="rgba(255,255,255,0.38)" strokeWidth="1.5" strokeLinecap="round" />
+
+  <!-- ===== Right cluster ===== -->
+  <path d="M660 208 Q662 168 656 132" stroke="rgba(255,255,255,0.30)" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+  <ellipse cx="628" cy="154" rx="36" ry="15" transform="rotate(-40 628 154)" fill="url(#leafC)" />
+  <ellipse cx="694" cy="162" rx="28" ry="12" transform="rotate(40 694 162)" fill="url(#leafA)" />
+  <ellipse cx="660" cy="126" rx="26" ry="11" transform="rotate(-10 660 126)" fill="url(#leafB)" />
+
+  <!-- ===== Small ground clusters ===== -->
+  <ellipse cx="240" cy="198" rx="26" ry="11" transform="rotate(-26 240 198)" fill="url(#leafB)" />
+  <ellipse cx="560" cy="196" rx="26" ry="11" transform="rotate(24 560 196)" fill="url(#leafA)" />
+
+  <!-- ===== Floating petals & dew ===== -->
+  <ellipse cx="176" cy="60" rx="16" ry="8" transform="rotate(-26 176 60)" fill="url(#leafB)" />
+  <ellipse cx="620" cy="52" rx="14" ry="7" transform="rotate(24 620 52)" fill="url(#leafA)" />
+  <ellipse cx="332" cy="148" rx="14" ry="7" transform="rotate(-30 332 148)" fill="url(#leafC)" />
+  <circle cx="306" cy="44" r="3" fill="rgba(255,255,255,0.14)" />
+  <circle cx="520" cy="38" r="2.5" fill="rgba(159,225,203,0.16)" />
+  <circle cx="236" cy="120" r="2" fill="rgba(255,255,255,0.12)" />
+  <circle cx="566" cy="104" r="2" fill="rgba(159,225,203,0.12)" />
+  <circle cx="452" cy="224" r="3" fill="rgba(159,225,203,0.14)" />
+  <circle cx="168" cy="224" r="2.5" fill="rgba(255,255,255,0.10)" />
+</svg>

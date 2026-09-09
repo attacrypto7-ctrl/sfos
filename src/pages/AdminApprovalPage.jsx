@@ -249,7 +249,7 @@ export default function AdminApprovalPage() {
                             : 'var(--color-warning-pale)',
                           color: u.approvalStatus === 'approved' ? 'var(--color-primary-dark)'
                             : u.approvalStatus === 'rejected' ? 'var(--color-danger)'
-                            : '#A0680A',
+                            : 'var(--color-warning)',
                         }}>
                           {u.approvalStatus === 'approved' ? 'Disetujui'
                             : u.approvalStatus === 'rejected' ? 'Ditolak'

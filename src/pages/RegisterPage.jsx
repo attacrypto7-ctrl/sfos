@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useTransition } from 'react';
 import { Link } from 'react-router-dom';
 import { registerApi } from '../services/plantService';
+import AuthIllustration from '../components/AuthIllustration';
 import '../css/auth.css';
 
 const WHATSAPP_URL = 'https://wa.me/6285215002047';
@@ -15,6 +16,17 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [registered, setRegistered] = useState(false);
+
+  // Animasi zoom-in ilustrasi — state lokal, tidak naik ke context/parent besar.
+  // Saat isZooming true, class .illustration-zoom ditambah ke wrapper ilustrasi.
+  // CSS @keyframes murni (transform+opacity) yang menangani animasinya —
+  // berjalan di compositor thread, tidak membebani main thread / INP.
+  const [isZooming, setIsZooming] = useState(false);
+
+  // startTransition: tandai update error display sebagai non-urgent
+  // sehingga browser dapat memprioritaskan visual feedback klik (spinner)
+  // terlebih dahulu sebelum merender pesan error.
+  const [, startTransition] = useTransition();
 
   const [strengthScore, setStrengthScore] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState('');
@@ -34,17 +46,35 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setApiError('');
+
+    // URGENT: Reset error + trigger zoom-in ilustrasi — visual feedback langsung
+    setIsZooming(true);
+
+    // NON-URGENT: reset error display
+    startTransition(() => {
+      setApiError('');
+    });
+
+    // Validasi sinkronus
     if (!name || !email || !password || !confirmPassword) {
-      setApiError('Semua kolom wajib diisi.');
+      startTransition(() => {
+        setApiError('Semua kolom wajib diisi.');
+      });
+      setIsZooming(false);
       return;
     }
     if (password !== confirmPassword) {
-      setApiError('Konfirmasi kata sandi tidak cocok.');
+      startTransition(() => {
+        setApiError('Konfirmasi kata sandi tidak cocok.');
+      });
+      setIsZooming(false);
       return;
     }
     if (password.length < 8) {
-      setApiError('Kata sandi minimal 8 karakter.');
+      startTransition(() => {
+        setApiError('Kata sandi minimal 8 karakter.');
+      });
+      setIsZooming(false);
       return;
     }
 
@@ -53,9 +83,12 @@ export default function RegisterPage() {
       await registerApi({ name, phone, email, password });
       setRegistered(true);
     } catch (err) {
-      setApiError(err.message || 'Pendaftaran gagal, coba lagi.');
+      startTransition(() => {
+        setApiError(err.message || 'Pendaftaran gagal, coba lagi.');
+      });
     } finally {
       setLoading(false);
+      setIsZooming(false);
     }
   };
 
@@ -143,6 +176,32 @@ export default function RegisterPage() {
       <div className="auth-layout">
         {/* Left Panel */}
         <div className="auth-panel-left" role="complementary" aria-label="Informasi pendaftaran">
+          <div className="auth-ill-decor" aria-hidden="true">
+            <svg className="auth-decor-leaf auth-decor-f1" viewBox="0 0 24 24" fill="none">
+              <ellipse cx="12" cy="12" rx="8.5" ry="5" transform="rotate(-30 12 12)" fill="currentColor" opacity="0.85" />
+              <path d="M12 15 L12 9" stroke="rgba(255,255,255,0.9)" strokeWidth="1" strokeLinecap="round" />
+            </svg>
+            <svg className="auth-decor-drop auth-decor-f2" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3.2c3.1 4.1 5.6 6.6 5.6 9.4a5.6 5.6 0 1 1-11.2 0C6.4 9.8 8.9 7.3 12 3.2Z" fill="currentColor" />
+            </svg>
+            <svg className="auth-decor-sprout auth-decor-f3" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22V15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M12 17c0-2.4-1.4-4.4-3.8-5.4.4 2.4 1.6 4.2 3.8 5.4Z" fill="currentColor" />
+              <path d="M12 15c0-2.4 1.4-4.4 3.8-5.4-.4 2.4-1.6 4.2-3.8 5.4Z" fill="currentColor" />
+            </svg>
+            <svg className="auth-decor-leaf auth-decor-f4" viewBox="0 0 24 24" fill="none">
+              <ellipse cx="12" cy="12" rx="8" ry="4.6" transform="rotate(32 12 12)" fill="currentColor" opacity="0.85" />
+              <path d="M12 9 L12 14" stroke="rgba(255,255,255,0.9)" strokeWidth="1" strokeLinecap="round" />
+            </svg>
+            <svg className="auth-decor-drop auth-decor-f5" viewBox="0 0 24 24" fill="none">
+              <path d="M12 3.2c3.1 4.1 5.6 6.6 5.6 9.4a5.6 5.6 0 1 1-11.2 0C6.4 9.8 8.9 7.3 12 3.2Z" fill="currentColor" opacity="0.8" />
+            </svg>
+            <svg className="auth-decor-sprout auth-decor-f6" viewBox="0 0 24 24" fill="none">
+              <path d="M12 22V15" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M12 17c0-2.4-1.4-4.4-3.8-5.4.4 2.4 1.6 4.2 3.8 5.4Z" fill="currentColor" />
+              <path d="M12 15c0-2.4 1.4-4.4 3.8-5.4-.4 2.4-1.6 4.2-3.8 5.4Z" fill="currentColor" opacity="0.8" />
+            </svg>
+          </div>
           <div className="auth-brand">
             <div className="auth-brand-logo">
               <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
@@ -151,27 +210,7 @@ export default function RegisterPage() {
             <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
           </div>
 
-          <div className="auth-illustration ambient-drift" aria-hidden="true">
-            <svg viewBox="0 0 360 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect width="360" height="280" rx="20" fill="rgba(255,255,255,0.08)" />
-              <g transform="translate(60,180)">
-                <rect x="10" y="0" width="8" height="60" rx="4" fill="rgba(139,105,20,0.6)" />
-                <circle cx="14" cy="0" r="18" fill="rgba(255,255,255,0.15)" />
-              </g>
-              <g transform="translate(150,140)">
-                <rect x="14" y="0" width="12" height="100" rx="4" fill="rgba(139,105,20,0.7)" />
-                <ellipse cx="20" cy="-5" rx="30" ry="25" fill="rgba(255,255,255,0.2)" />
-                <ellipse cx="20" cy="-20" rx="22" ry="18" fill="rgba(255,255,255,0.15)" />
-              </g>
-              <g transform="translate(250,110)">
-                <rect x="17" y="0" width="14" height="130" rx="4" fill="rgba(139,105,20,0.7)" />
-                <ellipse cx="24" cy="-8" rx="38" ry="32" fill="rgba(255,255,255,0.22)" />
-                <ellipse cx="24" cy="-28" rx="30" ry="25" fill="rgba(255,255,255,0.16)" />
-                <ellipse cx="24" cy="-46" rx="22" ry="18" fill="rgba(255,255,255,0.1)" />
-              </g>
-              <path d="M20 240 Q180 210 340 240 L340 260 L20 260 Z" fill="rgba(255,255,255,0.08)" />
-            </svg>
-          </div>
+          <AuthIllustration isZooming={isZooming} />
 
           <div className="auth-features" role="list">
             <div className="auth-feature-item" role="listitem">
