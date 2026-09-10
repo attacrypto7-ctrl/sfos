@@ -2,15 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
-import CameraCaptureModal from '../components/CameraCaptureModal';
+import PhotoUploadModal from '../components/PhotoUploadModal';
 import {
   fetchPlantById,
   waterPlantApi,
   toggleAutoWaterApi,
   fetchPlantChartHistory,
-  analyzePlantPhotoApi,
-  addPlantPhotoDocApi,
-  fetchPlantPhotosApi,
 } from '../services/plantService';
 import '../css/app.css';
 
@@ -30,32 +27,23 @@ export default function PlantDetailPage() {
   const [waterMsg, setWaterMsg] = useState('');
   const canvasRef = useRef(null);
 
-  // Photo & AI Analysis States
+  // Photo States
   const [photos, setPhotos] = useState([]);
   const [photosLoading, setPhotosLoading] = useState(false);
-  const [analyzing, setAnalyzing] = useState(false);
-  const [analysisResult, setAnalysisResult] = useState(null);
-  const [showPhotoDocModal, setShowPhotoDocModal] = useState(false);
-  const [photoDocFile, setPhotoDocFile] = useState(null);
-  const [photoDocPreview, setPhotoDocPreview] = useState(null);
-  const [photoDocCatatan, setPhotoDocCatatan] = useState('');
-  const [uploadingDoc, setUploadingDoc] = useState(false);
-  const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [showPhotoUploadModal, setShowPhotoUploadModal] = useState(false);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
 
-  // Live Web Camera State
-  const [isCameraOpen, setIsCameraOpen] = useState(false);
-  const [cameraPurpose, setCameraPurpose] = useState('analyze'); // 'analyze' or 'doc'
-
-  const analyzeInputRef = useRef(null);
-  const docInputRef = useRef(null);
-
-  // Load photos & analysis
+  // Load photos from backend
   const loadPhotos = async () => {
     if (!plantId) return;
     setPhotosLoading(true);
     try {
-      const data = await fetchPlantPhotosApi(plantId);
-      setPhotos(data || []);
+      const { images } = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/plants/${plantId}/images`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('tmk_token')}`,
+        },
+      }).then(r => r.json());
+      setPhotos(images || []);
     } catch (err) {
       console.error('Gagal load foto tanaman:', err.message);
     } finally {
@@ -63,69 +51,20 @@ export default function PlantDetailPage() {
     }
   };
 
-  // Eksekusi proses analisa AI pada file (dari kamera atau file upload)
-  const executeAnalyze = async (file) => {
-    if (!file) return;
-    setAnalyzing(true);
-    showToast('🔍 Mengirim foto & menganalisis dengan AI...', 'info');
-
+  // Handle photo upload (auto-assign to this plant)
+  const handlePhotoUpload = async (uploadData) => {
+    if (!plantId) return;
+    setUploadingPhoto(true);
     try {
-      const res = await analyzePlantPhotoApi(plantId, file);
-      setAnalysisResult({
-        photoUrl: res.photo?.photo_url,
-        hasil: res.hasil,
-        status: res.status,
-        analyzedAt: new Date().toISOString(),
-      });
-      showToast('✅ Analisis AI selesai!', 'success');
-      loadPhotos();
+      const { uploadPlantImageApi } = await import('../services/plantService');
+      await uploadPlantImageApi(plantId, uploadData.imageBase64, uploadData.caption);
+      showToast('✅ Foto berhasil diunggah ke tanaman ini', 'success');
+      await loadPhotos();
+      setShowPhotoUploadModal(false);
     } catch (err) {
-      showToast(err.message || 'Gagal menganalisis foto tanaman.', 'error');
+      showToast(err.message || 'Gagal mengunggah foto', 'error');
     } finally {
-      setAnalyzing(false);
-    }
-  };
-
-  // Trigger kamera / file upload untuk analisa AI
-  const handleAnalyzeFileSelected = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    e.target.value = '';
-    executeAnalyze(file);
-  };
-
-  // Handler saat foto selesai dijepret lewat Live Camera Web
-  const handleLivePhotoCaptured = (file) => {
-    if (cameraPurpose === 'analyze') {
-      executeAnalyze(file);
-    } else {
-      setPhotoDocFile(file);
-      setPhotoDocPreview(URL.createObjectURL(file));
-      setShowPhotoDocModal(true);
-    }
-  };
-
-  // Submit foto dokumentasi biasa
-  const handleDocSubmit = async (e) => {
-    e.preventDefault();
-    if (!photoDocFile) {
-      showToast('Pilih foto terlebih dahulu.', 'error');
-      return;
-    }
-
-    setUploadingDoc(true);
-    try {
-      await addPlantPhotoDocApi(plantId, photoDocFile, photoDocCatatan);
-      showToast('📸 Foto dokumentasi berhasil disimpan.', 'success');
-      setShowPhotoDocModal(false);
-      setPhotoDocFile(null);
-      setPhotoDocPreview(null);
-      setPhotoDocCatatan('');
-      loadPhotos();
-    } catch (err) {
-      showToast(err.message || 'Gagal menyimpan foto dokumentasi.', 'error');
-    } finally {
-      setUploadingDoc(false);
+      setUploadingPhoto(false);
     }
   };
 

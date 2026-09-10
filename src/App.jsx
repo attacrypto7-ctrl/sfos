@@ -17,6 +17,7 @@ const HistoryPage        = lazy(() => import('./pages/HistoryPage'));
 const ManagePlantsPage   = lazy(() => import('./pages/ManagePlantsPage'));
 const ProfilePage        = lazy(() => import('./pages/ProfilePage'));
 const AdminApprovalPage  = lazy(() => import('./pages/AdminApprovalPage'));
+const TakuChatPage       = lazy(() => import('./pages/TakuChatPage'));
 
 // Import CSS Design system
 import './css/style.css';
@@ -102,6 +103,14 @@ export default function App() {
               element={
                 <AuthGuard>
                   <ProfilePage />
+                </AuthGuard>
+              }
+            />
+            <Route
+              path="/taku"
+              element={
+                <AuthGuard>
+                  <TakuChatPage />
                 </AuthGuard>
               }
             />

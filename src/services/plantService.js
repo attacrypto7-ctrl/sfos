@@ -245,3 +245,81 @@ export async function adminChangeRoleApi(id, role) {
   if (!res.ok) throw new Error(data.error || 'Gagal mengubah role');
   return data;
 }
+
+// ── AI & Photos APIs ─────────────────────────────────────────
+
+export async function analyzePlantPhotoApi(plantId, file) {
+  const formData = new FormData();
+  formData.append('photo', file);
+
+  const res = await fetch(`${API_BASE_URL}/plants/${plantId}/photos/analyze`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal menganalisis foto tanaman');
+  return data;
+}
+
+export async function addPlantPhotoDocApi(plantId, file, catatan = '') {
+  const formData = new FormData();
+  formData.append('photo', file);
+  if (catatan) formData.append('catatan', catatan);
+
+  const res = await fetch(`${API_BASE_URL}/plants/${plantId}/photos`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+    body: formData,
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengupload foto dokumentasi');
+  return data;
+}
+
+export async function fetchPlantPhotosApi(plantId) {
+  const res = await fetch(`${API_BASE_URL}/plants/${plantId}/photos`, {
+    headers: authHeaders(),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengambil data foto tanaman');
+  return data;
+}
+
+export async function chatTakuApi(message, plantId = null) {
+  const res = await fetch(`${API_BASE_URL}/ai/chat`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ message, plantId }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengirim pesan ke Taku AI');
+  return data;
+}
+
+export async function fetchChatHistoryApi(plantId = null) {
+  const url = plantId
+    ? `${API_BASE_URL}/ai/chat/history?plantId=${plantId}`
+    : `${API_BASE_URL}/ai/chat/history`;
+  const res = await fetch(url, { headers: authHeaders() });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengambil riwayat chat');
+  return data;
+}
+
+export async function fetchPhotosHistoryApi(plantId = 'all') {
+  const params = new URLSearchParams();
+  if (plantId !== 'all') params.set('plantId', plantId);
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const res = await fetch(`${API_BASE_URL}/history/photos${query}`, { headers: authHeaders() });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal mengambil riwayat foto tanaman');
+  return data;
+}
+
+
+
