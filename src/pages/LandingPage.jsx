@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import { useApp } from '../context/AppContext';
@@ -10,17 +10,16 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loading, setLoading] = useState(!landingSeen);
 
-  const cardTiltRefs = useRef([]);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {
+    if (loading) return undefined;
     const reveals = document.querySelectorAll('.reveal');
     const revealObserver = new IntersectionObserver(
       (entries) => {
@@ -31,11 +30,11 @@ export default function LandingPage() {
           }
         });
       },
-      { threshold: 0.12 }
+      { threshold: 0.12, rootMargin: '80px 0px' }
     );
     reveals.forEach((el) => revealObserver.observe(el));
     return () => revealObserver.disconnect();
-  }, []);
+  }, [loading]);
 
   // Main landing page hanya di-render setelah progress loading menyentuh 100%.
   // onComplete dipanggil dari LoadingScreen tepat saat progress = 100%.
@@ -57,25 +56,9 @@ export default function LandingPage() {
     }
   };
 
-  const handleCardMove = useCallback((e, index) => {
-    const card = cardTiltRefs.current[index];
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.setProperty('--rx', `${(-py * 10).toFixed(2)}deg`);
-    card.style.setProperty('--ry', `${(px * 12).toFixed(2)}deg`);
-  }, []);
-
-  const resetCardTilt = useCallback((index) => {
-    const card = cardTiltRefs.current[index];
-    if (!card) return;
-    card.style.setProperty('--rx', '0deg');
-    card.style.setProperty('--ry', '0deg');
-  }, []);
-
   return (
-    <div className={`landing-body${loading ? ' is-loading' : ' is-loaded'}`}>
+    <div className={`landing-body bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-100/70 via-slate-50/50 to-white relative overflow-hidden${loading ? ' is-loading' : ' is-loaded'}`}>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.20)_0%,_rgba(20,184,166,0.08)_50%,_transparent_70%)] pointer-events-none -z-10" />
       {loading && (
         <LoadingScreen label="Memuat kebun anda..." onComplete={handleLoadingComplete} />
       )}
@@ -94,7 +77,7 @@ export default function LandingPage() {
         </div>
         <div className="nav-actions">
           <Link to="/login" className="btn btn-ghost btn-sm">Masuk</Link>
-          <Link to="/register" className="btn btn-primary btn-sm">Mulai Gratis</Link>
+          <Link to="/register" className="btn btn-primary btn-sm lp-btn-lux bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-bold shadow-[0_8px_20px_-4px_rgba(16,185,129,0.45)] hover:shadow-[0_12px_28px_-2px_rgba(16,185,129,0.65)] hover:scale-[1.02] active:scale-95 transition-all duration-100 ease-out transform-gpu will-change-transform">Mulai Gratis</Link>
         </div>
         <button
           className="nav-menu-btn"
@@ -111,13 +94,14 @@ export default function LandingPage() {
           <a href="#features" onClick={(e) => { handleAnchorClick(e, '#features'); setMobileMenuOpen(false); }}>Fitur</a>
           <a href="#how-it-works" onClick={(e) => { handleAnchorClick(e, '#how-it-works'); setMobileMenuOpen(false); }}>Cara Kerja</a>
           <Link to="/login" className="btn btn-outline btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Masuk</Link>
-          <Link to="/register" className="btn btn-primary btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Mulai Gratis</Link>
+          <Link to="/register" className="btn btn-primary btn-sm lp-btn-lux bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-bold shadow-[0_8px_20px_-4px_rgba(16,185,129,0.45)] hover:shadow-[0_12px_28px_-2px_rgba(16,185,129,0.65)] hover:scale-[1.02] active:scale-95 transition-all duration-100 ease-out transform-gpu will-change-transform" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Mulai Gratis</Link>
         </div>
       )}
 
       {/* ── Hero Section ── */}
       <section className="hero" id="hero" aria-labelledby="hero-headline">
-        <div className="hero-bg ambient-drift"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.20)_0%,_rgba(20,184,166,0.08)_50%,_transparent_70%)] pointer-events-none -z-10" aria-hidden="true" />
+        <div className="hero-bg"></div>
 
         <div className="hero-contour" aria-hidden="true">
           <svg viewBox="0 0 1440 800" preserveAspectRatio="xMidYMid slice">
@@ -129,27 +113,27 @@ export default function LandingPage() {
 
         <div className="hero-inner">
           <div className="hero-content">
-            <div className="hero-eyebrow" aria-label="Tag produk">
+            <div className="hero-eyebrow bg-emerald-50/90 border border-emerald-300 text-emerald-700 font-semibold shadow-[0_2px_12px_rgba(16,185,129,0.2)] rounded-full px-4 py-1.5" aria-label="Tag produk">
               <span className="eyebrow-dot" aria-hidden="true"></span>
               Pertanian Berbasis IoT
             </div>
             <h1 className="hero-title" id="hero-headline">
               Kebunmu Tumbuh,<br />
-              <span className="highlight">Kami yang Jaga</span>
+              <span className="highlight bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(16,185,129,0.25)] font-extrabold">Kami yang Jaga</span>
             </h1>
             <p className="hero-desc">
               Kebunku memantau dan menyiram tanamanmu secara otomatis, kapan pun, di mana pun kamu berada.
             </p>
             <div className="hero-cta">
-              <Link to="/register" className="btn btn-primary btn-lg hero-cta-btn">
+              <Link to="/register" className="btn btn-primary btn-lg hero-cta-btn bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-bold shadow-[0_8px_20px_-4px_rgba(16,185,129,0.45)] hover:shadow-[0_12px_28px_-2px_rgba(16,185,129,0.65)] hover:scale-[1.02] active:scale-95 transition-all duration-100 ease-out transform-gpu will-change-transform">
                 Mulai Sekarang
               </Link>
-              <Link to="/login" className="btn btn-outline btn-lg hero-cta-btn">Masuk Akun</Link>
+              <Link to="/login" className="btn btn-outline btn-lg hero-cta-btn bg-white border-2 border-emerald-500/80 text-emerald-700 font-semibold hover:bg-emerald-50/60 hover:border-emerald-600 transition-all duration-100 ease-out transform-gpu">Masuk Akun</Link>
             </div>
           </div>
 
-          <div className="hero-visual" aria-hidden="true">
-            <div className="hero-illustration-wrap">
+          <div className="hero-visual min-h-[350px] aspect-video" aria-hidden="true">
+            <div className="hero-illustration-wrap min-h-[350px]">
               <span className="hero-illustration-caption">Ilustrasi</span>
               <div className="hero-illustration">
                 <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,14 +218,9 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Floating cards — 3D tilt on mouse move */}
-            <div
-              className="hero-float-card card-1"
-              ref={(el) => (cardTiltRefs.current[0] = el)}
-              onMouseMove={(e) => handleCardMove(e, 0)}
-              onMouseLeave={() => resetCardTilt(0)}
-            >
-              <div className="hero-float-inner" style={{ animationDelay: '0.2s' }}>
+            {/* Floating cards — static (no per-frame tilt for INP) */}
+            <div className="hero-float-card card-1">
+              <div className="hero-float-inner">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2.5">
                   <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
                 </svg>
@@ -251,13 +230,8 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <div
-              className="hero-float-card card-2"
-              ref={(el) => (cardTiltRefs.current[1] = el)}
-              onMouseMove={(e) => handleCardMove(e, 1)}
-              onMouseLeave={() => resetCardTilt(1)}
-            >
-              <div className="hero-float-inner" style={{ animationDelay: '0.9s' }}>
+            <div className="hero-float-card card-2">
+              <div className="hero-float-inner">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2.5">
                   <circle cx="12" cy="12" r="10" />
                   <polyline points="12 6 12 12 16 14" />
@@ -268,13 +242,8 @@ export default function LandingPage() {
                 </div>
               </div>
             </div>
-            <div
-              className="hero-float-card card-3"
-              ref={(el) => (cardTiltRefs.current[2] = el)}
-              onMouseMove={(e) => handleCardMove(e, 2)}
-              onMouseLeave={() => resetCardTilt(2)}
-            >
-              <div className="hero-float-inner" style={{ animationDelay: '1.6s' }}>
+            <div className="hero-float-card card-3">
+              <div className="hero-float-inner">
                 <span style={{ fontSize: '18px' }}>&#127795;</span>
                 <div>
                   <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kondisi</div>
@@ -296,11 +265,11 @@ export default function LandingPage() {
       <section className="features" id="features" aria-labelledby="features-title">
         <div className="section-inner">
           <p className="section-eyebrow">Kenapa Kebunku?</p>
-          <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk Kebunmu</h2>
+          <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700 bg-clip-text text-transparent">Kebunmu</span></h2>
           <p className="section-sub">Dari sensor tanah hingga <b>Sistem IoT cerdas</b> — semua bekerja bersama agar tanamanmu selalu terawat dengan baik.</p>
 
           <div className="features-grid">
-            <div className="feature-card reveal">
+            <div className="feature-card reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl">
               <div className="feature-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
@@ -309,7 +278,7 @@ export default function LandingPage() {
               <h3 className="feature-title">Selalu Terpantau</h3>
               <p className="feature-desc">Kelembaban tanah, kondisi tanaman, semua bisa kamu lihat langsung dari genggaman secara <q>real-time</q> setiap saat.</p>
             </div>
-            <div className="feature-card reveal" style={{ transitionDelay: '.1s' }}>
+            <div className="feature-card reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.1s' }}>
               <div className="feature-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="12" cy="12" r="3" />
@@ -319,7 +288,7 @@ export default function LandingPage() {
               <h3 className="feature-title">Siram Otomatis, Tanpa Ribet</h3>
               <p className="feature-desc">Tanaman haus? Kebunku sudah tahu duluan dan langsung bertindak. Sistem IoT kami dengan kontrol jarak jauh memastikan tidak ada yang disiram berlebihan.</p>
             </div>
-            <div className="feature-card reveal" style={{ transitionDelay: '.2s' }}>
+            <div className="feature-card reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.2s' }}>
               <div className="feature-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -343,18 +312,19 @@ export default function LandingPage() {
           <p className="section-sub">Tidak perlu jadi ahli teknologi. Kebunku dirancang sederhana dan langsung bisa dipakai.</p>
 
           <div className="steps-grid">
-            <div className="step-item reveal">
-              <div className="step-number">1</div>
+            <div className="steps-line" aria-hidden="true"></div>
+            <div className="step-item reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl">
+              <div className="step-number bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.4)] font-bold">1</div>
               <h3 className="step-title">Daftar & Tambah Tanaman</h3>
               <p className="step-desc">Buat akun gratis, lalu daftarkan tanaman-tanamanmu beserta info dasarnya. Mudah seperti mengisi formulir singkat.</p>
             </div>
-            <div className="step-item reveal" style={{ transitionDelay: '.15s' }}>
-              <div className="step-number">2</div>
+            <div className="step-item reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.15s' }}>
+              <div className="step-number bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.4)] font-bold">2</div>
               <h3 className="step-title">Pasang Sensor di Kebun</h3>
               <p className="step-desc">Hubungkan perangkat sensor IoT ke tanamanmu. Sensor akan mulai membaca data kelembaban secara real-time.</p>
             </div>
-            <div className="step-item reveal" style={{ transitionDelay: '.3s' }}>
-              <div className="step-number">3</div>
+            <div className="step-item reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.3s' }}>
+              <div className="step-number bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.4)] font-bold">3</div>
               <h3 className="step-title">Biarkan Kebunku Bekerja</h3>
               <p className="step-desc">AI kami memantau 24/7 dan menyiram otomatis saat dibutuhkan. Kamu tinggal duduk santai dan lihat tanamanmu tumbuh.</p>
             </div>
@@ -363,15 +333,15 @@ export default function LandingPage() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="cta-section" aria-labelledby="cta-title">
+      <section className="cta-section bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-2xl border-t border-emerald-500/30" aria-labelledby="cta-title">
         <div className="cta-inner">
           <h2 id="cta-title" className="reveal">Siap Mengotomatiskan Irigasi Kebun Anda?</h2>
           <p className="reveal" style={{ transitionDelay: '.1s' }}>Pantau kelembapan tanah dan kendalikan penyiraman secara real-time dari mana saja dengan keandalan sistem IoT Kebunku.</p>
           <div className="cta-btns reveal" style={{ transitionDelay: '.2s' }}>
-            <Link to="/register" className="btn btn-primary btn-lg">
+            <Link to="/register" className="btn btn-primary btn-lg bg-emerald-400 text-slate-950 font-bold hover:bg-emerald-300 shadow-[0_0_25px_rgba(52,211,153,0.6)] hover:scale-[1.03] active:scale-95 transition-all duration-100 ease-out transform-gpu will-change-transform">
               Mulai Sekarang — Gratis
             </Link>
-            <Link to="/login" className="btn btn-outline btn-lg">Sudah punya akun? Masuk</Link>
+            <Link to="/login" className="btn btn-outline btn-lg border-2 border-emerald-500/80 text-emerald-100 font-semibold hover:bg-emerald-800/50 hover:border-emerald-400 transition-all duration-100 ease-out transform-gpu">Sudah punya akun? Masuk</Link>
           </div>
         </div>
       </section>
