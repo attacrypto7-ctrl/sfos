@@ -19,6 +19,7 @@ export default function LoginPage() {
 
   const [apiError, setApiError] = useState('');
   const [showPendingModal, setShowPendingModal] = useState(false);
+  const [pendingSupportPhone, setPendingSupportPhone] = useState('');
 
   // Animasi zoom-in ilustrasi — state lokal, tidak naik ke context/parent besar.
   // Saat isZooming true, class .illustration-zoom ditambah ke wrapper ilustrasi.
@@ -76,6 +77,7 @@ export default function LoginPage() {
       navigate('/dashboard');
     } catch (err) {
       if (err.code === 'pending_approval') {
+        setPendingSupportPhone(err.supportPhone || '');
         setShowPendingModal(true);
       } else {
         // NON-URGENT: tampilkan error API
@@ -91,7 +93,12 @@ export default function LoginPage() {
 
   return (
     <div className="auth-body" style={{ width: '100%' }}>
-      {showPendingModal && <PendingApprovalModal onClose={() => setShowPendingModal(false)} />}
+      {showPendingModal && (
+        <PendingApprovalModal
+          onClose={() => setShowPendingModal(false)}
+          supportPhone={pendingSupportPhone}
+        />
+      )}
       <div className="auth-layout">
         {/* Left Panel */}
         <div className="auth-panel-left" role="complementary" aria-label="Informasi produk">
@@ -125,8 +132,8 @@ export default function LoginPage() {
             <div className="auth-brand-logo">
               <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="112" height="112" />
             </div>
-            <h1 className="auth-brand-name">Kebunku</h1>
-            <p className="auth-brand-tagline">Kendali Pintar untuk Perawatan Maksimal</p>
+            <h1 className="auth-brand-name">Tanamanku</h1>
+            <p className="auth-brand-tagline">Dipantau AI, bukan cuma sensor.</p>
           </div>
 
           <AuthIllustration isZooming={isZooming} />
@@ -146,7 +153,7 @@ export default function LoginPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span>Sistem Irigasi Otomatis berbasis IoT</span>
+              <span>Analisis kesehatan tanaman via AI</span>
             </div>
             <div className="auth-feature-item" role="listitem">
               <div className="auth-feature-icon" aria-hidden="true">
@@ -154,7 +161,7 @@ export default function LoginPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span>Riwayat penyiraman lengkap</span>
+              <span>Riwayat &amp; insight tiap tanaman</span>
             </div>
           </div>
         </div>
@@ -256,6 +263,9 @@ export default function LoginPage() {
           <div className="auth-footer">
             Belum punya akun? <Link to="/register">Daftar sekarang</Link>
           </div>
+          <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '16px' }}>
+            Dipantau AI, bukan cuma sensor.
+          </p>
         </div>
       </div>
     </div>

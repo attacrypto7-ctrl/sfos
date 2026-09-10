@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
-import { waterPlantApi } from '../services/plantService';
+import CameraCaptureModal from '../components/CameraCaptureModal';
+import { waterPlantApi, analyzePlantPhotoApi } from '../services/plantService';
 import '../css/app.css';
 
 // ── Helpers ─────────────────────────────────────────────────
@@ -250,6 +251,11 @@ export default function GardenOverviewPage() {
   const [wateringId, setWateringId] = useState(null);
   const [gaugeAnimated, setGaugeAnimated] = useState(false);
 
+  // Live Camera State
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [selectedPlantForCamera, setSelectedPlantForCamera] = useState(null);
+  const [analyzingPhoto, setAnalyzingPhoto] = useState(false);
+
   useEffect(() => {
     const t = setTimeout(() => setGaugeAnimated(true), 300);
     return () => clearTimeout(t);
@@ -258,8 +264,10 @@ export default function GardenOverviewPage() {
   const healthScore = computeHealthScore(plants);
   const { color: scoreColor } = getScoreLabel(healthScore);
 
-  const criticalPlants = plants.filter((p) => p.status === 'warning');
-  const goodPlants = plants.filter((p) => p.status !== 'warning');
+  const criticalPlants = plants.filter((p) => p.status === 'warning' || p.status === 'no_data');
+  const goodPlants = plants.filter((p) => p.status === 'good');
+  const plantsWithDiseases = plants.filter((p) => p.latestAnalysis?.status === 'terindikasi_penyakit');
+  const plantsNeedAttention = plants.filter((p) => p.latestAnalysis?.status === 'perlu_perhatian');
 
   const avgMoisture = (() => {
     const withData = plants.filter((p) => p.moisture !== null && p.moisture !== undefined);
@@ -292,6 +300,28 @@ export default function GardenOverviewPage() {
     }
   }, [wateringId, showToast, loadPlants]);
 
+  const handleOpenPlantCamera = (e, plant) => {
+    e.stopPropagation();
+    setSelectedPlantForCamera(plant);
+    setIsCameraOpen(true);
+  };
+
+  const handleLiveCameraCaptured = async (file) => {
+    if (!selectedPlantForCamera) return;
+    setAnalyzingPhoto(true);
+    showToast(`🔍 Menganalisis foto ${selectedPlantForCamera.name} dengan AI...`, 'info');
+
+    try {
+      await analyzePlantPhotoApi(selectedPlantForCamera.id, file);
+      showToast(`✅ Diagnosa AI selesai untuk ${selectedPlantForCamera.name}!`, 'success');
+      await loadPlants();
+    } catch (err) {
+      showToast(err.message || 'Gagal menganalisis foto tanaman.', 'error');
+    } finally {
+      setAnalyzingPhoto(false);
+    }
+  };
+
   // ── Empty state ──
   if (plants.length === 0) {
     return (
@@ -320,6 +350,93 @@ export default function GardenOverviewPage() {
 
   return (
     <Layout title="Kebun Saya">
+
+      {/* ── Section Baru: Analisis AI Berbasis Data Kebun Real-time ── */}
+      <div
+        className="card"
+        style={{
+          background: 'linear-gradient(135deg, rgba(29,158,117,0.06), rgba(147,51,234,0.06))',
+          border: '1.5px solid rgba(29,158,117,0.2)',
+          borderRadius: '24px',
+          padding: '22px 24px',
+          marginBottom: 'var(--space-6)',
+          boxShadow: '0 4px 20px rgba(15, 110, 86, 0.05)',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', marginBottom: '16px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #1D9E75, #7E22CE)',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '18px',
+              }}
+            >
+              🤖
+            </div>
+            <div>
+              <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0, color: 'var(--color-text)' }}>
+                Analisis AI &amp; Intelligence Kebun
+              </h2>
+              <p style={{ fontSize: '12px', color: 'var(--color-text-sub)', margin: 0 }}>
+                Diagnosa otomatis berdasarkan data sensor kelembaban, riwayat irigasi, dan visual daun terkini
+              </p>
+            </div>
+          </div>
+
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={() => navigate('/taku')}
+            style={{ borderRadius: '9999px', fontSize: '12.5px', display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
+            💬 Tanya Taku AI
+          </button>
+        </div>
+
+        {/* AI Insight Badges & Action Points */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
+          <div style={{ background: '#FFFFFF', padding: '14px 16px', borderRadius: '16px', border: '1px solid rgba(29,158,117,0.12)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 700, color: '#1D9E75', marginBottom: '4px' }}>
+              <span>💧</span> Status Irigasi &amp; Tanah
+            </div>
+            <p style={{ fontSize: '13px', color: 'var(--color-text)', margin: 0, lineHeight: 1.5 }}>
+              {criticalPlants.length === 0
+                ? 'Semua tanaman dalam rentang kelembaban ideal. Sistem irigasi stabil.'
+                : `${criticalPlants.length} tanaman memerlukan penyiraman (termasuk ${criticalPlants.map(p => p.name).slice(0, 2).join(', ')}).`}
+            </p>
+          </div>
+
+          <div style={{ background: '#FFFFFF', padding: '14px 16px', borderRadius: '16px', border: '1px solid rgba(147,51,234,0.15)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 700, color: '#9333EA', marginBottom: '4px' }}>
+              <span>🔍</span> Diagnosa Visual Daun
+            </div>
+            <p style={{ fontSize: '13px', color: 'var(--color-text)', margin: 0, lineHeight: 1.5 }}>
+              {plantsWithDiseases.length > 0
+                ? `Waspada: Terindikasi masalah kesehatan pada ${plantsWithDiseases.map(p => p.name).join(', ')}. Cek detail rekomendasi.`
+                : plantsNeedAttention.length > 0
+                ? `${plantsNeedAttention.length} tanaman perlu perhatian nutrisi/air dari foto terbaru.`
+                : 'Belum ada indikasi penyakit aktif terdeteksi dari foto daun.'}
+            </p>
+          </div>
+
+          <div style={{ background: '#FFFFFF', padding: '14px 16px', borderRadius: '16px', border: '1px solid rgba(245,158,11,0.15)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px', fontWeight: 700, color: '#D97706', marginBottom: '4px' }}>
+              <span>💡</span> Rekomendasi Tindakan AI
+            </div>
+            <p style={{ fontSize: '13px', color: 'var(--color-text)', margin: 0, lineHeight: 1.5 }}>
+              {driestPlant && driestPlant.moisture !== null && driestPlant.moisture < driestPlant.moistureMin
+                ? `Prioritaskan siram ${driestPlant.name} (${driestPlant.moisture}%, min ${driestPlant.moistureMin}%).`
+                : 'Kondisi kebun prima. Lakukan foto berkala untuk memantau pertumbuhan daun.'}
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* ── Top Row: Health Score + Stats ── */}
       <div className="garden-top-row">
@@ -465,6 +582,7 @@ export default function GardenOverviewPage() {
                 urgent
                 watering={wateringId === plant.id}
                 onWater={(e) => handleWater(e, plant)}
+                onCamera={(e) => handleOpenPlantCamera(e, plant)}
                 onDetail={() => navigate(`/plant-detail?id=${plant.id}`)}
               />
             ))}
@@ -475,7 +593,7 @@ export default function GardenOverviewPage() {
       {/* ── All Plants Heatmap ── */}
       <div>
         <div className="garden-section-header" style={{ marginBottom: 'var(--space-4)' }}>
-          <h3 className="garden-section-title">Semua Tanaman</h3>
+          <h3 className="garden-section-title">Semua Tanaman &amp; Data Foto</h3>
           <button className="btn btn-ghost btn-sm" onClick={() => navigate('/manage-plants')}>
             + Tambah Tanaman
           </button>
@@ -488,11 +606,22 @@ export default function GardenOverviewPage() {
               urgent={false}
               watering={wateringId === plant.id}
               onWater={(e) => handleWater(e, plant)}
+              onCamera={(e) => handleOpenPlantCamera(e, plant)}
               onDetail={() => navigate(`/plant-detail?id=${plant.id}`)}
             />
           ))}
         </div>
       </div>
+
+      {/* ── Live Camera Modal ── */}
+      <CameraCaptureModal
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+        onPhotoCaptured={handleLiveCameraCaptured}
+        title={`Kamera AI — ${selectedPlantForCamera?.name || 'Tanaman'}`}
+        subtitle="Ambil foto daun untuk didiagnosa AI dan diperbarui fotonya di kebun"
+        confirmLabel="Simpan Foto &amp; Analisa AI"
+      />
 
     </Layout>
   );
@@ -500,48 +629,97 @@ export default function GardenOverviewPage() {
 
 // ── Plant Heat Card Component ─────────────────────────────────
 
-function PlantHeatCard({ plant, urgent, watering, onWater, onDetail }) {
+function PlantHeatCard({ plant, urgent, watering, onWater, onCamera, onDetail }) {
   const hasMoisture = plant.moisture !== null && plant.moisture !== undefined;
   const color = getMoistureColor(plant.moisture, plant.moistureMin, plant.moistureMax);
   const bg = getMoistureBg(plant.moisture, plant.moistureMin, plant.moistureMax);
   const label = getMoistureLabel(plant.moisture, plant.moistureMin, plant.moistureMax);
   const pct = hasMoisture ? plant.moisture : 0;
 
-  // How far into the ideal range (0–100%)
   const rangeWidth = plant.moistureMax - plant.moistureMin;
-  const inRangePos = hasMoisture
-    ? Math.max(0, Math.min(100, ((plant.moisture - plant.moistureMin) / (rangeWidth || 1)) * 100))
+
+  const hasPhoto = Boolean(plant.latestPhoto?.url);
+  const photoTime = plant.latestPhoto?.uploadedAt
+    ? new Date(plant.latestPhoto.uploadedAt).toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
     : null;
+
+  const aiStatus = plant.latestAnalysis?.status;
+  const aiBadgeColor = aiStatus === 'sehat' ? '#1D9E75' : aiStatus === 'terindikasi_penyakit' ? '#EF4444' : '#F59E0B';
+  const aiBadgeLabel = aiStatus === 'sehat' ? '✅ Sehat' : aiStatus === 'terindikasi_penyakit' ? '⚠️ Terindikasi Sakit' : aiStatus === 'perlu_perhatian' ? '⚡ Perhatian' : null;
 
   return (
     <div
       className={`garden-heat-card ${urgent ? 'urgent' : ''}`}
-      style={{ '--card-accent': color, '--card-bg': bg }}
+      style={{ '--card-accent': color, '--card-bg': bg, padding: '16px' }}
       onClick={onDetail}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => e.key === 'Enter' && onDetail()}
       aria-label={`Detail ${plant.name}`}
     >
-      <div className="garden-heat-top">
-        <div className="garden-heat-emoji">{plant.emoji || '🌱'}</div>
-        <div className="garden-heat-info">
-          <div className="garden-heat-name">{plant.name}</div>
+      <div className="garden-heat-top" style={{ alignItems: 'flex-start' }}>
+        {/* Real photo thumbnail if uploaded, fallback to emoji */}
+        {hasPhoto ? (
+          <div
+            style={{
+              width: '46px',
+              height: '46px',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              flexShrink: 0,
+              border: '2px solid rgba(29,158,117,0.3)',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            }}
+          >
+            <img src={plant.latestPhoto.url} alt={plant.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </div>
+        ) : (
+          <div className="garden-heat-emoji" style={{ width: '46px', height: '46px', fontSize: '24px' }}>
+            {plant.emoji || '🌱'}
+          </div>
+        )}
+
+        <div className="garden-heat-info" style={{ flex: 1 }}>
+          <div className="garden-heat-name" style={{ fontSize: '15px' }}>{plant.name}</div>
           <div className="garden-heat-type">{plant.type}</div>
+          {photoTime && (
+            <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', marginTop: '2px' }}>
+              📷 Foto: {photoTime}
+            </div>
+          )}
         </div>
-        <div className="garden-heat-badge">
+
+        <div className="garden-heat-badge" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
           {hasMoisture ? (
             <span className="garden-heat-pct" style={{ color }}>{plant.moisture}%</span>
           ) : (
             <span className="garden-heat-pct" style={{ color: '#9BB5AC' }}>–</span>
           )}
+          {aiBadgeLabel && (
+            <span
+              style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                color: '#fff',
+                background: aiBadgeColor,
+                padding: '2px 8px',
+                borderRadius: '9999px',
+              }}
+            >
+              {aiBadgeLabel}
+            </span>
+          )}
         </div>
       </div>
 
       {/* Moisture range bar */}
-      <div className="garden-heat-bar-wrap">
+      <div className="garden-heat-bar-wrap" style={{ margin: '12px 0 10px' }}>
         <div className="garden-heat-bar-track">
-          {/* Ideal zone highlight */}
           <div
             className="garden-heat-bar-ideal"
             style={{
@@ -549,12 +727,10 @@ function PlantHeatCard({ plant, urgent, watering, onWater, onDetail }) {
               width: `${rangeWidth}%`,
             }}
           />
-          {/* Fill */}
           <div
             className="garden-heat-bar-fill"
             style={{ width: `${pct}%`, background: color }}
           />
-          {/* Needle marker */}
           {hasMoisture && (
             <div className="garden-heat-bar-needle" style={{ left: `${pct}%`, background: color }} />
           )}
@@ -567,7 +743,7 @@ function PlantHeatCard({ plant, urgent, watering, onWater, onDetail }) {
       </div>
 
       {/* Footer */}
-      <div className="garden-heat-footer">
+      <div className="garden-heat-footer" style={{ borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '10px' }}>
         <span className="garden-heat-update">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <circle cx="12" cy="12" r="10" />
@@ -576,6 +752,17 @@ function PlantHeatCard({ plant, urgent, watering, onWater, onDetail }) {
           {formatTime(plant.lastUpdate)}
         </span>
         <div style={{ display: 'flex', gap: '6px' }}>
+          {/* Kamera Button */}
+          <button
+            className="btn btn-xs"
+            style={{ background: 'rgba(147, 51, 234, 0.12)', color: '#9333EA', border: '1px solid rgba(147,51,234,0.2)' }}
+            onClick={onCamera}
+            title="Buka kamera live untuk foto &amp; analisa AI"
+          >
+            📷 Foto AI
+          </button>
+
+          {/* Water Button */}
           <button
             className="btn btn-xs garden-heat-btn-water"
             style={{ '--btn-color': color }}
@@ -592,15 +779,9 @@ function PlantHeatCard({ plant, urgent, watering, onWater, onDetail }) {
             )}
             Siram
           </button>
-          <button
-            className="btn btn-ghost btn-xs"
-            onClick={(e) => { e.stopPropagation(); onDetail(); }}
-            aria-label={`Lihat detail ${plant.name}`}
-          >
-            Detail →
-          </button>
         </div>
       </div>
     </div>
   );
 }
+

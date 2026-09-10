@@ -37,8 +37,6 @@ export default function LandingPage() {
     return () => revealObserver.disconnect();
   }, []);
 
-  // Main landing page hanya di-render setelah progress loading menyentuh 100%.
-  // onComplete dipanggil dari LoadingScreen tepat saat progress = 100%.
   const handleLoadingComplete = useCallback(() => {
     markLandingSeen();
     setLoading(false);
@@ -77,20 +75,22 @@ export default function LandingPage() {
   return (
     <div className={`landing-body${loading ? ' is-loading' : ' is-loaded'}`}>
       {loading && (
-        <LoadingScreen label="Memuat kebun anda..." onComplete={handleLoadingComplete} />
+        <LoadingScreen label="Memuat platform kebun anda..." onComplete={handleLoadingComplete} />
       )}
 
       {/* ── Navbar — Glassmorphism ── */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
-        <Link to="/" className="nav-logo" aria-label="Kebunku beranda">
+        <Link to="/" className="nav-logo" aria-label="Tanamanku beranda">
           <div className="nav-logo-mark">
-            <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="40" height="40" fetchpriority="high" decoding="async" />
+            <img src="/Logo Kebunku.png" alt="Logo Tanamanku" width="40" height="40" fetchpriority="high" decoding="async" />
           </div>
-          <span className="nav-logo-name">Kebunku</span>
+          <span className="nav-logo-name">Tanamanku</span>
         </Link>
         <div className="nav-links" role="list">
-          <a href="#features" role="listitem" onClick={(e) => handleAnchorClick(e, '#features')}>Fitur</a>
-          <a href="#how-it-works" role="listitem" onClick={(e) => handleAnchorClick(e, '#how-it-works')}>Cara Kerja</a>
+          <a href="#platform-flow" role="listitem" onClick={(e) => handleAnchorClick(e, '#platform-flow')}>Cara Kerja</a>
+          <a href="#account-steps" role="listitem" onClick={(e) => handleAnchorClick(e, '#account-steps')}>Cara Buat Akun</a>
+          <a href="#features" role="listitem" onClick={(e) => handleAnchorClick(e, '#features')}>Fitur AI</a>
+          <a href="#contact" role="listitem" onClick={(e) => handleAnchorClick(e, '#contact')}>Instalasi</a>
         </div>
         <div className="nav-actions">
           <Link to="/login" className="btn btn-ghost btn-sm">Masuk</Link>
@@ -108,8 +108,10 @@ export default function LandingPage() {
 
       {mobileMenuOpen && (
         <div className="mobile-nav-panel">
-          <a href="#features" onClick={(e) => { handleAnchorClick(e, '#features'); setMobileMenuOpen(false); }}>Fitur</a>
-          <a href="#how-it-works" onClick={(e) => { handleAnchorClick(e, '#how-it-works'); setMobileMenuOpen(false); }}>Cara Kerja</a>
+          <a href="#platform-flow" onClick={(e) => { handleAnchorClick(e, '#platform-flow'); setMobileMenuOpen(false); }}>Cara Kerja</a>
+          <a href="#account-steps" onClick={(e) => { handleAnchorClick(e, '#account-steps'); setMobileMenuOpen(false); }}>Cara Buat Akun</a>
+          <a href="#features" onClick={(e) => { handleAnchorClick(e, '#features'); setMobileMenuOpen(false); }}>Fitur AI</a>
+          <a href="#contact" onClick={(e) => { handleAnchorClick(e, '#contact'); setMobileMenuOpen(false); }}>Instalasi</a>
           <Link to="/login" className="btn btn-outline btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Masuk</Link>
           <Link to="/register" className="btn btn-primary btn-sm" style={{justifyContent:'center'}} onClick={() => setMobileMenuOpen(false)}>Mulai Gratis</Link>
         </div>
@@ -131,26 +133,28 @@ export default function LandingPage() {
           <div className="hero-content">
             <div className="hero-eyebrow" aria-label="Tag produk">
               <span className="eyebrow-dot" aria-hidden="true"></span>
-              Pertanian Berbasis IoT
+              Platform Pertanian Cerdas
             </div>
             <h1 className="hero-title" id="hero-headline">
-              Kebunmu Tumbuh,<br />
-              <span className="highlight">Kami yang Jaga</span>
+              Platform yang<br />
+              <span className="highlight">Mengenal Setiap Pohonmu</span>
             </h1>
             <p className="hero-desc">
-              Kebunku memantau dan menyiram tanamanmu secara otomatis, kapan pun, di mana pun kamu berada.
+              Tanamanku menggabungkan data sensor real-time, irigasi presisi, dan kekuatan AI untuk memberi insight mendalam tentang setiap tanaman di kebunmu.
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn btn-primary btn-lg hero-cta-btn">
                 Mulai Sekarang
               </Link>
-              <Link to="/login" className="btn btn-outline btn-lg hero-cta-btn">Masuk Akun</Link>
+              <a href="#platform-flow" onClick={(e) => handleAnchorClick(e, '#platform-flow')} className="btn btn-outline btn-lg hero-cta-btn">
+                Pelajari Cara Kerja
+              </a>
             </div>
           </div>
 
           <div className="hero-visual" aria-hidden="true">
             <div className="hero-illustration-wrap">
-              <span className="hero-illustration-caption">Ilustrasi</span>
+              <span className="hero-illustration-caption">Smart Garden AI</span>
               <div className="hero-illustration">
                 <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="480" height="420" rx="24" fill="#F2FBF7" />
@@ -219,17 +223,6 @@ export default function LandingPage() {
                     <ellipse cx="30" cy="36" rx="24" ry="16" fill="white" />
                     <ellipse cx="70" cy="36" rx="24" ry="16" fill="white" />
                   </g>
-
-                  <g transform="translate(140, 200)" opacity="0.5" stroke="#1D9E75" fill="none" strokeLinecap="round">
-                    <path d="M10 20 Q18 12 26 20" strokeWidth="2" />
-                    <path d="M5 14 Q18 4 31 14" strokeWidth="2" />
-                    <circle cx="18" cy="24" r="2.5" fill="#1D9E75" />
-                  </g>
-
-                  <g transform="translate(320, 280)" opacity="0.3">
-                    <path d="M0 20 Q15 0 30 20 Q15 15 0 20Z" fill="#1D9E75" />
-                    <line x1="15" y1="0" x2="15" y2="20" stroke="#0F6E56" strokeWidth="1" />
-                  </g>
                 </svg>
               </div>
             </div>
@@ -246,8 +239,8 @@ export default function LandingPage() {
                   <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
                 </svg>
                 <div>
-                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kelembaban</div>
-                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#1D9E75' }}>72%</div>
+                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kelembaban Tanah</div>
+                  <div style={{ fontSize: '16px', fontWeight: 800, color: '#1D9E75' }}>Sensor Real-time</div>
                 </div>
               </div>
             </div>
@@ -258,13 +251,12 @@ export default function LandingPage() {
               onMouseLeave={() => resetCardTilt(1)}
             >
               <div className="hero-float-inner" style={{ animationDelay: '0.9s' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="2.5">
-                  <circle cx="12" cy="12" r="10" />
-                  <polyline points="12 6 12 12 16 14" />
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A855F7" strokeWidth="2.5">
+                  <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
                 </svg>
                 <div>
-                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Siram Otomatis</div>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#0F6E56' }}>Aktif &#10003;</div>
+                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Analisa AI</div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#7E22CE' }}>Deteksi Dini Penyakit</div>
                 </div>
               </div>
             </div>
@@ -277,8 +269,8 @@ export default function LandingPage() {
               <div className="hero-float-inner" style={{ animationDelay: '1.6s' }}>
                 <span style={{ fontSize: '18px' }}>&#127795;</span>
                 <div>
-                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Kondisi</div>
-                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1D9E75' }}>Sangat Baik</div>
+                  <div style={{ fontSize: '11px', color: '#6B8C80', fontWeight: 500 }}>Memory Pohon</div>
+                  <div style={{ fontSize: '12px', fontWeight: 700, color: '#1D9E75' }}>Riwayat &amp; Insight</div>
                 </div>
               </div>
             </div>
@@ -292,34 +284,187 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── Section 1: Cara Kerja Platform (4 Langkah Visual) ── */}
+      <section className="platform-flow-section" id="platform-flow" aria-labelledby="pf-title">
+        <div className="section-inner">
+          <p className="section-eyebrow">Alur Kerja Cerdas</p>
+          <h2 className="section-title" id="pf-title">Bagaimana Tanamanku Bekerja</h2>
+          <p className="section-sub">Empat pilar terpadu: dari pembacaan sensor tanah hingga memori cerdas berbasis AI di dashboard.</p>
+
+          <div className="flow-grid">
+            <div className="flow-card reveal">
+              <div className="flow-card-header">
+                <div className="flow-badge-num">1</div>
+                <div className="flow-icon-box" style={{ background: 'rgba(29,158,117,0.12)', color: '#1D9E75' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="flow-card-title">Sensor Pantau Kondisi Tanah</h3>
+              <p className="flow-card-desc">
+                Sensor kelembaban membaca kondisi tanah setiap pohon secara <b>real-time</b> 24/7 dan mengirimkan datanya langsung ke cloud.
+              </p>
+            </div>
+
+            <div className="flow-card reveal" style={{ transitionDelay: '.1s' }}>
+              <div className="flow-card-header">
+                <div className="flow-badge-num">2</div>
+                <div className="flow-icon-box" style={{ background: 'rgba(14,165,233,0.12)', color: '#0284C7' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.07 4.93a10 10 0 1 1-14.14 0" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="flow-card-title">Sistem Siram Otomatis</h3>
+              <p className="flow-card-desc">
+                Irigasi presisi menyiram tanaman sesuai kebutuhan spesifik — tidak kurang, tidak boros air, dan bisa dikontrol manual dari jarak jauh.
+              </p>
+            </div>
+
+            <div className="flow-card reveal" style={{ transitionDelay: '.2s' }}>
+              <div className="flow-card-header">
+                <div className="flow-badge-num">3</div>
+                <div className="flow-icon-box" style={{ background: 'rgba(168,85,247,0.12)', color: '#9333EA' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                    <circle cx="12" cy="13" r="4" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="flow-card-title">Foto Dianalisis AI Cerdas</h3>
+              <p className="flow-card-desc">
+                Ambil foto daun atau tanaman, AI menganalisis gejala visual untuk <b>deteksi dini penyakit &amp; hama</b> lengkap dengan rekomendasi penanganan.
+              </p>
+            </div>
+
+            <div className="flow-card reveal" style={{ transitionDelay: '.3s' }}>
+              <div className="flow-card-header">
+                <div className="flow-badge-num">4</div>
+                <div className="flow-icon-box" style={{ background: 'rgba(245,158,11,0.12)', color: '#D97706' }}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 20V10" /><path d="M18 20V4" /><path d="M6 20v-4" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="flow-card-title">Memory &amp; Insight Setiap Pohon</h3>
+              <p className="flow-card-desc">
+                Seluruh riwayat penyiraman, tren kelembaban, catatan fisik, dan foto membentuk &ldquo;memori&rdquo; tiap pohon untuk keputusan pertanian yang lebih tepat.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Section 2: Cara Buat Akun (3 Langkah & Alur Approval) ── */}
+      <section className="account-flow-section" id="account-steps" aria-labelledby="af-title">
+        <div className="section-inner">
+          <p className="section-eyebrow">Alur Pendaftaran</p>
+          <h2 className="section-title" id="af-title">Cara Mulai Menggunakan Tanamanku</h2>
+          <p className="section-sub">
+            Kami menjaga kualitas data dan keamanan kebun Anda melalui proses verifikasi terkelola.
+          </p>
+
+          <div className="account-steps-container">
+            <div className="account-step-card reveal">
+              <div className="step-badge">Langkah 1</div>
+              <div className="step-icon-round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="8.5" cy="7" r="4" />
+                  <line x1="20" y1="8" x2="20" y2="14" />
+                  <line x1="23" y1="11" x2="17" y2="11" />
+                </svg>
+              </div>
+              <h3 className="step-card-title">Daftar Akun Baru</h3>
+              <p className="step-card-desc">
+                Isi form pendaftaran singkat dengan nama, email, dan kata sandi Anda. Hanya butuh kurang dari 1 menit.
+              </p>
+            </div>
+
+            <div className="step-divider" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+
+            <div className="account-step-card reveal" style={{ transitionDelay: '.15s' }}>
+              <div className="step-badge highlight-badge">Langkah 2</div>
+              <div className="step-icon-round highlight-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+              </div>
+              <h3 className="step-card-title">Persetujuan Tim Admin</h3>
+              <p className="step-card-desc">
+                Akun diverifikasi admin untuk menjamin integritas data dan kecocokan profil kebun Anda. Anda dapat menghubungi CS untuk mempercepat aktivasi.
+              </p>
+            </div>
+
+            <div className="step-divider" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2">
+                <polyline points="9 18 15 12 9 6" />
+              </svg>
+            </div>
+
+            <div className="account-step-card reveal" style={{ transitionDelay: '.3s' }}>
+              <div className="step-badge">Langkah 3</div>
+              <div className="step-icon-round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                  <polyline points="22 4 12 14.01 9 11.01" />
+                </svg>
+              </div>
+              <h3 className="step-card-title">Mulai Pantau &amp; Analisis</h3>
+              <p className="step-card-desc">
+                Akses dashboard penuh, daftarkan pohon, gunakan fitur analisis foto AI, dan konsultasikan kondisi kebun ke Taku AI.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── Features ── */}
       <section className="features" id="features" aria-labelledby="features-title">
         <div className="section-inner">
-          <p className="section-eyebrow">Kenapa Kebunku?</p>
-          <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk Kebunmu</h2>
-          <p className="section-sub">Dari sensor tanah hingga <b>Sistem IoT cerdas</b> — semua bekerja bersama agar tanamanmu selalu terawat dengan baik.</p>
+          <p className="section-eyebrow">Keunggulan Platform</p>
+          <h2 className="section-title" id="features-title">Kekuatan Data &amp; AI di Kebun Anda</h2>
+          <p className="section-sub">Bukan sekadar alat penyiram otomatis — Tanamanku adalah platform analitik dan kecerdasan buatan untuk hasil panen optimal.</p>
 
           <div className="features-grid">
             <div className="feature-card reveal">
+              <div className="feature-icon" style={{ color: '#9333EA' }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" />
+                </svg>
+              </div>
+              <h3 className="feature-title">Deteksi Penyakit via Foto AI</h3>
+              <p className="feature-desc">Cukup foto daun atau tanaman yang bermasalah. AI langsung menganalisis dan memberikan saran penanganan dalam Bahasa Indonesia.</p>
+            </div>
+
+            <div className="feature-card reveal" style={{ transitionDelay: '.1s' }}>
+              <div className="feature-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+              </div>
+              <h3 className="feature-title">Asisten Cerdas &ldquo;Taku AI&rdquo;</h3>
+              <p className="feature-desc">Tanya jawab seputar perawatan kebun. Taku memahami konteks sensor, riwayat siram, dan catatan setiap tanaman Anda secara mendalam.</p>
+            </div>
+
+            <div className="feature-card reveal" style={{ transitionDelay: '.2s' }}>
               <div className="feature-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" />
                 </svg>
               </div>
-              <h3 className="feature-title">Selalu Terpantau</h3>
-              <p className="feature-desc">Kelembaban tanah, kondisi tanaman, semua bisa kamu lihat langsung dari genggaman secara <q>real-time</q> setiap saat.</p>
+              <h3 className="feature-title">Sensor &amp; Irigasi Presisi</h3>
+              <p className="feature-desc">Sensor kelembaban tanah memberikan umpan data real-time, memungkinkan algoritma menyiram tanaman pada ambang batas yang paling ideal.</p>
             </div>
-            <div className="feature-card reveal" style={{ transitionDelay: '.1s' }}>
-              <div className="feature-icon">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="3" />
-                  <path d="M19.07 4.93a10 10 0 1 1-14.14 0" />
-                </svg>
-              </div>
-              <h3 className="feature-title">Siram Otomatis, Tanpa Ribet</h3>
-              <p className="feature-desc">Tanaman haus? Kebunku sudah tahu duluan dan langsung bertindak. Sistem IoT kami dengan kontrol jarak jauh memastikan tidak ada yang disiram berlebihan.</p>
-            </div>
-            <div className="feature-card reveal" style={{ transitionDelay: '.2s' }}>
+
+            <div className="feature-card reveal" style={{ transitionDelay: '.3s' }}>
               <div className="feature-icon">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -328,35 +473,54 @@ export default function LandingPage() {
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
               </div>
-              <h3 className="feature-title">Riwayat Lengkap</h3>
-              <p className="feature-desc">Pantau perjalanan setiap tanamanmu, dari awal ditanam hingga sekarang. Data historis untuk keputusan yang lebih cerdas.</p>
+              <h3 className="feature-title">Timeline &amp; Memory Pohon</h3>
+              <p className="feature-desc">Setiap dokumentasi foto, hasil cek laboratorium/AI, dan catatan lapangan tersimpan rapi sebagai riwayat hidup tiap pohon.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── How It Works ── */}
-      <section className="how-it-works" id="how-it-works" aria-labelledby="hiw-title">
+      {/* ── Section 3: Hubungi Kami / Bantuan Instalasi (CTA Baru) ── */}
+      <section className="contact-install-section" id="contact" aria-labelledby="contact-title">
         <div className="section-inner">
-          <p className="section-eyebrow">Cara Kerja</p>
-          <h2 className="section-title" id="hiw-title">Mulai dalam 3 Langkah Mudah</h2>
-          <p className="section-sub">Tidak perlu jadi ahli teknologi. Kebunku dirancang sederhana dan langsung bisa dipakai.</p>
+          <div className="contact-install-card reveal">
+            <div className="contact-install-info">
+              <span className="contact-badge">Layanan Instalasi &amp; Konsultasi</span>
+              <h2 id="contact-title" className="contact-title">Tim Kami Bantu Instalasi Langsung di Lokasi Kebun Anda</h2>
+              <p className="contact-desc">
+                Tidak perlu pusing urusan teknis sensor atau konfigurasi. Teknisi Tanamanku siap datang langsung untuk survei, pemasangan perangkat IoT, dan pendampingan penggunaan dashboard.
+              </p>
+              <div className="contact-details">
+                <div className="contact-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2.5">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 9.67a19.79 19.79 0 0 1-3-8.59A2 2 0 0 1 3.62 1H7a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                  </svg>
+                  <span>WhatsApp: <b>0852-1500-2047</b></span>
+                </div>
+                <div className="contact-item">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" strokeWidth="2.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                  <span>Respon Cepat &middot; Senin – Minggu</span>
+                </div>
+              </div>
+            </div>
 
-          <div className="steps-grid">
-            <div className="step-item reveal">
-              <div className="step-number">1</div>
-              <h3 className="step-title">Daftar & Tambah Tanaman</h3>
-              <p className="step-desc">Buat akun gratis, lalu daftarkan tanaman-tanamanmu beserta info dasarnya. Mudah seperti mengisi formulir singkat.</p>
-            </div>
-            <div className="step-item reveal" style={{ transitionDelay: '.15s' }}>
-              <div className="step-number">2</div>
-              <h3 className="step-title">Pasang Sensor di Kebun</h3>
-              <p className="step-desc">Hubungkan perangkat sensor IoT ke tanamanmu. Sensor akan mulai membaca data kelembaban secara real-time.</p>
-            </div>
-            <div className="step-item reveal" style={{ transitionDelay: '.3s' }}>
-              <div className="step-number">3</div>
-              <h3 className="step-title">Biarkan Kebunku Bekerja</h3>
-              <p className="step-desc">AI kami memantau 24/7 dan menyiram otomatis saat dibutuhkan. Kamu tinggal duduk santai dan lihat tanamanmu tumbuh.</p>
+            <div className="contact-install-action">
+              <a
+                href="https://wa.me/6285215002047"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-whatsapp"
+                aria-label="Hubungi Customer Service Tanamanku via WhatsApp"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span>Chat Tim Instalasi</span>
+              </a>
+              <span className="contact-note">Konsultasikan kebutuhan lahan Anda secara gratis</span>
             </div>
           </div>
         </div>
@@ -365,13 +529,15 @@ export default function LandingPage() {
       {/* ── CTA ── */}
       <section className="cta-section" aria-labelledby="cta-title">
         <div className="cta-inner">
-          <h2 id="cta-title" className="reveal">Siap Mengotomatiskan Irigasi Kebun Anda?</h2>
-          <p className="reveal" style={{ transitionDelay: '.1s' }}>Pantau kelembapan tanah dan kendalikan penyiraman secara real-time dari mana saja dengan keandalan sistem IoT Kebunku.</p>
+          <h2 id="cta-title" className="reveal">Siap Menghubungkan Kebun Anda ke AI?</h2>
+          <p className="reveal" style={{ transitionDelay: '.1s' }}>
+            Bergabunglah dengan para pemilik kebun dan petani modern yang mengandalkan data serta AI untuk tanaman yang lebih sehat dan hasil yang lebih melimpah.
+          </p>
           <div className="cta-btns reveal" style={{ transitionDelay: '.2s' }}>
             <Link to="/register" className="btn btn-primary btn-lg">
-              Mulai Sekarang — Gratis
+              Daftar Sekarang &mdash; Gratis
             </Link>
-            <Link to="/login" className="btn btn-outline btn-lg">Sudah punya akun? Masuk</Link>
+            <Link to="/login" className="btn btn-outline btn-lg">Sudah Punya Akun? Masuk</Link>
           </div>
         </div>
       </section>
@@ -385,15 +551,16 @@ export default function LandingPage() {
           <div className="footer-brand-block">
             <div className="footer-logo">
               <div className="footer-logo-mark">
-                <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="36" height="36" loading="lazy" decoding="async" />
+                <img src="/Logo Kebunku.png" alt="Logo Tanamanku" width="36" height="36" loading="lazy" decoding="async" />
               </div>
-              <span className="footer-brand-name">Kebunku</span>
+              <span className="footer-brand-name">Tanamanku</span>
             </div>
-            <p className="footer-tagline">Menjaga tanaman, menumbuhkan hasil.</p>
+            <p className="footer-tagline">Platform pertanian cerdas berbasis data &amp; AI.</p>
           </div>
-          <p className="footer-copy">&copy; 2026 Kebunku &middot; Aplikasi Pertanian Nomor Satu</p>
+          <p className="footer-copy">&copy; 2026 Tanamanku &middot; Smart Agriculture Platform</p>
         </div>
       </footer>
     </div>
   );
 }
+

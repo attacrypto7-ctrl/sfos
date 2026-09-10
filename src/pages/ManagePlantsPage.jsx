@@ -313,10 +313,10 @@ export default function ManagePlantsPage() {
                       </svg>
                     </span>
                     <input type="text" id="device-id" className="form-input"
-                      placeholder="cth: DEV-001 (opsional)"
+                      placeholder="cth: DEV-001 (opsional, isi setelah sensor dipasang)"
                       value={deviceId} onChange={(e) => setDeviceId(e.target.value)} />
                   </div>
-                  <span className="text-xs text-muted">Kosongkan untuk digenerate otomatis.</span>
+                  <span className="text-xs text-muted">Isi ID sesuai yang tertera di perangkat sensor. Kosongkan jika sensor belum dipasang.</span>
                 </div>
 
                 {/* Moisture threshold */}

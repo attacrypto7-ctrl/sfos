@@ -13,11 +13,10 @@ export default function ProfilePage() {
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
   const [role, setRole] = useState(
-    user?.role === 'owner' || user?.role === 'Pemilik Kebun'
-      ? 'owner'
-      : user?.role === 'admin' || user?.role === 'Manajer Kebun'
-      ? 'admin'
-      : 'viewer'
+    user?.role === 'user' ? 'user'
+    : user?.role === 'worker' ? 'worker'
+    : user?.role === 'admin' ? 'admin'
+    : 'user'
   );
   
   // Accordion active state
@@ -254,9 +253,9 @@ export default function ProfilePage() {
                   onChange={(e) => setRole(e.target.value)}
                   aria-label="Pilih peran"
                 >
-                  <option value="owner">Pemilik Kebun</option>
+                  <option value="user">Pemilik Kebun</option>
+                  <option value="worker">Pekerja Kebun</option>
                   <option value="admin">Manajer Kebun</option>
-                  <option value="viewer">Pekerja Kebun</option>
                 </select>
               </div>
               <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }} disabled={saving}>

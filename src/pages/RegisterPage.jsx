@@ -4,7 +4,7 @@ import { registerApi } from '../services/plantService';
 import AuthIllustration from '../components/AuthIllustration';
 import '../css/auth.css';
 
-const WHATSAPP_URL = 'https://wa.me/6285215002047';
+const WHATSAPP_FALLBACK = 'https://wa.me/';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -16,6 +16,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   const [registered, setRegistered] = useState(false);
+  const [supportPhone, setSupportPhone] = useState('');
 
   // Animasi zoom-in ilustrasi — state lokal, tidak naik ke context/parent besar.
   // Saat isZooming true, class .illustration-zoom ditambah ke wrapper ilustrasi.
@@ -80,7 +81,11 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await registerApi({ name, phone, email, password });
+      const result = await registerApi({ name, phone, email, password });
+      // Simpan supportPhone dari respons API untuk ditampilkan di success state
+      if (result.supportPhone) {
+        setSupportPhone(result.supportPhone);
+      }
       setRegistered(true);
     } catch (err) {
       startTransition(() => {
@@ -94,6 +99,15 @@ export default function RegisterPage() {
 
   // ── Success State ──
   if (registered) {
+    // Bangun URL WhatsApp dari supportPhone yang dikirim API.
+    // Normalisasi: hapus karakter non-digit, pastikan awalan 62 untuk Indonesia.
+    const buildWhatsAppUrl = (sp) => {
+      if (!sp) return null;
+      const digits = sp.replace(/\D/g, '');
+      const intl = digits.startsWith('0') ? '62' + digits.slice(1) : digits;
+      return `${WHATSAPP_FALLBACK}${intl}`;
+    };
+    const whatsappUrl = buildWhatsAppUrl(supportPhone);
     return (
       <div className="auth-body" style={{ width: '100%' }}>
         <div className="auth-layout">
@@ -132,8 +146,9 @@ export default function RegisterPage() {
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '320px', margin: '0 auto' }}>
+                {whatsappUrl && (
                 <a
-                  href={WHATSAPP_URL}
+                  href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
@@ -150,6 +165,7 @@ export default function RegisterPage() {
                   </svg>
                   Hubungi CS via WhatsApp
                 </a>
+                )}
                 <Link
                   to="/login"
                   style={{
@@ -206,8 +222,8 @@ export default function RegisterPage() {
             <div className="auth-brand-logo">
               <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
             </div>
-            <h1 className="auth-brand-name">Kebunku</h1>
-            <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
+            <h1 className="auth-brand-name">Tanamanku</h1>
+            <p className="auth-brand-tagline">Platform AI untuk Kebunmu</p>
           </div>
 
           <AuthIllustration isZooming={isZooming} />
@@ -227,7 +243,7 @@ export default function RegisterPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span>Kelola tanaman tanpa batas</span>
+              <span>Analisis penyakit tanaman via AI</span>
             </div>
             <div className="auth-feature-item" role="listitem">
               <div className="auth-feature-icon" aria-hidden="true">
@@ -235,7 +251,7 @@ export default function RegisterPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span>Dukungan tim kami 24/7</span>
+              <span>Chat Taku AI &amp; insight kebun</span>
             </div>
           </div>
         </div>

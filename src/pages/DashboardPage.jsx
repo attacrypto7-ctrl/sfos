@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
+import TakuBar from '../components/TakuBar';
 import { waterPlantApi } from '../services/plantService';
 import '../css/app.css';
 
@@ -32,6 +33,44 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const [greeting, setGreeting] = useState('');
 
+  // ── Taku AI state ─────────────────────────────────────────
+  const [activePlantIdx, setActivePlantIdx]   = useState(null); // plant yang sedang dibahas
+  const [activeCue, setActiveCue]             = useState(null); // 'greeting'|'summary'|'plant'|'closing'
+  const [highlightSummary, setHighlightSummary] = useState(false);
+  const plantCardRefs = useRef([]);
+
+  const handleTakuCue = useCallback((cue, plantIndex) => {
+    setActiveCue(cue);
+    setActivePlantIdx(plantIndex);
+
+    if (cue === 'summary') {
+      setHighlightSummary(true);
+      // scroll ke summary cards
+      document.getElementById('taku-summary')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => setHighlightSummary(false), 2800);
+    }
+
+    if (cue === 'plant' && plantIndex !== null) {
+      setHighlightSummary(false);
+      // scroll ke plant card yang bersangkutan
+      const card = plantCardRefs.current[plantIndex];
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    if (cue === 'greeting') {
+      setHighlightSummary(false);
+      // scroll ke atas
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    if (cue === 'closing') {
+      setActivePlantIdx(null);
+      setHighlightSummary(false);
+    }
+  }, []);
+
   useEffect(() => {
     const getGreeting = () => {
       const h = new Date().getHours();
@@ -45,7 +84,7 @@ export default function DashboardPage() {
 
   const totalPlants = plants.length;
   const goodCount = plants.filter((p) => p.status === 'good').length;
-  const warningCount = plants.filter((p) => p.status === 'warning').length;
+  const warningCount = plants.filter((p) => p.status === 'warning' || p.status === 'no_data').length;
 
   // ── Efek partikel saat tombol diklik (daun / tetesan air) ──
   const spawnParticles = (e, type = 'leaf') => {
@@ -106,7 +145,7 @@ export default function DashboardPage() {
   };
 
   const formatTime = (minutes) => {
-    if (minutes === undefined || minutes === null) return 'Belum sync';
+    if (minutes === undefined || minutes === null || minutes >= 999) return 'Belum sync';
     if (minutes < 60) return `${minutes} menit lalu`;
     const h = Math.floor(minutes / 60);
     return `${h} jam lalu`;
@@ -115,7 +154,7 @@ export default function DashboardPage() {
   return (
     <>
       <Layout title="Dashboard">
-        <div className="dash-content is-ready">
+        <div className="dash-content is-ready" style={{ paddingBottom: '80px' }}>
           {/* Greeting */}
           <div className="greeting-section">
             <h2 className="greeting-title" id="greeting-text">
@@ -127,7 +166,13 @@ export default function DashboardPage() {
           </div>
 
           {/* Summary Cards */}
-          <div className="summary-grid" role="region" aria-label="Ringkasan kebun">
+          <div
+            id="taku-summary"
+            className={`summary-grid${highlightSummary ? ' taku-section-active' : ''}`}
+            role="region"
+            aria-label="Ringkasan kebun"
+            style={{ transition: 'box-shadow 0.4s, transform 0.4s' }}
+          >
             <div className="summary-card">
               <div className="summary-icon green" aria-hidden="true">
                 {/* Leaf — Lucide */}
@@ -209,11 +254,13 @@ export default function DashboardPage() {
             <div className="plants-grid" id="plants-grid" role="list" aria-label="Daftar tanaman">
               {plants.map((plant, index) => {
                 const isWarning = plant.status === 'warning';
+                const isNoData = plant.status === 'no_data';
                 const mColor = getMoistureColor(plant.moisture, plant.moistureMin, plant.moistureMax);
                 return (
                   <div
                     key={plant.id}
-                    className="plant-card is-in"
+                    ref={el => { plantCardRefs.current[index] = el; }}
+                    className={`plant-card is-in${activePlantIdx === index ? ' taku-plant-active' : ''}`}
                     onClick={() => navigate(`/plant-detail?id=${plant.id}`)}
                     role="listitem"
                     style={{ '--d': `${index * 0.13}s` }}
@@ -227,8 +274,8 @@ export default function DashboardPage() {
                         <div className="plant-name">{plant.name}</div>
                         <div className="plant-type text-xs text-muted">{plant.type}</div>
                       </div>
-                      <span className={`badge ${isWarning ? 'badge-yellow' : 'badge-green'} badge-dot`}>
-                        {isWarning ? 'Perlu Dicek' : 'Aktif'}
+                      <span className={`badge ${isWarning ? 'badge-yellow' : isNoData ? 'badge-yellow' : 'badge-green'} badge-dot`}>
+                        {isNoData ? 'Belum Ada Data' : isWarning ? 'Perlu Dicek' : 'Aktif'}
                       </span>
                     </div>
 
@@ -300,6 +347,14 @@ export default function DashboardPage() {
         </div>
       </Layout>
 
+      {/* Taku AI — bottom HUD bar, always mounted */}
+      {!plantsLoading && (
+        <TakuBar
+          plants={plants}
+          onCue={handleTakuCue}
+          autoStart={true}
+        />
+      )}
     </>
   );
 }
