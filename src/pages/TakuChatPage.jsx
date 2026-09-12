@@ -228,13 +228,14 @@ export default function TakuChatPage() {
 
                   <div>
                     <div
+                      className={isUser ? 'bg-[#109E75] text-white' : 'bg-[#109E75] text-white'}
                       style={{
                         padding: '12px 16px',
                         borderRadius: isUser ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
-                        background: isUser ? 'var(--color-primary, #1D9E75)' : '#FFFFFF',
-                        color: isUser ? '#FFFFFF' : 'var(--color-text, #1A2B25)',
-                        border: isUser ? 'none' : '1px solid var(--color-border, #E2E8F0)',
-                        boxShadow: isUser ? '0 4px 14px rgba(29,158,117,0.2)' : '0 2px 6px rgba(0,0,0,0.04)',
+                        background: isUser ? '#109E75' : '#109E75',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        boxShadow: '0 4px 14px rgba(29,158,117,0.2)',
                         fontSize: '14px',
                         lineHeight: 1.65,
                         whiteSpace: 'pre-wrap',
