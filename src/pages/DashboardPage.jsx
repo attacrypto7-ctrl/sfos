@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import Layout from '../components/Layout';
-import TakuBar from '../components/TakuBar';
 import { waterPlantApi } from '../services/plantService';
 import '../css/app.css';
 
@@ -32,44 +31,6 @@ export default function DashboardPage() {
   const { user, plants, showToast, loadPlants, plantsLoading } = useApp();
   const navigate = useNavigate();
   const [greeting, setGreeting] = useState('');
-
-  // ── Taku AI state ─────────────────────────────────────────
-  const [activePlantIdx, setActivePlantIdx]   = useState(null); // plant yang sedang dibahas
-  const [activeCue, setActiveCue]             = useState(null); // 'greeting'|'summary'|'plant'|'closing'
-  const [highlightSummary, setHighlightSummary] = useState(false);
-  const plantCardRefs = useRef([]);
-
-  const handleTakuCue = useCallback((cue, plantIndex) => {
-    setActiveCue(cue);
-    setActivePlantIdx(plantIndex);
-
-    if (cue === 'summary') {
-      setHighlightSummary(true);
-      // scroll ke summary cards
-      document.getElementById('taku-summary')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => setHighlightSummary(false), 2800);
-    }
-
-    if (cue === 'plant' && plantIndex !== null) {
-      setHighlightSummary(false);
-      // scroll ke plant card yang bersangkutan
-      const card = plantCardRefs.current[plantIndex];
-      if (card) {
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }
-
-    if (cue === 'greeting') {
-      setHighlightSummary(false);
-      // scroll ke atas
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    if (cue === 'closing') {
-      setActivePlantIdx(null);
-      setHighlightSummary(false);
-    }
-  }, []);
 
   useEffect(() => {
     const getGreeting = () => {
@@ -168,9 +129,9 @@ export default function DashboardPage() {
           {/* Summary Cards */}
           <div
             id="taku-summary"
-            className={`summary-grid${highlightSummary ? ' taku-section-active' : ''}`}
+            className="summary-grid"
             role="region"
-                 aria-label="Ringkasan tanaman"
+            aria-label="Ringkasan tanaman"
             style={{ transition: 'box-shadow 0.4s, transform 0.4s' }}
           >
             <div className="summary-card">
@@ -259,8 +220,7 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={plant.id}
-                    ref={el => { plantCardRefs.current[index] = el; }}
-                    className={`plant-card is-in${activePlantIdx === index ? ' taku-plant-active' : ''}`}
+                    className="plant-card is-in"
                     onClick={() => navigate(`/plant-detail?id=${plant.id}`)}
                     role="listitem"
                     style={{ '--d': `${index * 0.13}s` }}
@@ -346,15 +306,6 @@ export default function DashboardPage() {
           )}
         </div>
       </Layout>
-
-      {/* Taku AI — bottom HUD bar, always mounted */}
-      {!plantsLoading && (
-        <TakuBar
-          plants={plants}
-          onCue={handleTakuCue}
-          autoStart={true}
-        />
-      )}
     </>
   );
 }

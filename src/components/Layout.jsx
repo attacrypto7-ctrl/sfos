@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import VoiceOrb from './VoiceOrb';
+import TakuAssistant from './TakuAssistant';
 import LoadingScreen from './LoadingScreen';
 import NotificationPanel from './NotificationPanel';
 
@@ -378,8 +378,8 @@ export default function Layout({ children, title }) {
         </div>
       </nav>
       
-      {/* Smart Voice Assistant Orb */}
-      <VoiceOrb />
+      {/* Taku AI Active Assistant Orb */}
+      <TakuAssistant />
     </div>
   );
 }

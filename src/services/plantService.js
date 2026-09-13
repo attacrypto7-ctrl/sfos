@@ -321,5 +321,24 @@ export async function fetchPhotosHistoryApi(plantId = 'all') {
   return data;
 }
 
+// ── Taku Active Assistant API ─────────────────────────────────
+
+/**
+ * Kirim perintah suara/teks ke Taku AI (function calling endpoint).
+ * @param {string} message   - Teks perintah dari user
+ * @param {string} currentPage - Pathname halaman yang sedang dibuka (konteks)
+ * @returns {{ toolCalls: Array, spokenReply: string, plants: Array, report: Object }}
+ */
+export async function takuCommandApi(message, currentPage = '') {
+  const res = await fetch(`${API_BASE_URL}/ai/taku/command`, {
+    method: 'POST',
+    headers: authHeaders(),
+    body: JSON.stringify({ message, currentPage }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Gagal menghubungi Taku AI');
+  return data;
+}
+
 
 
