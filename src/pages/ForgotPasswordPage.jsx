@@ -31,8 +31,8 @@ export default function ForgotPasswordPage() {
         {/* Left Panel */}
         <div className="auth-panel-left" role="complementary">
           <div className="auth-brand">
-            <div className="auth-brand-logo">
-              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="32" height="32" />
+            <div className="logo-ring-wrap" style={{ marginBottom: 'var(--space-5)' }}>
+               <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="32" height="32" loading="eager" decoding="async" style={{ objectFit: 'cover' }} />
             </div>
             <h1 className="auth-brand-name">Tanamanku</h1>
             <p className="auth-brand-tagline">Aplikasi Pertanian Nomor Satu</p>

@@ -761,13 +761,12 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
 .sidebar-logo-mark {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
-  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
   flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 8px;
 }
 .sidebar-logo-text .brand-name {
   font-size: var(--font-size-md);
@@ -1003,6 +1002,39 @@ p  { color: var(--color-text-sub); line-height: 1.7; }
 /* ── "The Pulse" Ambient Animations & Keyframes ── */
 
 /* 1. Breathing Animation */
+/* Logo ring spin animation — gambar logo diam di tengah, cincin border berputar */
+@keyframes ring-spin-glow {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.logo-ring-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.logo-ring-wrap::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(from 0deg, transparent 0%, #1D9E75 30%, #3dffbb 50%, #1D9E75 70%, transparent 100%);
+  animation: ring-spin-glow 4s linear infinite;
+  z-index: 0;
+}
+
+.logo-ring-wrap img {
+  position: relative;
+  z-index: 1;
+  border-radius: 50%;
+  background: #FFFFFF;
+  display: block;
+}
+
 @keyframes breathe {
   0%, 100% {
     transform: scale(1);

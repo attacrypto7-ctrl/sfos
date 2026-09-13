@@ -129,8 +129,8 @@ export default function LoginPage() {
             </svg>
           </div>
           <div className="auth-brand">
-            <div className="auth-brand-logo">
-              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="112" height="112" />
+            <div className="logo-ring-wrap" style={{ marginBottom: 'var(--space-5)' }}>
+              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="104" height="104" loading="eager" decoding="async" style={{ objectFit: 'cover' }} />
             </div>
             <h1 className="auth-brand-name">Tanamanku</h1>
             <p className="auth-brand-tagline">Dipantau AI, bukan cuma sensor.</p>

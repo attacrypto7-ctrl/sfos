@@ -64,8 +64,8 @@ export default function LandingPage() {
       {/* ── Navbar — Glassmorphism ── */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
         <Link to="/" className="nav-logo" aria-label="Tanamanku beranda">
-          <div className="nav-logo-mark">
-            <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="40" height="40" fetchpriority="high" decoding="async" />
+          <div className="logo-ring-wrap">
+            <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="36" height="36" loading="eager" fetchpriority="high" decoding="async" style={{ objectFit: 'cover' }} />
           </div>
           <span className="nav-logo-name">Tanamanku</span>
         </Link>
@@ -136,7 +136,6 @@ export default function LandingPage() {
 
           <div className="hero-visual min-h-[350px] aspect-video" aria-hidden="true">
             <div className="hero-illustration-wrap min-h-[350px]">
-              <span className="hero-illustration-caption">Ilustrasi</span>
               <div className="hero-illustration">
                 <svg viewBox="0 0 480 420" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <rect width="480" height="420" rx="24" fill="#F2FBF7" />
@@ -510,8 +509,8 @@ export default function LandingPage() {
         <div className="footer-inner">
           <div className="footer-brand-block">
             <div className="footer-logo">
-              <div className="footer-logo-mark">
-                <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="36" height="36" loading="lazy" decoding="async" />
+              <div className="logo-ring-wrap">
+                <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="32" height="32" loading="eager" decoding="async" style={{ objectFit: 'cover' }} />
               </div>
               <span className="footer-brand-name">Tanamanku</span>
             </div>

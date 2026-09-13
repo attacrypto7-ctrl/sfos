@@ -369,7 +369,7 @@ export default function ProfilePage() {
                 alt="Kebunku Logo"
                 width="20"
                 height="20"
-                style={{ objectFit: 'contain', display: 'inline-block' }}
+                style={{ borderRadius: '4px', objectFit: 'cover', display: 'inline-block' }}
               />
               <span className="text-semibold" style={{ color: 'var(--color-text)' }}>Tanamanku</span>
             </div>

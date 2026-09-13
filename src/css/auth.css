@@ -61,8 +61,8 @@
   width: 112px;
   height: 112px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.14);
-  border: 2px solid rgba(255,255,255,0.25);
+  background: #FFFFFF;
+  border: 2px solid rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,6 +74,10 @@
     0 0 40px rgba(159, 225, 203, 0.4),
     0 0 90px rgba(29, 158, 117, 0.25);
   animation: brandGlow 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+.auth-brand-logo:hover {
+  transform: scale(1.03);
 }
 @keyframes brandGlow {
   0%, 100% {
@@ -147,6 +151,13 @@
 @keyframes authDecorFloat {
   0%, 100% { transform: translateY(-10px); }
   50%      { transform: translateY(10px); }
+}
+
+/* Logo spin animation — elegan, industri-standar */
+@keyframes logo-spin-glow {
+  0%   { transform: rotate(0deg); box-shadow: 0 0 0 0 rgba(29, 158, 117, 0.4); }
+  70%  { transform: rotate(180deg); box-shadow: 0 0 0 10px rgba(29, 158, 117, 0); }
+  100% { transform: rotate(360deg); box-shadow: 0 0 0 0 rgba(29, 158, 117, 0.4); }
 }
 
 @media (prefers-reduced-motion: reduce) {

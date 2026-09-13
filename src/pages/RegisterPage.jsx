@@ -113,8 +113,8 @@ export default function RegisterPage() {
         <div className="auth-layout">
           <div className="auth-panel-left" role="complementary">
             <div className="auth-brand">
-              <div className="auth-brand-logo">
-                <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
+              <div className="logo-ring-wrap" style={{ marginBottom: 'var(--space-5)' }}>
+                <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="76" height="76" loading="eager" decoding="async" style={{ objectFit: 'cover' }} />
               </div>
               <h1 className="auth-brand-name">Tanamanku</h1>
               <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
@@ -219,8 +219,8 @@ export default function RegisterPage() {
             </svg>
           </div>
           <div className="auth-brand">
-            <div className="auth-brand-logo">
-              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
+            <div className="logo-ring-wrap" style={{ marginBottom: 'var(--space-5)' }}>
+              <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="76" height="76" loading="eager" decoding="async" style={{ objectFit: 'cover' }} />
             </div>
             <h1 className="auth-brand-name">Tanamanku</h1>
             <p className="auth-brand-tagline">Platform AI untuk Tanamanmu</p>
