@@ -99,7 +99,7 @@ export default function Layout({ children, title }) {
         <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`} role="navigation" aria-label="Navigasi aplikasi">
           <div className="sidebar-logo">
             <div className="sidebar-logo-mark" aria-hidden="true">
-              <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="28" height="28" style={{ borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
+              <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="28" height="28" style={{ borderRadius: '8px', objectFit: 'cover' }} />
             </div>
             <div className="sidebar-logo-text">
               <div className="brand-name">Tanamanku</div>
