@@ -223,7 +223,7 @@ function SegmentDots({ total, current }) {
 export default function TakuBar({ plants = [], onCue, autoStart = true }) {
   const [phase, setPhase]             = useState('idle');   // idle|booting|speaking|paused|done
   const [subtitle, setSubtitle]       = useState('');
-  const [cueLabel, setCueLabel]       = useState('TAKU AI · ASISTEN KEBUN');
+  const [cueLabel, setCueLabel]       = useState('TAKU AI · ASISTEN TANAMAN');
   const [segments, setSegments]       = useState([]);
   const [segIdx, setSegIdx]           = useState(0);
   const [dismissed, setDismissed]     = useState(false);
@@ -270,7 +270,7 @@ export default function TakuBar({ plants = [], onCue, autoStart = true }) {
         const cueLabels = {
           system:   'TAKU AI · SISTEM',
           greeting: 'TAKU AI · INISIALISASI',
-          summary:  'TAKU AI · RINGKASAN KEBUN',
+          summary:  'TAKU AI · RINGKASAN TANAMAN',
           plant:    `TAKU AI · TANAMAN ${plants[plantIndex]?.name?.toUpperCase() ?? ''}`,
           warning:  `TAKU AI · ⚠ PERINGATAN`,
           closing:  'TAKU AI · LAPORAN SELESAI',
@@ -281,7 +281,7 @@ export default function TakuBar({ plants = [], onCue, autoStart = true }) {
       onWord: () => {},
       onDone: () => {
         setPhase('done');
-        setSubtitle('Laporan kondisi kebun telah selesai disampaikan.');
+        setSubtitle('Laporan kondisi tanaman telah selesai disampaikan.');
         setCueLabel('TAKU AI · STANDBY');
       },
       onError: (err) => {
@@ -301,7 +301,7 @@ export default function TakuBar({ plants = [], onCue, autoStart = true }) {
 
   const handleStop = () => {
     stopReport(); setPhase('idle'); setSubtitle(''); startedRef.current = false; pausedRef.current = false;
-    setCueLabel('TAKU AI · ASISTEN KEBUN');
+    setCueLabel('TAKU AI · ASISTEN TANAMAN');
   };
 
   const handleReplay = () => {
@@ -365,7 +365,7 @@ export default function TakuBar({ plants = [], onCue, autoStart = true }) {
       <div
         className="taku-bar"
         role="region"
-        aria-label="Taku AI Asisten Kebun"
+        aria-label="Taku AI Asisten Tanaman"
         style={{
           position: 'fixed',
           bottom: 0, left: 0, right: 0,
@@ -439,7 +439,7 @@ export default function TakuBar({ plants = [], onCue, autoStart = true }) {
               {subtitle
                 ? <TypewriterText key={subtitle} text={subtitle} />
                 : <span style={{ color: 'rgba(255,255,255,0.3)' }}>
-                    {phase === 'idle' ? '▶ Ketuk play untuk memulai laporan kondisi kebun' : ''}
+                    {phase === 'idle' ? '▶ Ketuk play untuk memulai laporan kondisi tanaman' : ''}
                   </span>
               }
             </div>

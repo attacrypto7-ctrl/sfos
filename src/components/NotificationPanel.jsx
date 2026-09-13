@@ -375,7 +375,7 @@ export default function NotificationPanel({ open, closing = false, onClose }) {
               className="btn btn-ghost btn-xs"
               onClick={() => { navigate('/garden'); onClose(); }}
             >
-              Lihat Kebun →
+              Lihat Tanaman →
             </button>
           )}
           {isAdmin && pendingUsers.length > 0 && (

@@ -30,7 +30,7 @@ export default function TakuChatPage() {
           {
             id: 'welcome-msg',
             role: 'assistant',
-            content: 'Halo! Saya Taku, asisten AI Tanamanku. Ada yang ingin kamu tanyakan seputar kondisi kebun, jadwal penyiraman, atau diagnosa tanamanmu hari ini?',
+            content: 'Halo! Saya Taku, asisten AI Tanamanku. Ada yang ingin kamu tanyakan seputar kondisi tanaman, jadwal penyiraman, atau diagnosa tanamanmu hari ini?',
             created_at: new Date().toISOString(),
           },
         ]);
@@ -151,7 +151,7 @@ export default function TakuChatPage() {
               <p style={{ fontSize: '12px', color: 'var(--color-text-muted)', margin: 0 }}>
                 {selectedPlant
                   ? `Konteks Tanaman: ${selectedPlant.name} (${selectedPlant.type})`
-                  : 'Konteks: Semua Tanaman di Kebunmu'}
+                  : 'Konteks: Semua Tanaman di Tanamanmu'}
               </p>
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function TakuChatPage() {
               onChange={(e) => setSelectedPlantId(e.target.value)}
               style={{ padding: '6px 12px', fontSize: '13px', borderRadius: '10px', minWidth: '160px' }}
             >
-              <option value="">Semua Kebun (Umum)</option>
+              <option value="">Semua Tanaman (Umum)</option>
               {plants.map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.emoji || '🌱'} {p.name}

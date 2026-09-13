@@ -116,7 +116,7 @@ export default function RegisterPage() {
               <div className="auth-brand-logo">
                 <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
               </div>
-              <h1 className="auth-brand-name">Kebunku</h1>
+              <h1 className="auth-brand-name">Tanamanku</h1>
               <p className="auth-brand-tagline">Pertanian Cerdas Berbasis IoT</p>
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function RegisterPage() {
               <img src="/Logo Kebunku.png" alt="Kebunku Logo" width="80" height="80" />
             </div>
             <h1 className="auth-brand-name">Tanamanku</h1>
-            <p className="auth-brand-tagline">Platform AI untuk Kebunmu</p>
+            <p className="auth-brand-tagline">Platform AI untuk Tanamanmu</p>
           </div>
 
           <AuthIllustration isZooming={isZooming} />
@@ -251,7 +251,7 @@ export default function RegisterPage() {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <span>Chat Taku AI &amp; insight kebun</span>
+              <span>Chat Taku AI &amp; insight tanaman</span>
             </div>
           </div>
         </div>

@@ -253,9 +253,9 @@ export default function ProfilePage() {
                   onChange={(e) => setRole(e.target.value)}
                   aria-label="Pilih peran"
                 >
-                  <option value="user">Pemilik Kebun</option>
-                  <option value="worker">Pekerja Kebun</option>
-                  <option value="admin">Manajer Kebun</option>
+                        <option value="user">Pemilik Tanaman</option>
+                        <option value="worker">Pekerja Tanaman</option>
+                        <option value="admin">Manajer Tanaman</option>
                 </select>
               </div>
               <button type="submit" className="btn btn-primary" style={{ alignSelf: 'flex-start' }} disabled={saving}>
@@ -319,7 +319,7 @@ export default function ProfilePage() {
             <div className="settings-item" role="group" aria-label="Notifikasi laporan mingguan">
               <div className="settings-item-info">
                 <div className="settings-item-title">Laporan Mingguan</div>
-                <div className="settings-item-desc">Ringkasan kondisi kebun setiap hari Senin pagi</div>
+                      <div className="settings-item-desc">Ringkasan kondisi tanaman setiap hari Senin pagi</div>
               </div>
               <label className="toggle" aria-label="Aktifkan notifikasi laporan mingguan">
                 <input
@@ -364,9 +364,13 @@ export default function ProfilePage() {
           {/* Footer Info */}
           <div className="card card-flat" style={{ textAlign: 'center', color: 'var(--color-text-muted)' }} role="contentinfo">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" strokeWidth="2.5">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
+              <img
+                src="/Logo Kebunku.png"
+                alt="Kebunku Logo"
+                width="20"
+                height="20"
+                style={{ objectFit: 'contain', display: 'inline-block' }}
+              />
               <span className="text-semibold" style={{ color: 'var(--color-text)' }}>Tanamanku</span>
             </div>
             <p className="text-xs">Versi 1.0.0 · Menjaga tanaman, menumbuhkan hasil.</p>
@@ -474,7 +478,7 @@ export default function ProfilePage() {
       <ConfirmModal
         open={showLogoutConfirm}
         title="Keluar dari akun ini?"
-        message="Kamu perlu masuk kembali untuk mengakses kebunmu."
+        message="Kamu perlu masuk kembali untuk mengakses Tanamanmu."
         confirmLabel="Ya, Keluar"
         cancelLabel="Batal"
         danger

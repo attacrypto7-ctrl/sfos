@@ -158,7 +158,7 @@ export default function DashboardPage() {
           {/* Greeting */}
           <div className="greeting-section">
             <h2 className="greeting-title" id="greeting-text">
-              {greeting}, {user.name.split(' ')[0]}. Begini kondisi kebunmu hari ini.
+              {greeting}, {user.name.split(' ')[0]}. Begini kondisi Tanamanmu hari ini.
             </h2>
             <p className="greeting-sub">
               {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
@@ -170,7 +170,7 @@ export default function DashboardPage() {
             id="taku-summary"
             className={`summary-grid${highlightSummary ? ' taku-section-active' : ''}`}
             role="region"
-            aria-label="Ringkasan kebun"
+                 aria-label="Ringkasan tanaman"
             style={{ transition: 'box-shadow 0.4s, transform 0.4s' }}
           >
             <div className="summary-card">
@@ -240,7 +240,7 @@ export default function DashboardPage() {
                   <path d="M14.1 6a7 7 0 0 1 1.3 4.2 6 6 0 0 1-5.4.5 9 9 0 0 1 3.1-5.5 5 5 0 0 1 1 .8z" />
                 </svg>
               </div>
-              <h3>Kebunmu masih kosong</h3>
+              <h3>Tanamanmu masih kosong</h3>
               <p>Yuk tambahkan tanaman pertamamu dan biarkan Tanamanku mulai menjaganya.</p>
               <button className="btn btn-primary mt-4" onClick={(e) => { spawnParticles(e, 'leaf'); navigate('/manage-plants'); }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

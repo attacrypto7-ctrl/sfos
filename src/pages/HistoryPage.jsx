@@ -145,7 +145,7 @@ export default function HistoryPage() {
   const grouped = groupLogsByDate(logs);
 
   return (
-    <Layout title="Riwayat &amp; Log Kebun">
+      <Layout title="Riwayat &amp; Log Tanaman">
       {/* Header Tabs */}
       <div
         style={{

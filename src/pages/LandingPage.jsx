@@ -58,14 +58,14 @@ export default function LandingPage() {
     <div className={`landing-body bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-100/70 via-slate-50/50 to-white relative overflow-hidden${loading ? ' is-loading' : ' is-loaded'}`}>
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[450px] bg-[radial-gradient(circle_at_center,_rgba(16,185,129,0.20)_0%,_rgba(20,184,166,0.08)_50%,_transparent_70%)] pointer-events-none -z-10" />
       {loading && (
-        <LoadingScreen label="Memuat platform kebun anda..." onComplete={handleLoadingComplete} />
+        <LoadingScreen label="Memuat platform tanaman anda..." onComplete={handleLoadingComplete} />
       )}
 
       {/* ── Navbar — Glassmorphism ── */}
       <nav className={`landing-nav ${scrolled ? 'scrolled' : ''}`} role="navigation" aria-label="Navigasi utama">
         <Link to="/" className="nav-logo" aria-label="Tanamanku beranda">
           <div className="nav-logo-mark">
-            <img src="/Logo Kebunku.png" alt="Logo Tanamanku" width="40" height="40" fetchpriority="high" decoding="async" />
+            <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="40" height="40" fetchpriority="high" decoding="async" />
           </div>
           <span className="nav-logo-name">Tanamanku</span>
         </Link>
@@ -117,14 +117,14 @@ export default function LandingPage() {
           <div className="hero-content">
             <div className="hero-eyebrow bg-emerald-50/90 border border-emerald-300 text-emerald-700 font-semibold shadow-[0_2px_12px_rgba(16,185,129,0.2)] rounded-full px-4 py-1.5" aria-label="Tag produk">
               <span className="eyebrow-dot" aria-hidden="true"></span>
-              Platform Pertanian Cerdas
+              Pertanian Cerdas Berbasis IoT
             </div>
             <h1 className="hero-title" id="hero-headline">
-              Kebunmu Tumbuh,<br />
+              Tanamanmu Tumbuh,<br />
               <span className="highlight bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(16,185,129,0.25)] font-extrabold">Kami yang Jaga</span>
             </h1>
             <p className="hero-desc">
-              Tanamanku menggabungkan data sensor real-time, irigasi presisi, dan kekuatan AI untuk memberi insight mendalam tentang setiap tanaman di kebunmu.
+              Tanamanku menggabungkan data sensor real-time, irigasi presisi, dan kekuatan AI untuk memberi insight mendalam tentang setiap tanaman di Tanamanmu.
             </p>
             <div className="hero-cta">
               <Link to="/register" className="btn btn-primary btn-lg hero-cta-btn bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-white font-bold shadow-[0_8px_20px_-4px_rgba(16,185,129,0.45)] hover:shadow-[0_12px_28px_-2px_rgba(16,185,129,0.65)] hover:scale-[1.02] active:scale-95 transition-all duration-100 ease-out transform-gpu will-change-transform">
@@ -331,7 +331,7 @@ export default function LandingPage() {
           <p className="section-eyebrow">Alur Pendaftaran</p>
           <h2 className="section-title" id="af-title">Cara Mulai Menggunakan Tanamanku</h2>
           <p className="section-sub">
-            Kami menjaga kualitas data dan keamanan kebun Anda melalui proses verifikasi terkelola.
+            Kami menjaga kualitas data dan keamanan tanaman Anda melalui proses verifikasi terkelola.
           </p>
 
           <div className="account-steps-container">
@@ -367,7 +367,7 @@ export default function LandingPage() {
               </div>
               <h3 className="step-card-title">Persetujuan Tim Admin</h3>
               <p className="step-card-desc">
-                Akun diverifikasi admin untuk menjamin integritas data dan kecocokan profil kebun Anda. Anda dapat menghubungi CS untuk mempercepat aktivasi.
+                Akun diverifikasi admin untuk menjamin integritas data dan kecocokan profil tanaman Anda. Anda dapat menghubungi CS untuk mempercepat aktivasi.
               </p>
             </div>
 
@@ -387,7 +387,7 @@ export default function LandingPage() {
               </div>
               <h3 className="step-card-title">Mulai Pantau &amp; Analisis</h3>
               <p className="step-card-desc">
-                Akses dashboard penuh, daftarkan pohon, gunakan fitur analisis foto AI, dan konsultasikan kondisi kebun ke Taku AI.
+                Akses dashboard penuh, daftarkan pohon, gunakan fitur analisis foto AI, dan konsultasikan kondisi tanaman ke Taku AI.
               </p>
             </div>
           </div>
@@ -397,8 +397,8 @@ export default function LandingPage() {
       {/* ── Features ── */}
       <section className="features" id="features" aria-labelledby="features-title">
         <div className="section-inner">
-          <p className="section-eyebrow">Kenapa Kebunku?</p>
-          <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700 bg-clip-text text-transparent">Kebunmu</span></h2>
+          <p className="section-eyebrow">Kenapa Tanamanku?</p>
+              <h2 className="section-title" id="features-title">Teknologi yang Bekerja untuk <span className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-700 bg-clip-text text-transparent">Tanamanmu</span></h2>
           <p className="section-sub">Dari sensor tanah hingga <b>Sistem IoT cerdas</b> — semua bekerja bersama agar tanamanmu selalu terawat dengan baik.</p>
 
           <div className="features-grid">
@@ -419,7 +419,7 @@ export default function LandingPage() {
                 </svg>
               </div>
               <h3 className="feature-title">Siram Otomatis, Tanpa Ribet</h3>
-              <p className="feature-desc">Tanaman haus? Kebunku sudah tahu duluan dan langsung bertindak. Sistem IoT kami dengan kontrol jarak jauh memastikan tidak ada yang disiram berlebihan.</p>
+                <p className="feature-desc">Tanaman haus? Tanamanku sudah tahu duluan dan langsung bertindak. Sistem IoT kami dengan kontrol jarak jauh memastikan tidak ada yang disiram berlebihan.</p>
             </div>
             <div className="feature-card reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.2s' }}>
               <div className="feature-icon">
@@ -443,7 +443,7 @@ export default function LandingPage() {
           <div className="contact-install-card reveal">
             <div className="contact-install-info">
               <span className="contact-badge">Layanan Instalasi &amp; Konsultasi</span>
-              <h2 id="contact-title" className="contact-title">Tim Kami Bantu Instalasi Langsung di Lokasi Kebun Anda</h2>
+              <h2 id="contact-title" className="contact-title">Tim Kami Bantu Instalasi Langsung di Lokasi Tanaman Anda</h2>
               <p className="contact-desc">
                 Tidak perlu pusing urusan teknis sensor atau konfigurasi. Teknisi Tanamanku siap datang langsung untuk survei, pemasangan perangkat IoT, dan pendampingan penggunaan dashboard.
               </p>
@@ -473,12 +473,12 @@ export default function LandingPage() {
             </div>
             <div className="step-item reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.15s' }}>
               <div className="step-number bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.4)] font-bold">2</div>
-              <h3 className="step-title">Pasang Sensor di Kebun</h3>
+              <h3 className="step-title">Pasang Sensor di Tanaman</h3>
               <p className="step-desc">Hubungkan perangkat sensor IoT ke tanamanmu. Sensor akan mulai membaca data kelembaban secara real-time.</p>
             </div>
             <div className="step-item reveal bg-white/95 border border-emerald-200/80 shadow-[0_10px_25px_-5px_rgba(16,185,129,0.12)] hover:border-emerald-400 hover:shadow-[0_18px_35px_-5px_rgba(16,185,129,0.28)] hover:-translate-y-1.5 transition-all duration-150 ease-out transform-gpu will-change-transform rounded-2xl" style={{ transitionDelay: '.3s' }}>
               <div className="step-number bg-gradient-to-br from-emerald-400 to-teal-600 text-white shadow-[0_4px_15px_rgba(16,185,129,0.4)] font-bold">3</div>
-              <h3 className="step-title">Biarkan Kebunku Bekerja</h3>
+              <h3 className="step-title">Biarkan Tanamanku Bekerja</h3>
               <p className="step-desc">AI kami memantau 24/7 dan menyiram otomatis saat dibutuhkan. Kamu tinggal duduk santai dan lihat tanamanmu tumbuh.</p>
             </div>
           </div>
@@ -489,9 +489,9 @@ export default function LandingPage() {
       {/* ── CTA ── */}
       <section className="cta-section bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-emerald-950 via-emerald-900 to-teal-950 text-white shadow-2xl border-t border-emerald-500/30" aria-labelledby="cta-title">
         <div className="cta-inner">
-          <h2 id="cta-title" className="reveal">Siap Menghubungkan Kebun Anda ke AI?</h2>
+          <h2 id="cta-title" className="reveal">Siap Menghubungkan Tanaman Anda ke AI?</h2>
           <p className="reveal" style={{ transitionDelay: '.1s' }}>
-            Bergabunglah dengan para pemilik kebun dan petani modern yang mengandalkan data serta AI untuk tanaman yang lebih sehat dan hasil yang lebih melimpah.
+            Bergabunglah dengan para pemilik tanaman dan petani modern yang mengandalkan data serta AI untuk tanaman yang lebih sehat dan hasil yang lebih melimpah.
           </p>
           <div className="cta-btns reveal" style={{ transitionDelay: '.2s' }}>
             <Link to="/register" className="btn btn-primary btn-lg bg-emerald-400 text-slate-950 font-bold hover:bg-emerald-300 shadow-[0_0_25px_rgba(52,211,153,0.6)] hover:scale-[1.03] active:scale-95 transition-all duration-100 ease-out transform-gpu will-change-transform">
@@ -511,7 +511,7 @@ export default function LandingPage() {
           <div className="footer-brand-block">
             <div className="footer-logo">
               <div className="footer-logo-mark">
-                <img src="/Logo Kebunku.png" alt="Logo Tanamanku" width="36" height="36" loading="lazy" decoding="async" />
+                <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="36" height="36" loading="lazy" decoding="async" />
               </div>
               <span className="footer-brand-name">Tanamanku</span>
             </div>

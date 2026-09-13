@@ -177,7 +177,7 @@ export default function LoginPage() {
 
           <div className="auth-header">
             <h1>Selamat Datang Kembali</h1>
-            <p>Masuk untuk terus memantau kebunmu.</p>
+              <p>Masuk untuk terus memantau Tanamanmu.</p>
           </div>
 
           <form className="auth-form" onSubmit={handleSubmit} noValidate aria-label="Formulir masuk">

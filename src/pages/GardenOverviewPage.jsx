@@ -214,7 +214,7 @@ function HealthGauge({ score, animated }) {
   const offset = c * 0.625; // rotate so arc starts bottom-left
 
   return (
-    <div className="health-gauge-wrap" aria-label={`Skor kesehatan kebun ${score}`}>
+          <div className="health-gauge-wrap" aria-label={`Skor kesehatan tanaman ${score}`}>
       <svg width="136" height="136" viewBox="0 0 136 136" aria-hidden="true">
         {/* Background track */}
         <circle
@@ -325,7 +325,7 @@ export default function GardenOverviewPage() {
   // ── Empty state ──
   if (plants.length === 0) {
     return (
-      <Layout title="Kebun Saya">
+      <Layout title="Tanaman Saya">
         <div className="empty-state">
           <div className="empty-state-icon">
             <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -335,8 +335,8 @@ export default function GardenOverviewPage() {
               <path d="M14.1 6a7 7 0 0 1 1.3 4.2 6 6 0 0 1-5.4.5 9 9 0 0 1 3.1-5.5 5 5 0 0 1 1 .8z" />
             </svg>
           </div>
-          <h3>Kebunmu masih kosong</h3>
-          <p>Tambahkan tanaman pertamamu untuk mulai memantau kesehatan kebun secara menyeluruh.</p>
+          <h3>Tanamanmu masih kosong</h3>
+          <p>Tambahkan tanaman pertamamu untuk mulai memantau kesehatan tanaman secara menyeluruh.</p>
           <button className="btn btn-primary mt-4" onClick={() => navigate('/manage-plants')}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
@@ -382,7 +382,7 @@ export default function GardenOverviewPage() {
             </div>
             <div>
               <h2 style={{ fontSize: '16px', fontWeight: 800, margin: 0, color: 'var(--color-text)' }}>
-                Analisis AI &amp; Intelligence Kebun
+                Analisis AI &amp; Intelligence Tanaman
               </h2>
               <p style={{ fontSize: '12px', color: 'var(--color-text-sub)', margin: 0 }}>
                 Diagnosa otomatis berdasarkan data sensor kelembaban, riwayat irigasi, dan visual daun terkini
@@ -432,7 +432,7 @@ export default function GardenOverviewPage() {
             <p style={{ fontSize: '13px', color: 'var(--color-text)', margin: 0, lineHeight: 1.5 }}>
               {driestPlant && driestPlant.moisture !== null && driestPlant.moisture < driestPlant.moistureMin
                 ? `Prioritaskan siram ${driestPlant.name} (${driestPlant.moisture}%, min ${driestPlant.moistureMin}%).`
-                : 'Kondisi kebun prima. Lakukan foto berkala untuk memantau pertumbuhan daun.'}
+                : 'Kondisi tanaman prima. Lakukan foto berkala untuk memantau pertumbuhan daun.'}
             </p>
           </div>
         </div>
@@ -445,7 +445,7 @@ export default function GardenOverviewPage() {
         <div className="garden-health-card">
           <div className="garden-health-header">
             <div>
-              <h2 className="garden-section-title">Skor Kesehatan Kebun</h2>
+              <h2 className="garden-section-title">Skor Kesehatan Tanaman</h2>
               <p className="garden-section-sub">Berdasarkan {plants.length} tanaman aktif</p>
             </div>
             <button
@@ -619,7 +619,7 @@ export default function GardenOverviewPage() {
         onClose={() => setIsCameraOpen(false)}
         onPhotoCaptured={handleLiveCameraCaptured}
         title={`Kamera AI — ${selectedPlantForCamera?.name || 'Tanaman'}`}
-        subtitle="Ambil foto daun untuk didiagnosa AI dan diperbarui fotonya di kebun"
+                  subtitle="Ambil foto daun untuk didiagnosa AI dan diperbarui fotonya di tanaman"
         confirmLabel="Simpan Foto &amp; Analisa AI"
       />
 

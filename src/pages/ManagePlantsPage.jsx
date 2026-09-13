@@ -211,7 +211,7 @@ export default function ManagePlantsPage() {
                 </svg>
               </div>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
-                Untuk menambah atau mengubah tanaman, hubungi worker atau admin yang bertugas di kebunmu.
+                Untuk menambah atau mengubah tanaman, hubungi worker atau admin yang bertugas di Tanamanmu.
               </p>
             </div>
           </div>

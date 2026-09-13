@@ -110,7 +110,7 @@ export default function TakuGreeting({ plants = [], onComplete = () => {}, autoP
         </div>
 
         <h2 style={{ marginTop: 0, marginBottom: 'var(--space-2)', color: '#1A2B25' }}>
-          Taku AI - Asisten Kebun Anda
+            Taku AI - Asisten Tanaman Anda
         </h2>
 
         {/* Greeting Text */}

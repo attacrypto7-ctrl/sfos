@@ -421,10 +421,10 @@ export default function PlantDetailPage() {
             <span style={{ fontSize: '24px' }}>🌿</span>
             <div>
               <p style={{ margin: 0, fontWeight: 700, color: 'var(--color-text, #1A2B25)', fontSize: '14px' }}>
-                Tanaman ini belum punya foto asli kebun
+                Tanaman ini belum punya foto asli tanaman
               </p>
               <p style={{ margin: '2px 0 0', fontSize: '12.5px', color: 'var(--color-text-sub, #4D6B60)' }}>
-                Tambahkan foto &amp; catatan kondisi pohon untuk melengkapi riwayat memori kebunmu.
+                Tambahkan foto &amp; catatan kondisi pohon untuk melengkapi riwayat memori Tanamanmu.
               </p>
             </div>
           </div>

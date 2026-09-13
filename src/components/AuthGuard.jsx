@@ -9,7 +9,7 @@ export default function AuthGuard({ children }) {
   if (authLoading) {
     return (
       <LoadingScreen
-        label="Memuat kebun anda..."
+        label="Memuat tanaman anda..."
       />
     );
   }

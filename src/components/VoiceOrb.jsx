@@ -69,13 +69,13 @@ export default function VoiceOrb() {
 
   // Mencocokkan frasa suara
   const handleVoiceCommand = async (command) => {
-    // 1. Kondisi Kebun
-    if (command.includes('kondisi kebun') || command.includes('keadaan kebun') || command.includes('status kebun')) {
+    // 1. Kondisi Tanaman
+    if (command.includes('kondisi tanaman') || command.includes('keadaan tanaman') || command.includes('status tanaman')) {
       const total = plants.length;
       const good = plants.filter((p) => p.status === 'good').length;
       const warning = plants.filter((p) => p.status === 'warning').length;
       
-      let reply = `Kebun Anda memiliki ${total} tanaman terdaftar. `;
+       let reply = `Tanaman Anda memiliki ${total} tanaman terdaftar. `;
       if (warning > 0) {
         reply += `${good} tanaman dalam kondisi baik, dan ${warning} tanaman butuh perhatian Anda.`;
       } else {
@@ -124,7 +124,7 @@ export default function VoiceOrb() {
     }
 
     // Jika tidak ada perintah yang cocok
-    const fallbackReply = "Perintah tidak dikenali. Ucapkan 'siram' diikuti nama tanaman, atau 'kondisi kebun'.";
+    const fallbackReply =           "Perintah tidak dikenali. Ucapkan 'siram' diikuti nama tanaman, atau 'kondisi tanaman'.";
     speakText(fallbackReply);
     showToast(fallbackReply, 'warning');
   };
@@ -162,7 +162,7 @@ export default function VoiceOrb() {
           <p style={{ color: 'var(--color-text-sub)', marginBottom: '8px' }}>Ucapkan perintah seperti:</p>
           <ul style={{ paddingLeft: '12px', listStyleType: 'disc', color: 'var(--color-text-sub)' }}>
             <li>"Siram Durian"</li>
-            <li>"Kondisi kebun"</li>
+                <li>"Kondisi tanaman"</li>
             <li>"Hentikan penyiraman"</li>
           </ul>
         </div>
@@ -180,8 +180,8 @@ export default function VoiceOrb() {
             Menu Pintasan Asisten
           </div>
           <button className="btn btn-ghost btn-xs w-full" style={{ justifyContent: 'flex-start', textAlign: 'left' }}
-            onClick={() => handleVoiceCommand("bagaimana kondisi kebun")}>
-            📢 Tanya Kondisi Kebun
+                 onClick={() => handleVoiceCommand("bagaimana kondisi tanaman")}>
+            📢 Tanya Kondisi Tanaman
           </button>
           {plants.map((p) => (
             <button key={p.id} className="btn btn-ghost btn-xs w-full" style={{ justifyContent: 'flex-start', textAlign: 'left' }}

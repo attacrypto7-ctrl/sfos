@@ -3,7 +3,7 @@ import '../css/loading.css';
 
 const STEPS = [
   'Memeriksa kelembapan tanah…',
-  'Menghubungkan sensor kebun…',
+  'Menghubungkan sensor tanaman…',
   'Menyiapkan data tanaman…',
   'Menghitung skor kesehatan…',
   'Merawat tanaman terbaik…',
@@ -12,7 +12,7 @@ const STEPS = [
 // Total durasi loading: 2.5–3 detik (diambil 2750ms)
 const DURATION_MS = 2750;
 
-export default function LoadingScreen({ label = 'Memuat kebun anda...', inline = false, onComplete }) {
+export default function LoadingScreen({ label = 'Memuat tanaman anda...', inline = false, onComplete }) {
   const [progress, setProgress] = useState(0);
   const [step, setStep] = useState(0);
   const completedRef = useRef(false);

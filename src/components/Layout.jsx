@@ -102,7 +102,7 @@ export default function Layout({ children, title }) {
               <img src="/Logo Kebunku.png" alt="Logo Kebunku" width="28" height="28" style={{ borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} />
             </div>
             <div className="sidebar-logo-text">
-              <div className="brand-name">Kebunku</div>
+              <div className="brand-name">Tanamanku</div>
               <div className="brand-tag">Pertanian Cerdas</div>
             </div>
           </div>
@@ -123,7 +123,7 @@ export default function Layout({ children, title }) {
               )}
             </NavLink>
 
-            {/* Kebun Saya — hanya untuk user & admin (bukan worker) */}
+            {/* Tanaman Saya — hanya untuk user & admin (bukan worker) */}
             {(isUser || isAdmin) && (
               <NavLink to="/garden" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={close}>
                 <span className="nav-icon" aria-hidden="true">
@@ -132,7 +132,7 @@ export default function Layout({ children, title }) {
                     <polyline points="9 22 9 12 15 12 15 22" />
                   </svg>
                 </span>
-                Kebun Saya
+                Tanaman Saya
               </NavLink>
             )}
 
@@ -184,7 +184,7 @@ export default function Layout({ children, title }) {
             <NavLink to="/profile" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`} onClick={close}>
               <span className="nav-icon" aria-hidden="true">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+                  <path d="M12 2c1.104 0 2 .896 2 2s-.896 2-2 2-2-.896-2-2 .896-2 2-2zm9 7h-6v13h-2v-6h-2v6h-2v-13h-6v-2h6v-1c0-1.104.896-2 2-2h2c1.104 0 2 .896 2 2v1h6v2z" />
                 </svg>
               </span>
               Profil & Pengaturan
@@ -312,7 +312,7 @@ export default function Layout({ children, title }) {
 
           <main className="app-main" id="main-content">
             {inlineLoader ? (
-              <LoadingScreen label="Memuat kebun anda..." inline />
+              <LoadingScreen label="Memuat tanaman anda..." inline />
             ) : (
               children
             )}
@@ -334,15 +334,15 @@ export default function Layout({ children, title }) {
             Beranda
           </NavLink>
 
-          {(isUser || isAdmin) && (
-            <NavLink to="/garden" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                <polyline points="9 22 9 12 15 12 15 22" />
-              </svg>
-              Kebun
-            </NavLink>
-          )}
+           {(isUser || isAdmin) && (
+             <NavLink to="/garden" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
+               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                 <polyline points="9 22 9 12 15 12 15 22" />
+               </svg>
+               Tanaman
+             </NavLink>
+           )}
 
           <NavLink to="/history" className={({ isActive }) => `bottom-nav-item ${isActive ? 'active' : ''}`}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
